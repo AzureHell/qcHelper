@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" 
+    android:orientation="vertical"
+    >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        >
+        
+        <LinearLayout 
+			android:id="@+id/ImageShow_top"
+			android:layout_width="fill_parent"
+			android:layout_height="50dip"
+			android:layout_alignParentBottom="true"
+			android:orientation="horizontal"
+			style="@android:style/ButtonBar"			
+			>         
+            <Button 
+                 android:id="@+id/btnShowBack" 
+                 android:text="@string/btn_Back"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_weight="1"
+                 /> 
+             <Button
+                 android:id="@+id/btnDeleteImage"
+                 android:text="@string/btn_DeleteImage"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_weight="1"
+                 />        
+  	    </LinearLayout> 
+  	    
+	    <LinearLayout
+			android:id="@+id/main_ImageShow"
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:orientation="vertical"
+			android:layout_above="@id/ImageShow_top"
+	    	>
+	        <ImageView android:id="@+id/ivImageShow"
+	            android:layout_width="fill_parent"
+	            android:layout_height="fill_parent"
+	            android:scaleType="matrix"
+	            />
+	    </LinearLayout>        
+        
+    </RelativeLayout>
+
+</LinearLayout>
+

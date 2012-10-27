@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:padding="2dip"
+    android:orientation="vertical" >
+    
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="30"
+        android:padding="5dip" >
+        <TextView android:id="@+id/PlanCheckDate"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:paddingLeft="10dip"
+            android:gravity="left"
+        ></TextView>
+        <TextView android:id="@+id/PlanOrderNo"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:textSize="14sp" 
+            android:paddingLeft="10dip"
+            android:gravity="center_horizontal"
+        ></TextView>
+        <TextView android:id="@+id/PlanStyleNo"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:textSize="14sp" 
+            android:paddingLeft="10dip"
+            android:gravity="center_horizontal"
+        ></TextView>
+        <TextView android:id="@+id/PlanProductID"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:textSize="14sp" 
+            android:paddingLeft="10dip"
+            android:gravity="left"
+        ></TextView>
+    </LinearLayout>    
+    
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="30"
+        android:padding="5dip" >
+        <TextView android:id="@+id/PlanCheckDesc"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:textSize="14sp" 
+            android:paddingLeft="10dip"
+            android:gravity="left"
+        ></TextView>
+    </LinearLayout>  
+    
+</LinearLayout>

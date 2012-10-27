@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:padding="2dip"
+    android:orientation="horizontal">
+    
+        <Button android:id="@+id/CheckResult"
+            android:text="@string/btn_CheckResult"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            />
+        <Button android:id="@+id/CheckPic"
+            android:text="@string/btn_CheckPic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/CheckResult"
+            android:layout_alignTop="@id/CheckResult"
+            />
+        <TextView android:id="@+id/CheckState"
+            android:layout_width="40dip"
+            android:layout_height="wrap_content"
+            android:textSize="20sp" 
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_toLeftOf="@id/CheckPic"
+            android:layout_alignTop="@id/CheckPic"            
+        />                
+       <TextView android:id="@+id/CheckItemID"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:gravity="left"
+            android:layout_toLeftOf="@id/CheckState"
+            android:layout_alignTop="@id/CheckState"          
+        />        
+</RelativeLayout>
