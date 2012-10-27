@@ -46,7 +46,7 @@
             android:label="@string/title_activity_conset" >
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name="com.qchelper.main.LoginActivity"
             android:label="@string/title_activity_login" >
         </activity>
     </application>
