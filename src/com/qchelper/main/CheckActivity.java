@@ -1,29 +1,23 @@
-package com.example.qchelper;
+package com.qchelper.main;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import android.os.Bundle;
+import com.example.qchelper.R;
+
 import android.app.Activity;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.View;
-import android.view.ViewGroup;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.TextView;
-import android.widget.ListView;
 import android.widget.Button;
-import com.example.qchelper.dbHelper;
-
-import android.widget.Toast;
-import android.view.View.OnClickListener;
-
-import com.example.qchelper.RemarkActivity;
-import com.example.qchelper.PicActivity;
+import android.widget.ListView;
+import android.widget.TextView;
 
 public class CheckActivity extends Activity {
 	final static String DEBUG_TAG = "CheckActivity";
@@ -43,7 +37,6 @@ public class CheckActivity extends Activity {
     
     int[] ItemKeyList;
     
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check);
@@ -71,7 +64,6 @@ public class CheckActivity extends Activity {
     }
     */
     
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) { 
         checkAdapter = new CheckAdapter(this, R.layout.qccheckitem, getCheckData());
         CheckList.setAdapter(checkAdapter);

@@ -1,4 +1,6 @@
-package com.example.qchelper;
+package com.qchelper.main;
+
+import com.example.qchelper.R;
 
 import android.os.Bundle;
 import android.app.Activity;

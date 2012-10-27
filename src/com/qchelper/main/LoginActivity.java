@@ -1,4 +1,6 @@
-package com.example.qchelper;
+package com.qchelper.main;
+
+import com.example.qchelper.R;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -12,9 +14,8 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
     }
 
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_login, menu);
+//        getMenuInflater().inflate(R.menu.activity_login, menu);
         return true;
     }
 }

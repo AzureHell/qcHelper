@@ -1,4 +1,4 @@
-package com.example.qchelper;
+package com.qchelper.main;
 
 import   java.text.SimpleDateFormat;     
 

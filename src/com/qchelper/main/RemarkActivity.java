@@ -1,4 +1,4 @@
-package com.example.qchelper;
+package com.qchelper.main;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -8,7 +8,10 @@ import android.content.Intent;
 import android.widget.Button;
 import android.widget.EditText;
 import android.database.Cursor;
-import com.example.qchelper.dbHelper;
+
+import com.example.qchelper.R;
+import com.qchelper.main.dbHelper;
+
 import android.widget.Toast;
 
 public class RemarkActivity extends Activity {
@@ -56,7 +59,6 @@ public class RemarkActivity extends Activity {
     
     class ButtonClickEvent implements View.OnClickListener {
 
-		@Override
 		public void onClick(View v) {
     		switch(v.getId()){
     		case R.id.btnRemarkOk: {

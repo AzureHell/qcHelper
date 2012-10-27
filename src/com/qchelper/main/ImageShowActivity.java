@@ -1,4 +1,4 @@
-package com.example.qchelper;
+package com.qchelper.main;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -47,7 +47,8 @@ import android.os.Handler;
 import android.os.Message; 
 
 
-import com.example.qchelper.dbHelper;
+import com.example.qchelper.R;
+import com.qchelper.main.dbHelper;
 
 public class ImageShowActivity extends Activity {
 	final static String TAG = "ImageShowActivity";
@@ -108,7 +109,6 @@ public class ImageShowActivity extends Activity {
         btnImgShowDelete.setOnClickListener(new ButtonClickEvent());
                 
         imgView.setOnTouchListener(new OnTouchListener() {
-			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				ImageView view = (ImageView) v;
 				switch (event.getAction() & MotionEvent.ACTION_MASK) {
@@ -351,7 +351,6 @@ public class ImageShowActivity extends Activity {
     
     class ButtonClickEvent implements View.OnClickListener {
 
-		@Override
 		public void onClick(View v) {
 			switch (v.getId()){
 			case R.id.btnDeleteImage: {

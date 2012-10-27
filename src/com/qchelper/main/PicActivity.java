@@ -1,4 +1,4 @@
-package com.example.qchelper;
+package com.qchelper.main;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -27,8 +27,9 @@ import android.database.Cursor;
 import android.widget.ImageView;
 import android.widget.AdapterView;
 
-import com.example.qchelper.dbHelper;
-import com.example.qchelper.ImageShowActivity;
+import com.example.qchelper.R;
+import com.qchelper.main.ImageShowActivity;
+import com.qchelper.main.dbHelper;
 
 
 public class PicActivity extends Activity {
@@ -272,7 +273,6 @@ public class PicActivity extends Activity {
     
     class ItemClickEvent implements AdapterView.OnItemClickListener {
 
-		@Override
 		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 				long arg3) {
 			Log.d(TAG, "ItemClickEvent:" + Integer.toString(arg2));
@@ -294,7 +294,6 @@ public class PicActivity extends Activity {
     
     class ButtonClickEvent implements View.OnClickListener {
 
-		@Override
 		public void onClick(View v) {
 			switch (v.getId()){
 			case R.id.btnGetPic: {

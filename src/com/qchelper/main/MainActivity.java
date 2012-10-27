@@ -1,4 +1,4 @@
-package com.example.qchelper;
+package com.qchelper.main;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +14,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.qchelper.dbHelper;
 import com.example.qchelper.R;
-import com.example.qchelper.CheckActivity;
-import com.example.qchelper.ConsetActivity;
+import com.qchelper.main.CheckActivity;
+import com.qchelper.main.ConsetActivity;
+import com.qchelper.main.dbHelper;
 
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -248,7 +248,6 @@ public class MainActivity extends Activity {
     }
     
     class ItemClickEvent implements AdapterView.OnItemClickListener {
-    	@Override
         public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,long arg3) {
     		Intent intent = new Intent(MainActivity.this, CheckActivity.class);   		
             TextView tv_sOrderNo = (TextView) arg1.findViewById(R.id.PlanOrderNo);
