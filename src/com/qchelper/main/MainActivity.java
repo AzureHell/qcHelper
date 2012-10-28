@@ -3,30 +3,36 @@ package com.qchelper.main;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.os.Bundle;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONStringer;
+
+import com.qchelper.comm.comm;
+import com.qchelper.comm.httpHelper;
+
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.database.Cursor;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.example.qchelper.R;
-import com.qchelper.main.CheckActivity;
-import com.qchelper.main.ConsetActivity;
-import com.qchelper.main.dbHelper;
-
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.AdapterView;
-import android.content.Intent;
-import android.content.res.Resources;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
@@ -38,7 +44,7 @@ public class MainActivity extends Activity {
 	
 	ListView PlanList;
 	PlanAdapter planAdapter;
-	Button MainSearch;
+	Button MainSearch, btnSync;
 	EditText edtSearch;
 	
 	int[] ItemKeyList;
@@ -133,23 +139,36 @@ public class MainActivity extends Activity {
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-      switch (item.getItemId()) {
-        case LOGIN_ID: {
-        	Intent intent = new Intent(this, LoginActivity.class);
-        	startActivity(intent);        	
-        	break;
-        }
-        case CONSETTING_ID: {        	
-        	Intent intent = new Intent(this, ConsetActivity.class);
-        	startActivity(intent);        	
-        	break;
-        }
-        case EXIT_ID: {
-        	finish();
-        	break;
-        }
-      }	
-      return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case LOGIN_ID: {
+            	Intent intent = new Intent(this, LoginActivity.class);
+            	startActivity(intent);
+            	
+                Log.d(DEBUG_TAG, "click login");
+                if (!comm.isNetworkAvailable(this)) {
+                    comm.showMsg(this, R.string.network_inactive);
+                    break;
+                }
+                Resources res = getResources();
+//                if (btnLogin.getText().toString() == res.getString(R.string.btn_login)) {
+//                    Intent intent = new Intent(this, LoginActivity.class);
+//                    startActivityForResult(intent, LOGIN_ACTIVITY_REQUESTCODE);
+//                } else if (btnLogin.getText().toString() == res.getString(R.string.btn_logout)) {
+//                    showDialog(0);
+//                }
+            	break;
+            }
+            case CONSETTING_ID: {        	
+            	Intent intent = new Intent(this, ConsetActivity.class);
+            	startActivity(intent);        	
+            	break;
+            }
+            case EXIT_ID: {
+            	finish();
+            	break;
+            }
+         }	
+         return super.onOptionsItemSelected(item);
     }    
     
     private List<String> getPlanData(String ParamValue) {
@@ -265,20 +284,154 @@ public class MainActivity extends Activity {
     	
     	public void onClick(View v) {
     		switch(v.getId()){
-    		case R.id.MainSearch: {
-    			String FParamValue;
-    			if (edtSearch.getText().toString() == "" || edtSearch.getText().length() <= 0) {
-    				FParamValue=null;
-    			}
-    			else {
-    				FParamValue = edtSearch.getText().toString();    				
-    			}
-    	        planAdapter = new PlanAdapter(MainActivity.this, R.layout.qcplanitem, getPlanData(FParamValue));
-    	        PlanList.setAdapter(planAdapter);    			
-    			break;    			
-    		}
+        		case R.id.MainSearch: {
+        			String FParamValue;
+        			if (edtSearch.getText().toString() == "" || edtSearch.getText().length() <= 0) {
+        				FParamValue=null;
+        			}
+        			else {
+        				FParamValue = edtSearch.getText().toString();    				
+        			}
+        	        planAdapter = new PlanAdapter(MainActivity.this, R.layout.qcplanitem, getPlanData(FParamValue));
+        	        PlanList.setAdapter(planAdapter);    			
+        			break;    			
+        		}
+                case R.id.main_sync: {
+                    Log.d(DEBUG_TAG, "click sync");
+                    if (!comm.isNetworkAvailable(MainActivity.this)) {
+                        comm.showMsg(MainActivity.this, R.string.network_inactive);
+                        break;
+                    }
+                    // 登录验证，如果未进行登录则弹出登录窗口
+                    SharedPreferences setting = getSharedPreferences("HummingbirdLogin",Context.MODE_WORLD_READABLE);
+                    String login_user_id = setting.getString("user_id", "");
+                    if (login_user_id == "") {
+                        comm.showMsg(MainActivity.this, R.string.main_need_login);
+                        break;
+                    }
+                    
+                    try {
+                        dbHelper dbhlp = new dbHelper(MainActivity.this);
+                        Cursor cursor = dbhlp.querySQL("select id, factory_no, case when worksection_no is null then '' else worksection_no end as worksection_no "
+                                + ", bill_no, order_no, style_no, product_no "
+                                + ", color_no, color_name, size_no, size_name, quantity "
+                                + ", datetime_opt, datetime_rec, datetime_delete "
+                                + " from process_rec where datetime_upload is null ");
+                        String[] strJson = new String[cursor.getCount()];
+                        int i = 0;
+                        while (cursor.moveToNext()) {
+                            Log.d(DEBUG_TAG, "Build sync Json rec:" + i);
+                            strJson[i] = new JSONStringer().object()
+                                    .key("user_id_opt").value(login_user_id)
+                                    .key("id").value(cursor.getString(cursor.getColumnIndex("id")))
+                                    .key("factory_no").value(cursor.getString(cursor.getColumnIndex("factory_no")))
+                                    .key("worksection_no").value(cursor.getString(cursor.getColumnIndex("worksection_no")))
+                                    .key("bill_no").value(cursor.getString(cursor.getColumnIndex("bill_no")))
+                                    .key("order_no").value(cursor.getString(cursor.getColumnIndex("order_no")))
+                                    .key("style_no").value(cursor.getString(cursor.getColumnIndex("style_no")))
+                                    .key("product_no").value(cursor.getString(cursor.getColumnIndex("product_no")))
+                                    .key("color_no").value(cursor.getString(cursor.getColumnIndex("color_no")))
+                                    .key("color_name").value(cursor.getString(cursor.getColumnIndex("color_name")))
+                                    .key("size_no").value(cursor.getString(cursor.getColumnIndex("size_no")))
+                                    .key("size_name").value(cursor.getString(cursor.getColumnIndex("size_name")))
+                                    .key("quantity").value(cursor.getString(cursor.getColumnIndex("quantity")))
+                                    .key("datetime_opt").value(cursor.getString(cursor.getColumnIndex("datetime_opt")))
+                                    .key("datetime_rec").value(cursor.getString(cursor.getColumnIndex("datetime_rec")))
+                                    .key("datetime_delete").value(cursor.getString(cursor.getColumnIndex("datetime_delete")))
+                                    .endObject().toString();
+                            Log.d(DEBUG_TAG, "sync Json: " + strJson[i]);
+                            i++;
+                        }
+                        if (strJson.length > 0) {
+                            new syncAsyncTask().execute(strJson);
+                        } else {
+                            comm.showMsg(MainActivity.this, R.string.main_not_data_need_sync);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                }        		
     		}
     	}
     }
     
+    public class syncAsyncTask extends AsyncTask<String, Integer, Integer> {
+        final static String DEBUG_TAG = "syncAsyncTask";
+        private ProgressDialog progressDialog;
+        private int syncMaxCount = 0;
+        private int syncCurrentCount = 0;
+
+        @Override
+        protected void onPreExecute() {
+            Log.d(DEBUG_TAG, "onPreExecute");
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(MainActivity.this);
+            progressDialog.setCancelable(false);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setIndeterminate(false);
+            progressDialog.setTitle(comm.getResourceString(MainActivity.this, R.string.process_wait));
+            progressDialog.show();
+        }        
+        
+        protected Integer doInBackground(String... strJson) {
+            Log.d(DEBUG_TAG, "doInBackground");
+            syncMaxCount = strJson.length;
+            
+            /* LJF */
+            String SERVER_URL = "";         
+            dbHelper dbhlp = new dbHelper(MainActivity.this);
+            Cursor dbcur = dbhlp.querySQL("select id, server_ip, server_port "
+                    + " from server_con "); 
+            if (dbcur.getCount() > 0) {
+                dbcur.moveToFirst();
+                if ((dbcur.getString(dbcur.getColumnIndex("server_ip")).length() > 0) && (dbcur.getString(dbcur.getColumnIndex("server_port")).length() > 0)) {
+                    SERVER_URL = "http://" + dbcur.getString(dbcur.getColumnIndex("server_ip")) 
+                      + ":" + dbcur.getString(dbcur.getColumnIndex("server_port")) + "/sync";                   
+                }
+
+            }     
+            
+            Log.d(DEBUG_TAG, "doInBackground_2");
+            if (SERVER_URL == ""){
+                return null;            
+            } 
+            
+            for (int i = 0; i < strJson.length; i++) {
+                syncCurrentCount = i + 1;
+                
+                List<NameValuePair> params = new ArrayList<NameValuePair>();
+                params.add(new BasicNameValuePair("data", strJson[i]));
+                String result = null;
+                try {
+                    result = httpHelper.invoke(SERVER_URL, params);
+//                    result = httpHelper.invoke("sync", params); 
+                } catch (Exception e) {
+                    Log.e(DEBUG_TAG, e.toString());
+                }
+                try {
+                    JSONObject json = new JSONObject(result);
+                    //dbHelper dbhlp = new dbHelper(HummingbirdActivity.this);
+                    dbhlp.updateSyncDatetime("process_rec", json.getInt("id"), json.getString("user_id_opt"), json.getString("datetime_upload"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                publishProgress(syncCurrentCount);
+            }           
+
+            return 0;
+        }
+        
+        protected void onProgressUpdate(Integer progress) {
+            Log.d(DEBUG_TAG, "onProgressUpdate");
+            progressDialog.setMessage(comm.getResourceString(MainActivity.this, R.string.processing) + " " 
+                    + Integer.toString(progress) + "/" + Integer.toString(syncMaxCount));
+        }
+
+        protected void onPostExecute(Integer result) {
+            Log.d(DEBUG_TAG, "onPostExecute");
+            progressDialog.cancel();
+            comm.showMsg(MainActivity.this, R.string.main_sync_completed);
+        }
+    }    
 }
