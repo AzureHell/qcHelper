@@ -3,8 +3,6 @@ package com.qchelper.main;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.qchelper.R;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;

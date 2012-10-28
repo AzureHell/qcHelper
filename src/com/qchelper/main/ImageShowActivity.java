@@ -1,54 +1,30 @@
 package com.qchelper.main;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.net.Uri;
-import android.os.Bundle;
-import android.provider.MediaStore;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.util.FloatMath;
-import android.util.Log;
-import android.view.Menu;
-import android.view.View;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.PointF;
-import android.widget.ImageView;
-import android.widget.Button;
-import android.graphics.Bitmap;
-import android.view.MotionEvent;
-import android.widget.Toast;
-//import android.view.View.OnTouchListener;
-import android.view.GestureDetector;
-import android.view.GestureDetector.OnGestureListener;
-import android.view.View.OnTouchListener;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.app.AlertDialog;
-
-import android.util.DisplayMetrics;
-import android.graphics.Paint;
-
 import android.graphics.Matrix;
-
-import android.view.WindowManager;
-import android.view.WindowManager.LayoutParams; 
 import android.graphics.PixelFormat;
+import android.graphics.PointF;
+import android.os.Bundle;
+import android.util.FloatMath;
+import android.util.Log;
 import android.view.Gravity;
-import android.os.Handler;  
-import android.os.Message; 
-
-
-import com.example.qchelper.R;
-import com.qchelper.main.dbHelper;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
+import android.view.WindowManager;
+import android.view.WindowManager.LayoutParams;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 public class ImageShowActivity extends Activity {
 	final static String TAG = "ImageShowActivity";
