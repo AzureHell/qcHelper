@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.qchelper"
+    package="com.qchelper.main"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -10,6 +10,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />    
     
     <application
         android:icon="@drawable/icon"
@@ -21,7 +23,6 @@
             android:windowSoftInputMode="adjustResize|stateHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -46,7 +47,7 @@
             android:label="@string/title_activity_conset" >
         </activity>
         <activity
-            android:name="com.qchelper.main.LoginActivity"
+            android:name="com.qchelper.comm.LoginActivity"
             android:label="@string/title_activity_login" >
         </activity>
     </application>

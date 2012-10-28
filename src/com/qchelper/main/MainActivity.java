@@ -9,12 +9,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONStringer;
 
-import com.qchelper.comm.comm;
-import com.qchelper.comm.httpHelper;
-
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -35,13 +35,21 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.qchelper.comm.comm;
+import com.qchelper.comm.httpHelper;
+
 public class MainActivity extends Activity {
 	final static String DEBUG_TAG = "MainActivity";
 	
     private static final int LOGIN_ID = Menu.FIRST;
     private static final int CONSETTING_ID = Menu.FIRST + 1;  
     private static final int EXIT_ID = Menu.FIRST + 2;  	
-	
+    
+    final int SYNC_ACTIVITY_REQUESTCODE = 1;
+    final int LOGIN_ACTIVITY_REQUESTCODE = 2;    
+
+    private boolean DialogReturnType;    
+    
 	ListView PlanList;
 	PlanAdapter planAdapter;
 	Button MainSearch, btnSync;
@@ -137,28 +145,48 @@ public class MainActivity extends Activity {
         return true;
     }
     
+    @Override   
+    public boolean onPrepareOptionsMenu(Menu menu) {   
+        // Set 'delete' menu item state depending on count   
+        MenuItem loginItem = menu.findItem(LOGIN_ID);   
+        // 登录验证，如果未进行登录则弹出登录窗口
+        SharedPreferences setting = getSharedPreferences("Login",Context.MODE_WORLD_READABLE);
+        String login_user_id = setting.getString("user_id", "");
+        if (login_user_id == "") {
+            loginItem.setTitle(R.string.menu_login);   
+        } else {
+            loginItem.setTitle(R.string.menu_logout);   
+        }
+        return super.onPrepareOptionsMenu(menu);   
+    }      
+    
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()) {
             case LOGIN_ID: {
-            	Intent intent = new Intent(this, LoginActivity.class);
-            	startActivity(intent);
-            	
                 Log.d(DEBUG_TAG, "click login");
                 if (!comm.isNetworkAvailable(this)) {
                     comm.showMsg(this, R.string.network_inactive);
                     break;
                 }
                 Resources res = getResources();
-//                if (btnLogin.getText().toString() == res.getString(R.string.btn_login)) {
-//                    Intent intent = new Intent(this, LoginActivity.class);
-//                    startActivityForResult(intent, LOGIN_ACTIVITY_REQUESTCODE);
-//                } else if (btnLogin.getText().toString() == res.getString(R.string.btn_logout)) {
-//                    showDialog(0);
-//                }
+                if (item.getTitle().toString() == res.getString(R.string.menu_login)) {
+                    Intent intent = new Intent(this, LoginActivity.class);
+                    startActivityForResult(intent, LOGIN_ACTIVITY_REQUESTCODE);
+                } else if (item.getTitle().toString() == res.getString(R.string.menu_logout)) {
+                    showDialog(0);
+                }
             	break;
             }
-            case CONSETTING_ID: {        	
+            case CONSETTING_ID: {        
+                Resources res = getResources();
+                if (item.getTitle().toString() == res.getString(R.string.menu_logout)) {
+                    AskDialog();
+                    if (DialogReturnType == false) {
+                        break;              
+                    }               
+                }
+                
             	Intent intent = new Intent(this, ConsetActivity.class);
             	startActivity(intent);        	
             	break;
@@ -303,7 +331,7 @@ public class MainActivity extends Activity {
                         break;
                     }
                     // 登录验证，如果未进行登录则弹出登录窗口
-                    SharedPreferences setting = getSharedPreferences("HummingbirdLogin",Context.MODE_WORLD_READABLE);
+                    SharedPreferences setting = getSharedPreferences("Login",Context.MODE_WORLD_READABLE);
                     String login_user_id = setting.getString("user_id", "");
                     if (login_user_id == "") {
                         comm.showMsg(MainActivity.this, R.string.main_need_login);
@@ -355,6 +383,54 @@ public class MainActivity extends Activity {
     		}
     	}
     }
+    
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        if (id == 0) {// 注销  
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(comm.getResourceString(this, R.string.main_sure_logout))
+                    .setCancelable(false)
+                    .setPositiveButton(comm.getResourceString(this, R.string.ok),  
+                            new DialogInterface.OnClickListener() {  
+                                public void onClick(DialogInterface dialog,  
+                                        int id) {  
+                                    SharedPreferences setting = getSharedPreferences("Login",Context.MODE_WORLD_WRITEABLE);
+                                    setting.edit().clear().commit();
+//                                    btnLogin.setText(R.string.btn_login);
+                                }
+                            }).setNegativeButton(comm.getResourceString(this, R.string.cancel), null);  
+            AlertDialog alert = builder.create();  
+            return alert;
+        }
+        return null;
+    }    
+    
+    public void AskDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setMessage(R.string.dialog_askinfo);
+        builder.setTitle(R.string.dialog_titile);
+
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int which) {
+                SharedPreferences setting = getSharedPreferences("Login",Context.MODE_WORLD_WRITEABLE);
+                setting.edit().clear().commit();
+//                btnLogin.setText(R.string.btn_login);
+                DialogReturnType = true;
+                dialog.dismiss();
+            }
+
+        });
+        
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+
+        public void onClick(DialogInterface dialog, int which) {
+           DialogReturnType = false;            
+           dialog.dismiss();
+         }
+        });
+        builder.create().show();
+     }    
     
     public class syncAsyncTask extends AsyncTask<String, Integer, Integer> {
         final static String DEBUG_TAG = "syncAsyncTask";

@@ -26,6 +26,7 @@
     
     <string name="menu_setting">连接设置</string>
     <string name="menu_login">登陆</string>
+    <string name="menu_logout">注销</string>
     <string name="menu_exit">退出</string>
     
     <string name="server_ip">服务器IP</string>
@@ -45,8 +46,6 @@
     <string name="title_activity_login">登陆</string>    
     
     <string name="btn_sync">同步数据</string>
-    <string name="btn_login">登录</string>
-    <string name="btn_logout">注销用户</string>    
     
     <string name="ok">确定</string>
     <string name="cancel">取消</string>

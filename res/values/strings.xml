@@ -24,6 +24,7 @@
     <string name="dialog_titile">Warning</string>
     <string name="menu_setting">Connection</string>
     <string name="menu_login">Login</string>
+    <string name="menu_logout">Logout</string>
     <string name="menu_exit">Exit</string>
     <string name="title_activity_setting">Connection</string>
     <string name="server_ip">Server IP</string>
@@ -39,8 +40,6 @@
     <string name="title_activity_login">Login</string>
     
     <string name="btn_sync">Sync data</string>
-    <string name="btn_login">Login</string>
-    <string name="btn_logout">Logout</string>
     
     <string name="login_title">Login</string>
     <string name="login_user_name_hint">Type your user name</string>
