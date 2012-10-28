@@ -37,6 +37,32 @@
     
     <string name="title_activity_conset">Connection</string>
     <string name="title_activity_login">Login</string>
-    <string name="login_user_name_hint">Enter your username</string>
-    <string name="login_password_hint">Enter your password</string>
+    
+    <string name="btn_sync">Sync data</string>
+    <string name="btn_login">Login</string>
+    <string name="btn_logout">Logout</string>
+    
+    <string name="login_title">Login</string>
+    <string name="login_user_name_hint">Type your user name</string>
+    <string name="login_password_hint">Type your password</string>
+    <string name="login_succeed">Login succeed</string>
+    <string name="login_failed">Login failed</string>    
+    
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    
+    <string name="remember_password">Remeber password</string>
+    
+    <string name="main_need_login">Please login before!</string>
+    <string name="main_sure_logout">Are you sure logout!</string>
+    
+    <string name="record_save_succeed">Save succeed!</string>
+    <string name="record_save_failed">Save failed!</string>
+    
+    <string name="information_incomplete">Information incomplete!</string>
+    <string name="process_wait">Process,waiting....</string>
+    <string name="processing">Processing....</string>    
+    
+    <string name="wifi_inactive">Wifi Inactive!</string>
+    <string name="network_inactive">Network Inactive!</string>
 </resources>

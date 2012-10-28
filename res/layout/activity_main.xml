@@ -13,31 +13,32 @@
 			android:id="@+id/main_top"
 			android:layout_width="fill_parent"
 			android:layout_height="50dip"
-			android:orientation="vertical"
+			android:orientation="horizontal"
 			style="@android:style/ButtonBar"
 			>
 			
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                >
+            <Button 
+                android:id="@+id/main_sync" 
+                android:text="@string/btn_sync"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                />              
             <Button 
                 android:id="@+id/MainSearch" 
                 android:text="@string/btn_Search"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:layout_alignParentRight="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
                 />                 
             <EditText
                 android:id="@+id/edtSearch"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:textSize="14sp"
-                android:layout_toLeftOf="@id/MainSearch"
-                android:layout_alignTop="@id/MainSearch"              
+                android:layout_weight="1"
                 />                           
-             </RelativeLayout>                   
   	    </LinearLayout>
   	    
 	    <LinearLayout
