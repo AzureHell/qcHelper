@@ -36,7 +36,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.qchelper.comm.comm;
-import com.qchelper.comm.httpHelper;
+import com.qchelper.comm.dbHelper;
 
 public class MainActivity extends Activity {
 	final static String DEBUG_TAG = "MainActivity";
@@ -68,6 +68,8 @@ public class MainActivity extends Activity {
         
         MainSearch = (Button) findViewById(R.id.MainSearch);
         MainSearch.setOnClickListener(new ButtonClickEvent());
+        btnSync = (Button) findViewById(R.id.main_sync);
+        btnSync.setOnClickListener(new ButtonClickEvent());        
         edtSearch = (EditText) findViewById(R.id.edtSearch);
         edtSearch.setHint(R.string.Search_Hint);
         
@@ -309,7 +311,6 @@ public class MainActivity extends Activity {
     }
     
     class ButtonClickEvent implements View.OnClickListener {
-    	
     	public void onClick(View v) {
     		switch(v.getId()){
         		case R.id.MainSearch: {
@@ -340,29 +341,23 @@ public class MainActivity extends Activity {
                     
                     try {
                         dbHelper dbhlp = new dbHelper(MainActivity.this);
-                        Cursor cursor = dbhlp.querySQL("select id, factory_no, case when worksection_no is null then '' else worksection_no end as worksection_no "
-                                + ", bill_no, order_no, style_no, product_no "
-                                + ", color_no, color_name, size_no, size_name, quantity "
-                                + ", datetime_opt, datetime_rec, datetime_delete "
-                                + " from process_rec where datetime_upload is null ");
+                        Cursor cursor = dbhlp.querySQL("select iID, iFactoryID, sOrderNo, sStyleNo, sProductID"
+                        		+ "iItemID, dChecdedDate, sRemark, datetime_rec, datetime_opt, datetime_delete, user_id_opt"
+                                + " from qmCheckRecordMst where datetime_upload is null");
                         String[] strJson = new String[cursor.getCount()];
                         int i = 0;
                         while (cursor.moveToNext()) {
                             Log.d(DEBUG_TAG, "Build sync Json rec:" + i);
                             strJson[i] = new JSONStringer().object()
                                     .key("user_id_opt").value(login_user_id)
-                                    .key("id").value(cursor.getString(cursor.getColumnIndex("id")))
-                                    .key("factory_no").value(cursor.getString(cursor.getColumnIndex("factory_no")))
-                                    .key("worksection_no").value(cursor.getString(cursor.getColumnIndex("worksection_no")))
-                                    .key("bill_no").value(cursor.getString(cursor.getColumnIndex("bill_no")))
-                                    .key("order_no").value(cursor.getString(cursor.getColumnIndex("order_no")))
-                                    .key("style_no").value(cursor.getString(cursor.getColumnIndex("style_no")))
-                                    .key("product_no").value(cursor.getString(cursor.getColumnIndex("product_no")))
-                                    .key("color_no").value(cursor.getString(cursor.getColumnIndex("color_no")))
-                                    .key("color_name").value(cursor.getString(cursor.getColumnIndex("color_name")))
-                                    .key("size_no").value(cursor.getString(cursor.getColumnIndex("size_no")))
-                                    .key("size_name").value(cursor.getString(cursor.getColumnIndex("size_name")))
-                                    .key("quantity").value(cursor.getString(cursor.getColumnIndex("quantity")))
+                                    .key("iID").value(cursor.getString(cursor.getColumnIndex("iID")))
+                                    .key("iFactoryID").value(cursor.getString(cursor.getColumnIndex("iFactoryID")))
+                                    .key("sOrderNo").value(cursor.getString(cursor.getColumnIndex("sOrderNo")))
+                                    .key("sStyleNo").value(cursor.getString(cursor.getColumnIndex("sStyleNo")))
+                                    .key("sProductID").value(cursor.getString(cursor.getColumnIndex("sProductID")))
+                                    .key("iItemID").value(cursor.getString(cursor.getColumnIndex("iItemID")))
+                                    .key("dChecdedDate").value(cursor.getString(cursor.getColumnIndex("dChecdedDate")))
+                                    .key("sRemark").value(cursor.getString(cursor.getColumnIndex("sRemark")))
                                     .key("datetime_opt").value(cursor.getString(cursor.getColumnIndex("datetime_opt")))
                                     .key("datetime_rec").value(cursor.getString(cursor.getColumnIndex("datetime_rec")))
                                     .key("datetime_delete").value(cursor.getString(cursor.getColumnIndex("datetime_delete")))
@@ -454,47 +449,27 @@ public class MainActivity extends Activity {
             Log.d(DEBUG_TAG, "doInBackground");
             syncMaxCount = strJson.length;
             
-            /* LJF */
-            String SERVER_URL = "";         
-            dbHelper dbhlp = new dbHelper(MainActivity.this);
-            Cursor dbcur = dbhlp.querySQL("select id, server_ip, server_port "
-                    + " from server_con "); 
-            if (dbcur.getCount() > 0) {
-                dbcur.moveToFirst();
-                if ((dbcur.getString(dbcur.getColumnIndex("server_ip")).length() > 0) && (dbcur.getString(dbcur.getColumnIndex("server_port")).length() > 0)) {
-                    SERVER_URL = "http://" + dbcur.getString(dbcur.getColumnIndex("server_ip")) 
-                      + ":" + dbcur.getString(dbcur.getColumnIndex("server_port")) + "/sync";                   
-                }
-
-            }     
-            
-            Log.d(DEBUG_TAG, "doInBackground_2");
-            if (SERVER_URL == ""){
-                return null;            
-            } 
-            
             for (int i = 0; i < strJson.length; i++) {
                 syncCurrentCount = i + 1;
                 
                 List<NameValuePair> params = new ArrayList<NameValuePair>();
                 params.add(new BasicNameValuePair("data", strJson[i]));
-                String result = null;
+                String result = null;              
                 try {
-                    result = httpHelper.invoke(SERVER_URL, params);
-//                    result = httpHelper.invoke("sync", params); 
+                    result = comm.invokeHttp(MainActivity.this, "sync", params);
                 } catch (Exception e) {
                     Log.e(DEBUG_TAG, e.toString());
-                }
+                }                     
+                
                 try {
                     JSONObject json = new JSONObject(result);
-                    //dbHelper dbhlp = new dbHelper(HummingbirdActivity.this);
+                    dbHelper dbhlp = new dbHelper(MainActivity.this);
                     dbhlp.updateSyncDatetime("process_rec", json.getInt("id"), json.getString("user_id_opt"), json.getString("datetime_upload"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
                 publishProgress(syncCurrentCount);
-            }           
-
+            }
             return 0;
         }
         

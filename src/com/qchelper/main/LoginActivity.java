@@ -75,34 +75,13 @@ public class LoginActivity extends Activity implements OnClickListener {
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("username", username));
             params.add(new BasicNameValuePair("password",  comm.getMD5DStr(password)));
-            
-        	/* LJF */
-        	String SERVER_URL = ""; 
-        	dbHelper dbhlp = new dbHelper(LoginActivity.this);
-        	Cursor dbcur = dbhlp.querySQL("select id, server_ip, server_port "
-            		+ " from server_con "); 
-            if (dbcur.getCount() > 0) {
-            	dbcur.moveToFirst();
-            	if ((dbcur.getString(dbcur.getColumnIndex("server_ip")).length() > 0) && (dbcur.getString(dbcur.getColumnIndex("server_port")).length() > 0)) {
-                	SERVER_URL = "http://" + dbcur.getString(dbcur.getColumnIndex("server_ip")) 
-                	  + ":" + dbcur.getString(dbcur.getColumnIndex("server_port")) + "/checkuser";                	
-            	}
-
-            }                
-            if (SERVER_URL == ""){
-                return null;
-            } 
-            
+              
             try {
-                //return  httpHelper.invoke("checkuser", params);
-            	return  httpHelper.invoke(SERVER_URL, params);
-
+            	return comm.invokeHttp(LoginActivity.this, "checkuser", params);
             } catch (Exception e) {
                 Log.e(DEBUG_TAG, e.toString());
                 return null;
             }                
-            
-
         }
 
         @Override

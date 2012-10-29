@@ -3,6 +3,8 @@ package com.qchelper.main;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.qchelper.comm.dbHelper;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;

@@ -1,4 +1,4 @@
-package com.qchelper.main;
+package com.qchelper.comm;
 
 import   java.text.SimpleDateFormat;     
 
@@ -171,7 +171,6 @@ public class dbHelper extends SQLiteOpenHelper {
         		cv.put("server_ip", strarray[0]);
         		cv.put("server_port", strarray[1]);
         	}
-        	
         }        
         Log.d(DEBUG_TAG, "insert_3");
         long row=db.insert(table_name, null, cv);

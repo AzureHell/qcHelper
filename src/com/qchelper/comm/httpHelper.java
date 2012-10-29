@@ -13,16 +13,10 @@ import android.util.Log;
 
 public abstract class httpHelper {
     final static String DEBUG_TAG = "httpHelper";
-    //private final static String SERVER_URL = "http://116.211.12.192:8080/";
-    //private String SERVER_URL;
     
-    public static String invoke(String actionName, List<NameValuePair> params) {
+    public static String invoke(String url, List<NameValuePair> params) {
         String result = null;
         try {       	
-            //String url = SERVER_URL + actionName;
-        	
-        	String url = actionName;
-        	
             Log.d(DEBUG_TAG, "url is: " + url);
             HttpPost httpPost = new HttpPost(url);
             if (params != null && params.size() > 0) {

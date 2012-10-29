@@ -1,5 +1,7 @@
 package com.qchelper.main;
 
+import com.qchelper.comm.dbHelper;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -38,6 +40,7 @@ public class ConsetActivity extends Activity {
         	edtIp.setText(dbcur.getString(dbcur.getColumnIndex("server_ip")));
         	edtPort.setText(dbcur.getString(dbcur.getColumnIndex("server_port")));
         }
+        Log.d(TAG, "currid: "+Integer.toString(currid));
         Log.d(TAG, "Create_5");
         btnOk = (Button) findViewById(R.id.setting_ok);
         btnOk.setOnClickListener(new ClickEvent());
@@ -49,47 +52,39 @@ public class ConsetActivity extends Activity {
 
 		public void onClick(View v) {
 	      	  //if (v == btnOk)
-			switch(v.getId()){
-			case R.id.setting_ok:
-			{
-	      		    boolean IsInEffect;
-	      		    IsInEffect = true;
-	      		    if (edtIp.getText().length() <= 0){
-	      		    	IsInEffect = false;
-	      		    	PromptDialog(1);
-	      		    	edtIp.requestFocus();
-	      		    	break;
-	      		    }
-	      		    if (edtPort.getText().length() <= 0){
-	      		    	IsInEffect = false;
-	      		    	PromptDialog(2);
-	      		    	edtPort.requestFocus();
-	      		    	break;
-	      		    }
-	      		    
-	      		    if (IsInEffect == true) {
+			switch(v.getId()) {
+    			case R.id.setting_ok: {
+    	      		    if (edtIp.getText().length() <= 0){
+    	      		    	PromptDialog(1);
+    	      		    	edtIp.requestFocus();
+    	      		    	break;
+    	      		    }
+    	      		    if (edtPort.getText().length() <= 0){
+    	      		    	PromptDialog(2);
+    	      		    	edtPort.requestFocus();
+    	      		    	break;
+    	      		    }
+    	      		    
 	      		    	if (currid > 0) {
-	  	      		      if (dbhlp.update("ServerCon", currid, edtIp.getText().toString() + "," + edtPort.getText().toString()) > 0) {
-	  	      		    	  Toast.makeText(ConsetActivity.this, R.string.conset_success, 1500).show();
-	  	      		    	  finish();	      		    	  
-	  	      		      }	
+                            if (dbhlp.update("ServerCon", currid, edtIp.getText().toString() + "," + edtPort.getText().toString()) > 0) {
+                                Toast.makeText(ConsetActivity.this, R.string.conset_success, 1500).show();
+                                finish();
+                            }
 	  	      		    }
 	  	      		    else {
 	  		      		    dbhlp.delete("ServerCon", currid);
-	  		      		    if (dbhlp.insert("server_con", edtIp.getText().toString() + "," + edtPort.getText().toString()) > 0) {
+	  		      		    if (dbhlp.insert("ServerCon", edtIp.getText().toString() + "," + edtPort.getText().toString()) > 0) {
 	  		      		    	finish();	      		     	
 	  		      		    }		      		    	
-	  	      		    }	      		    	
-	      		    }     		    
-	      		    break;
-	        	  }
-	        	  //else if (v == btnCancel)
-			case R.id.setting_cancel:
-	        	  {
-	        		finish();
-	        		break;
-	        	  }
-			}	  
+    	      		    }     		    
+    	      		    break;
+    			}
+    	        //else if (v == btnCancel)
+    			case R.id.setting_cancel: {
+            		finish();
+            		break;
+    			}
+    		}	  
 			
 		}
 

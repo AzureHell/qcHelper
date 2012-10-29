@@ -3,6 +3,8 @@ package com.qchelper.main;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 
+import com.qchelper.comm.dbHelper;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;

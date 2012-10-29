@@ -6,14 +6,20 @@ import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+
+import org.apache.http.NameValuePair;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.widget.Toast;
+
+import com.qchelper.main.LoginActivity;
 
 public class comm {
 
@@ -135,7 +141,7 @@ public class comm {
         return false; 
     }
     
-    public static boolean isNetworkAvailable( Context context) {
+    public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivity == null) {
                 return false;
@@ -152,5 +158,24 @@ public class comm {
         return false;
     }
     
-    
+    public static String invokeHttp(Context con, String actionName, List<NameValuePair> params) {
+        String url = "";
+        dbHelper dbhlp = new dbHelper(con);
+        Cursor dbcur = dbhlp.select("ServerCon");
+        if (dbcur.getCount() > 0) {
+            dbcur.moveToFirst();
+            if ((dbcur.getString(dbcur.getColumnIndex("server_ip")).length() > 0) && (dbcur.getString(dbcur.getColumnIndex("server_port")).length() > 0)) {
+                url = "http://" + dbcur.getString(dbcur.getColumnIndex("server_ip")) 
+                  + ":" + dbcur.getString(dbcur.getColumnIndex("server_port")) + "/"+actionName;
+            }
+        }
+        if (url == ""){
+            return null;
+        }
+        try {
+            return  httpHelper.invoke(url, params);
+        } catch (Exception e) {
+            return null;
+        }      
+    }
 }

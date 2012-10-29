@@ -1,5 +1,7 @@
 package com.qchelper.main;
 
+import com.qchelper.comm.dbHelper;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
