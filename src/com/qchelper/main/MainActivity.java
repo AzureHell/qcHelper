@@ -464,7 +464,7 @@ public class MainActivity extends Activity {
                 try {
                     JSONObject json = new JSONObject(result);
                     dbHelper dbhlp = new dbHelper(MainActivity.this);
-                    dbhlp.updateSyncDatetime("process_rec", json.getInt("id"), json.getString("user_id_opt"), json.getString("datetime_upload"));
+                    dbhlp.updateSyncDatetime("qmCheckRecordMst", json.getInt("id"), json.getString("user_id_opt"), json.getString("datetime_upload"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
