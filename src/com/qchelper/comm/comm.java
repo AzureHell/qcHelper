@@ -4,11 +4,13 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -176,6 +178,23 @@ public class comm {
             return  httpHelper.invoke(url, params);
         } catch (Exception e) {
             return null;
-        }      
+        }
     }
+    
+    public static List<NameValuePair> fmtHttpParams(String status, String  error, Integer count, String data) {
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("content", "{\"status\":\""+ status +"\", \"error\":\""+ error +"\", \"count\":\""+ Integer.toString(count) 
+                +"\", \"data\":["+ data.replace("'", "\"") +"]}"));
+        return params;
+    }
+    
+    public static List<NameValuePair> fmtHttpParams(Integer count, String data) {
+        List<NameValuePair> params = fmtHttpParams("succeed", "", count, data);
+        return params;
+    }
+    
+    public static List<NameValuePair> fmtHttpParams(String data) {
+        List<NameValuePair> params = fmtHttpParams(1, data);
+        return params;
+    }    
 }

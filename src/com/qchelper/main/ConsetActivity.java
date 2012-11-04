@@ -45,7 +45,10 @@ public class ConsetActivity extends Activity {
         btnOk = (Button) findViewById(R.id.setting_ok);
         btnOk.setOnClickListener(new ClickEvent());
         btnCancel = (Button) findViewById(R.id.setting_cancel);
-        btnCancel.setOnClickListener(new ClickEvent());        
+        btnCancel.setOnClickListener(new ClickEvent());
+        
+        edtIp.setText("192.168.100.200");
+        edtPort.setText("8080");
     }
     
     class ClickEvent implements View.OnClickListener {
@@ -85,9 +88,7 @@ public class ConsetActivity extends Activity {
             		break;
     			}
     		}	  
-			
 		}
-
       }  
    
     public void PromptDialog(int infotype) {

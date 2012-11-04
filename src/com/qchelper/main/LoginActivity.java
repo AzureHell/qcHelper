@@ -1,19 +1,16 @@
 package com.qchelper.main;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,7 +21,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.qchelper.comm.comm;
-import com.qchelper.comm.httpHelper;
 
 public class LoginActivity extends Activity implements OnClickListener {
     final static String DEBUG_TAG = "LoginActivity";
@@ -45,9 +41,11 @@ public class LoginActivity extends Activity implements OnClickListener {
         edtPassword = (EditText)findViewById(R.id.password);
         btnOk = (Button)findViewById(R.id.login_ok);
         btnOk.setOnClickListener(this);
+        
+        edtUserName.setText("test");
+        edtPassword.setText("123");
     }
     
-    @SuppressLint("WorldWriteableFiles") 
     public void onClick(View v) {
         switch(v.getId()) {
             case R.id.login_ok: {
@@ -72,10 +70,7 @@ public class LoginActivity extends Activity implements OnClickListener {
             String username = strJson[0];
             String password = strJson[1];
             
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
-            params.add(new BasicNameValuePair("username", username));
-            params.add(new BasicNameValuePair("password",  comm.getMD5DStr(password)));
-              
+            List<NameValuePair> params = comm.fmtHttpParams("{'username':'"+username+"','password':'"+comm.getMD5DStr(password)+"'}");
             try {
             	return comm.invokeHttp(LoginActivity.this, "checkuser", params);
             } catch (Exception e) {
@@ -101,13 +96,18 @@ public class LoginActivity extends Activity implements OnClickListener {
             if (result != "") {
                 try {
                     JSONObject json = new JSONObject(result);
-                    SharedPreferences setting = getSharedPreferences("Login",Context.MODE_WORLD_WRITEABLE);
-                    setting.edit()
-                    .putString("user_id", json.getString("user_id"))
-                    .putString("user_name", json.getString("username"))
-                    .commit();
-                    comm.showMsg(LoginActivity.this, R.string.login_succeed);
-                    LoginActivity.this.finish();
+                    if (json.getString("status").equals("succeed")) {
+                        JSONObject jsonData = json.getJSONArray("data").getJSONObject(0);
+                        
+                        Log.d(DEBUG_TAG, jsonData.toString());
+                        SharedPreferences setting = getSharedPreferences("Login",Context.MODE_WORLD_WRITEABLE);
+                        setting.edit()
+                        .putString("user_id", jsonData.getString("user_id"))
+                        .putString("user_name", jsonData.getString("user_name"))
+                        .commit();
+                        comm.showMsg(LoginActivity.this, R.string.login_succeed);
+                        LoginActivity.this.finish();
+                    }
                 } catch (JSONException e) {
                     Log.e(DEBUG_TAG, e.toString());
                 }

@@ -76,7 +76,7 @@ public class dbHelper extends SQLiteOpenHelper {
         sql_create =" Create table qmCheckRecordDtl(iID integer primary key autoincrement "
     	+ ", iMstID integer, sPhoto bolb, dCreaimestamp default (datetime('now','localtime')) "
         + ", datetime_rec timestamp default (datetime('now','localtime')), datetime_opt timestamp "
-        + ", datetime_upload timestamp, datetime_delete timestamp, user_id_opt integer );";
+        + ", datetime_delete timestamp );";
         db.execSQL(sql_create);        
         Log.d(DEBUG_TAG, "CREATE_3");
         
@@ -157,21 +157,42 @@ public class dbHelper extends SQLiteOpenHelper {
         }
         return cursor;
     }    
+
+    public long insert(String table_name, ContentValues cv) {
+        Log.d(DEBUG_TAG, "insert");
+        SQLiteDatabase db=this.getWritableDatabase();
+        long row=db.insert(table_name, null, cv);
+        return row;
+    }
     
     public long insert(String table_name, String values) {
         Log.d(DEBUG_TAG, "insert");
         SQLiteDatabase db=this.getWritableDatabase();
-        ContentValues cv=new ContentValues();
+        ContentValues cv = new ContentValues();
         String[] strarray=values.split(",");
         Log.d(DEBUG_TAG, "insert_2:" + table_name);
-        if (table_name == "ServerCon") {
+        if (table_name.equals("ServerCon")) {
         	Log.d(DEBUG_TAG, "in(ServerCon)_1");
         	if (strarray.length == 2) {
         		Log.d(DEBUG_TAG, "in(ServerCon)_2");
         		cv.put("server_ip", strarray[0]);
         		cv.put("server_port", strarray[1]);
         	}
-        }        
+        } else if (table_name.equals("qmCheckPlan")) {
+            Log.d(DEBUG_TAG, "in(qmCheckPlan)_1");
+            if (strarray.length == 9) {
+                Log.d(DEBUG_TAG, "in(qmCheckPlan)_2");
+                cv.put("iID", strarray[0]);
+                cv.put("iFactoryID", strarray[1]);
+                cv.put("sOrderNo", strarray[2]);
+                cv.put("sStyleNo", strarray[3]);
+                cv.put("sProductID", strarray[4]);
+                cv.put("dRequestCheck", strarray[5]);
+                cv.put("sCheckItemDesc", strarray[6]);
+                cv.put("sQCUserID", strarray[7]);
+                cv.put("sUserID", strarray[8]);
+            }
+        }
         Log.d(DEBUG_TAG, "insert_3");
         long row=db.insert(table_name, null, cv);
         return row;
@@ -261,10 +282,6 @@ public class dbHelper extends SQLiteOpenHelper {
         if (table_name == "qmCheckRecordMst") {
             cv.put("user_id_opt", user_id);
             cv.put("datetime_upload", datetime_upload);
-        }
-        else if (table_name == "qmCheckRecordDtl") {
-            cv.put("user_id_opt", user_id);
-            cv.put("datetime_upload", datetime_upload);        	
         }
         return db.update(table_name, cv, where, whereValue);
     }
