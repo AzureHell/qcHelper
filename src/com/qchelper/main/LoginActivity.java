@@ -70,7 +70,7 @@ public class LoginActivity extends Activity implements OnClickListener {
             String username = strJson[0];
             String password = strJson[1];
             
-            List<NameValuePair> params = comm.fmtHttpParams("{'username':'"+username+"','password':'"+comm.getMD5DStr(password)+"'}");
+            String params = comm.fmtHttpParams("{'username':'"+username+"','password':'"+comm.getMD5DStr(password)+"'}");
             try {
             	return comm.invokeHttp(LoginActivity.this, "checkuser", params);
             } catch (Exception e) {

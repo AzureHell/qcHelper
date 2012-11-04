@@ -160,7 +160,7 @@ public class comm {
         return false;
     }
     
-    public static String invokeHttp(Context con, String actionName, List<NameValuePair> params) {
+    public static String invokeHttp(Context con, String actionName, String params) {
         String url = "";
         dbHelper dbhlp = new dbHelper(con);
         Cursor dbcur = dbhlp.select("ServerCon");
@@ -181,20 +181,16 @@ public class comm {
         }
     }
     
-    public static List<NameValuePair> fmtHttpParams(String status, String  error, Integer count, String data) {
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
-        params.add(new BasicNameValuePair("content", "{\"status\":\""+ status +"\", \"error\":\""+ error +"\", \"count\":\""+ Integer.toString(count) 
-                +"\", \"data\":["+ data.replace("'", "\"") +"]}"));
-        return params;
+    public static String fmtHttpParams(String status, String  error, Integer count, String data) {
+        return "{\"status\":\""+ status +"\", \"error\":\""+ error +"\", \"count\":\""+ Integer.toString(count) 
+                +"\", \"data\":["+ data.replace("'", "\"") +"]}";
     }
     
-    public static List<NameValuePair> fmtHttpParams(Integer count, String data) {
-        List<NameValuePair> params = fmtHttpParams("succeed", "", count, data);
-        return params;
+    public static String fmtHttpParams(Integer count, String data) {
+        return fmtHttpParams("succeed", "", count, data);
     }
     
-    public static List<NameValuePair> fmtHttpParams(String data) {
-        List<NameValuePair> params = fmtHttpParams(1, data);
-        return params;
+    public static String fmtHttpParams(String data) {
+        return fmtHttpParams(1, data);
     }    
 }

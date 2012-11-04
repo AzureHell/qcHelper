@@ -492,7 +492,7 @@ public class MainActivity extends Activity {
                         maxID = cursor.getInt(cursor.getColumnIndex("iID"));
                     }
                     
-                    List<NameValuePair> params = comm.fmtHttpParams("{'sQCUserID':'"+strJson[i]+"','iID':'"+Integer.toString(maxID)+"'}");
+                    String params = comm.fmtHttpParams("{'sQCUserID':'"+strJson[i]+"','iID':'"+Integer.toString(maxID)+"'}");
                     try {
                         resultHttp = comm.invokeHttp(MainActivity.this, "downloadCheckPlan", params);
                     } catch (Exception e) {
