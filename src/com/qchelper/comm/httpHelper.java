@@ -1,6 +1,7 @@
 package com.qchelper.comm;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -21,18 +22,18 @@ public abstract class httpHelper {
         	
             Log.d(DEBUG_TAG, "url is: " + url);
             HttpPost httpPost = new HttpPost(url);
-//            httpPost.addHeader("Authorization", mToken);  
-            httpPost.addHeader("Content-Type", "application/json");       
-            httpPost.addHeader("charset", HTTP.UTF_8);              
+            httpPost.addHeader("Content-Type", "application/json; charset="+HTTP.UTF_8);
+            httpPost.addHeader("charset", HTTP.UTF_8);
             if (json != "") {
                 Log.d(DEBUG_TAG, "params: " + json);
                 httpPost.setEntity(new StringEntity(json, HTTP.UTF_8));
             }
             HttpParams httpParms = new BasicHttpParams();
             httpParms.setParameter("charset", HTTP.UTF_8);
-            HttpResponse httpResponse = new DefaultHttpClient(httpParms).execute(httpPost);
+            HttpClient httpClient = new DefaultHttpClient(httpParms);
+            HttpResponse httpResponse = httpClient.execute(httpPost);
             if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                result = EntityUtils.toString(httpResponse.getEntity()).replaceAll("\r", "");
+                result = EntityUtils.toString(httpResponse.getEntity(), HTTP.UTF_8);
                 Log.d(DEBUG_TAG, "result is ( " + result + " )");
             }
         } catch (Exception e) {

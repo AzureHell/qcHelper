@@ -298,7 +298,7 @@ public class MainActivity extends Activity {
 
     		intent.putExtra("KeyID", ItemKeyList[arg2]);
     		intent.putExtra("OrderNo", tv_sOrderNo.getText());
-    		intent.putExtra("StyleNo", tv_sStyleNo.getText());	
+    		intent.putExtra("StyleNo", tv_sStyleNo.getText());
     		startActivity(intent);
     		
     	}    	
