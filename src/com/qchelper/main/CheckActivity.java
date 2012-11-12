@@ -3,11 +3,10 @@ package com.qchelper.main;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.qchelper.comm.dbHelper;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +17,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.qchelper.comm.comm;
+import com.qchelper.comm.dbHelper;
 
 public class CheckActivity extends Activity {
 	final static String DEBUG_TAG = "CheckActivity";
@@ -41,6 +43,14 @@ public class CheckActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check);
         
+        //获取登录信息
+        SharedPreferences setting = getSharedPreferences("Login",Context.MODE_WORLD_READABLE);
+        String login_user_id = setting.getString("user_id", "");
+        if (login_user_id == "") {
+            comm.showErrorMsg(this, R.string.main_need_login);
+            finish();
+        }        
+        
         txtOrderNo = (TextView) findViewById(R.id.txtCheckOrderNo);
         txtStyleNo = (TextView) findViewById(R.id.txtCheckStyleNo);
         
@@ -50,19 +60,31 @@ public class CheckActivity extends Activity {
         
         txtOrderNo.setText("订单号:" + bundle.getString("OrderNo"));
         txtStyleNo.setText("款号:" + bundle.getString("StyleNo"));
+
+        InitqmCheckRecordMstData(12, bundle.getString("OrderNo"), bundle.getString("StyleNo"), bundle.getString("ProductID"), login_user_id);
         
         CheckList = (ListView) findViewById(R.id.check_list);
         checkAdapter = new CheckAdapter(this, R.layout.qccheckitem, getCheckData());
         CheckList.setAdapter(checkAdapter);
-
     }
-    /*
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_check, menu);
-        return true;
+    
+    public void InitqmCheckRecordMstData(int FactoryID, String OrderNo, String StyleNo, String ProductID, String login_user_id) {
+        Log.d(DEBUG_TAG, "insert into qmCheckRecordMst");
+        dbHelper dbhlp = new dbHelper(this);
+        Cursor cursor = dbhlp.querySQL("select iID from qmCheckRecordMst "
+                + " where iFactoryID = ? and sOrderNo = ? and sStyleNo = ? and sProductID = ?"
+                , new String[] {Integer.toString(FactoryID), OrderNo, StyleNo, ProductID});
+        Log.d(DEBUG_TAG, "insert into qmCheckRecordMst:" + Integer.toString(cursor.getCount()));
+        
+        if (cursor.getCount() <= 0) {
+            String insertSQL = "insert into qmCheckRecordMst(iFactoryID, sOrderNo, sStyleNo, sProductID, iItemID, user_id_opt) values(?,?,?,?,?,?) ";
+            dbhlp.getWritableDatabase().execSQL(insertSQL, new Object[] {FactoryID, OrderNo, StyleNo, ProductID, 1, login_user_id});
+            dbhlp.getWritableDatabase().execSQL(insertSQL, new Object[] {FactoryID, OrderNo, StyleNo, ProductID, 2, login_user_id});
+            dbhlp.getWritableDatabase().execSQL(insertSQL, new Object[] {FactoryID, OrderNo, StyleNo, ProductID, 3, login_user_id}); 
+        }
+        cursor.close();
+        dbhlp.close();
     }
-    */
     
     protected void onActivityResult(int requestCode, int resultCode, Intent data) { 
         checkAdapter = new CheckAdapter(this, R.layout.qccheckitem, getCheckData());
@@ -77,7 +99,7 @@ public class CheckActivity extends Activity {
         dbHelper dbhlp = new dbHelper(this);
         Cursor cursor = dbhlp.querySQL("select a.iID, a.iItemID, a.dChecdedDate "
                 + " from qmCheckRecordMst a "
-                + " left join qmCheckPlan b on a.iFactoryID=b.iFactoryID and a.sProductID=b.sProductID "
+                + " inner join qmCheckPlan b on a.iFactoryID=b.iFactoryID and a.sProductID=b.sProductID and a.sOrderNo = b.sOrderNo and a.sStyleNo = b.sStyleNo "
                 + " where b.iID=? "
                 + " order by a.iItemID asc ", WhereParam);
 

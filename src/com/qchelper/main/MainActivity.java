@@ -3,7 +3,6 @@ package com.qchelper.main;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.NameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,6 +21,7 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -292,16 +292,17 @@ public class MainActivity extends Activity {
     
     class ItemClickEvent implements AdapterView.OnItemClickListener {
         public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,long arg3) {
-    		Intent intent = new Intent(MainActivity.this, CheckActivity.class);   		
+            Intent intent = new Intent(MainActivity.this, CheckActivity.class);
             TextView tv_sOrderNo = (TextView) arg1.findViewById(R.id.PlanOrderNo);
             TextView tv_sStyleNo = (TextView) arg1.findViewById(R.id.PlanStyleNo);
-
-    		intent.putExtra("KeyID", ItemKeyList[arg2]);
-    		intent.putExtra("OrderNo", tv_sOrderNo.getText());
-    		intent.putExtra("StyleNo", tv_sStyleNo.getText());
-    		startActivity(intent);
-    		
-    	}    	
+            TextView tv_sProductID = (TextView) arg1.findViewById(R.id.PlanProductID);
+            
+            intent.putExtra("KeyID", ItemKeyList[arg2]);
+            intent.putExtra("OrderNo", tv_sOrderNo.getText());
+            intent.putExtra("StyleNo", tv_sStyleNo.getText());
+            intent.putExtra("ProductID", tv_sProductID.getText());
+            startActivity(intent);
+        }
     }
     
     class ButtonClickEvent implements View.OnClickListener {
@@ -375,7 +376,7 @@ public class MainActivity extends Activity {
         try {
             dbHelper dbhlp = new dbHelper(MainActivity.this);
             Cursor cursor = dbhlp.querySQL("select iID, iFactoryID, sOrderNo, sStyleNo, sProductID"
-                    + "iItemID, dChecdedDate, sRemark, datetime_rec, datetime_opt, datetime_delete, user_id_opt"
+                    + "iItemID, dChecdedDate, sRemark, datetime_rec, datetime_delete, user_id_opt"
                     + " from qmCheckRecordMst where datetime_upload is null");
             String[] strJson = new String[cursor.getCount()];
             int i = 0;
@@ -391,7 +392,6 @@ public class MainActivity extends Activity {
                         .key("iItemID").value(cursor.getString(cursor.getColumnIndex("iItemID")))
                         .key("dChecdedDate").value(cursor.getString(cursor.getColumnIndex("dChecdedDate")))
                         .key("sRemark").value(cursor.getString(cursor.getColumnIndex("sRemark")))
-                        .key("datetime_opt").value(cursor.getString(cursor.getColumnIndex("datetime_opt")))
                         .key("datetime_rec").value(cursor.getString(cursor.getColumnIndex("datetime_rec")))
                         .key("datetime_delete").value(cursor.getString(cursor.getColumnIndex("datetime_delete")))
                         .endObject().toString();
@@ -478,12 +478,13 @@ public class MainActivity extends Activity {
             syncMaxCount = strJson.length;
             
             for (int i = 0; i < strJson.length; i++) {
-                user_id = strJson[i];
+//                user_id = strJson[i];
                 syncCurrentCount = i + 1;
                 String resultHttp = "";
                 dbHelper dbhlp = new dbHelper(MainActivity.this);
                 
                 // 下载QC计划
+                Log.d(DEBUG_TAG, "begin download");
                 int maxID = 1;
                 Cursor cursor = dbhlp.querySQL("select max(iID) as iID from qmCheckPlan");
                 while (cursor.moveToNext()) {
@@ -499,35 +500,38 @@ public class MainActivity extends Activity {
                         Log.e(DEBUG_TAG, e.toString());
                     }
                 }
+                cursor.close();
                 if (resultHttp != "") {
                     try {
                          JSONObject json = new JSONObject(resultHttp);
+                         //如何返回成功
                          if (json.getString("status").equals("succeed")) {
-                             JSONArray jsonDataArray = json.getJSONArray("data");
-                             for (int j=0; j < jsonDataArray.length(); j++) {
-                                 JSONObject jsonData = jsonDataArray.getJSONObject(j);
-                                 ContentValues cv = new ContentValues();
-                                 String str = "iID";
-                                 cv.put(str, jsonData.getString(str));
-                                 str = "iFactoryID";
-                                 cv.put(str, jsonData.getString(str));
-                                 str = "sOrderNo";
-                                 cv.put(str, jsonData.getString(str));
-                                 str = "sStyleNo";
-                                 cv.put(str, jsonData.getString(str));
-                                 str = "sProductID";
-                                 cv.put(str, jsonData.getString(str));
-                                 str = "dRequestCheck";
-                                 cv.put(str, jsonData.getString(str));
-                                 str = "sCheckItemDesc";
-                                 cv.put(str, jsonData.getString(str));
-                                 str = "sCheckItemDesc";
-                                 cv.put(str, jsonData.getString(str));
-                                 str = "sUserID";
-                                 cv.put(str, jsonData.getString(str));
-                                 dbhlp.insert("qmCheckPlan", cv);
+                             //处理返回表列表
+                             JSONArray jsonTableArray = json.getJSONArray("data");
+                             for (int j=0; j < jsonTableArray.length(); j++) {
+                                 //获取返回表
+                                 JSONObject jsonTable = jsonTableArray.getJSONObject(j);
+                                 if (jsonTable.getString("table").equals("qmCheckPlan")) {
+                                     //获取返回记录列表
+                                     JSONArray jsonRecordArray = jsonTable.getJSONArray("records");
+                                     for (int k=0;  k < jsonRecordArray.length(); k++) {
+                                         //获取返回记录
+                                         JSONObject jsonRecordData = jsonRecordArray.getJSONObject(k);
+                                         ContentValues cv = new ContentValues();
+                                         String str = "iID"; cv.put(str, jsonRecordData.getString(str));
+                                         str = "iFactoryID"; cv.put(str, jsonRecordData.getString(str));
+                                         str = "sOrderNo"; cv.put(str, jsonRecordData.getString(str));
+                                         str = "sStyleNo"; cv.put(str, jsonRecordData.getString(str));
+                                         str = "sProductID"; cv.put(str, jsonRecordData.getString(str));
+                                         str = "dRequestCheck"; cv.put(str, jsonRecordData.getString(str));
+                                         str = "sCheckItemDesc"; cv.put(str, jsonRecordData.getString(str));
+                                         str = "sCheckItemDesc"; cv.put(str, jsonRecordData.getString(str));
+                                         str = "sUserID"; cv.put(str, jsonRecordData.getString(str));
+                                         dbhlp.insert("qmCheckPlan", cv);
+                                     }
+                                 }
                              }
-                             refreshList();
+//                             refreshList();
                          }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -535,70 +539,124 @@ public class MainActivity extends Activity {
                 }
                 resultHttp = "";
                 //上传QC结果
-//                String jsonMst = "", jsonDtl = "";
-//                Cursor csCheckRecordMat = dbhlp.querySQL("select iID, iFactoryID, sOrderNo, sStyleNo, sProductID"
-//                        + "iItemID, dChecdedDate, sRemark, datetime_rec, datetime_opt, datetime_delete, user_id_opt"
-//                        + " from qmCheckRecordMst where datetime_upload is null");
-//                while (csCheckRecordMat.moveToNext()) {
-//                    Log.d(DEBUG_TAG, "Build downloadCheckRecordMaster Json rec:" + i);
-//                    jsonMst = "{'user_id_opt':'"+user_id
-//                            +"','iID':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("iID"))
-//                            +"','iFactoryID':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("iFactoryID"))
-//                            +"','sOrderNo':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("sOrderNo"))
-//                            +"','sStyleNo':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("sStyleNo"))
-//                            +"','sProductID':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("sProductID"))
-//                            +"','iItemID':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("iItemID"))
-//                            +"','dChecdedDate':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("dChecdedDate"))
-//                            +"','sRemark':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("sRemark"))
-//                            +"','datetime_opt':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("datetime_opt"))
-//                            +"','datetime_rec':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("datetime_rec"))
-//                            +"','datetime_delete':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("datetime_delete"))
-//                            +"'}";
-//                    
-//                    jsonDtl = "";
-//                    Cursor csCheckRecordDtl = dbhlp.querySQL("select iID, iMstID, sPhoto, dCreaimestamp, "
-//                            + " datetime_rec, datetime_opt, datetime_delete, user_id_opt"
-//                            + " from qmCheckRecordDtl where iMstID = " + cursor.getString(cursor.getColumnIndex("iID")));
-//                    while (csCheckRecordDtl.moveToNext()) {
-//                        Log.d(DEBUG_TAG, "Build downloadCheckRecordDetail Json rec:" + i);
-//                        String str = "{'user_id_opt':'"+user_id
-//                                +"','iID':'"+csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("iID"))
-//                                +"','iMstID':'"+csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("iMstID"))
-//                                +"','sPhoto':'"+csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("sPhoto"))
-//                                +"','dCreaimestamp':'"+csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("dCreaimestamp"))
-//                                +"','datetime_opt':'"+csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("datetime_opt"))
-//                                +"','datetime_rec':'"+csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("datetime_rec"))
-//                                +"','datetime_delete':'"+csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("datetime_delete"))
-//                                +"'}";
-//                        if (jsonDtl == "") {
-//                            jsonDtl = "[" + str;
-//                        } else {
-//                            jsonDtl = "," + str;
-//                        }
-//                    }
-//                    if (jsonDtl != "") {
-//                        jsonDtl += "]";
-//                    }
-//                    List<NameValuePair> params = comm.fmtHttpParams("{'master':'"+jsonMst+"','detail':'"+jsonDtl+"'}");
-//                    try {
-//                        resultHttp = comm.invokeHttp(MainActivity.this, "uploadCheckRecord", params);
-//                    } catch (Exception e) {
-//                        Log.e(DEBUG_TAG, e.toString());
-//                    }
-//                    i++;
-//                }
-//                if (resultHttp != "") {
-//                    try {
-//                        JSONObject json = new JSONObject(resultHttp);
-//                        JSONObject jsonData = json.getJSONObject("data");
-//                        dbhlp.updateSyncDatetime("qmCheckRecordMst", jsonData.getInt("id"),  jsonData.getString("user_id_opt"),  jsonData.getString("datetime_upload"));
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
+                Log.d(DEBUG_TAG, " begin upload");
+                String jsonMst = "", jsonDtl = "";
+                int recordDtlCount = 0;
+                
+                //暂时手动设置
+                user_id = "1";
+                
+                Cursor csCheckRecordMat = dbhlp.querySQL("select iID, iFactoryID, sOrderNo, sStyleNo, sProductID"
+                        + " , iItemID, dChecdedDate, sRemark, datetime_rec, datetime_delete, user_id_opt "
+                        + " from qmCheckRecordMst a where datetime_upload is null and  exists (select 1 from qmCheckRecordDtl where iMstID = a.iID limit 1  ) ");
+                while (csCheckRecordMat.moveToNext()) {
+                    Log.d(DEBUG_TAG, "Build uploadCheckRecordMaster Json rec:");
+                    jsonMst = "{'iID':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("iID"))
+                            +"','iFactoryID':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("iFactoryID"))
+                            +"','sOrderNo':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("sOrderNo"))
+                            +"','sStyleNo':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("sStyleNo"))
+                            +"','sProductID':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("sProductID"))
+                            +"','iItemID':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("iItemID"))
+                            +"','dChecdedDate':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("dChecdedDate"))
+                            +"','sRemark':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("sRemark"))
+                            +"','datetime_rec':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("datetime_rec"))
+                            +"','datetime_delete':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("datetime_delete"))
+                            +"','user_id_opt':'" + user_id 
+                            +"'}";
+                    
+                    jsonDtl = "";
+                    recordDtlCount = 0;
+                    
+                    Cursor csCheckRecordDtl = dbhlp.querySQL("select iID, iMstID, sPhoto, dCreaimestamp, "
+                            + " datetime_rec, datetime_delete "
+                            + " from qmCheckRecordDtl where iMstID = " + csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("iID")));
+                    while (csCheckRecordDtl.moveToNext()) {
+                        Log.d(DEBUG_TAG, "Build uploadCheckRecordDetail Json rec:" + recordDtlCount);
+                        String str = "{'user_id_opt':'"+user_id
+                                +"','iID':'"+csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("iID"))
+                                +"','iMstID':'"+csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("iMstID"))
+                                //组织作为文件名称
+                                +"','sPhoto':'" + "user_id_opt(" + user_id
+                                + ")iMstID(" + csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("iMstID"))
+                                + ")iID(" + csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("iID")) + ").png"
+//                                +"','sPhoto':'"+Base64.encodeToString(csCheckRecordDtl.getBlob(csCheckRecordDtl.getColumnIndex("sPhoto")), Base64.DEFAULT)
+                                +"','dCreaimestamp':'"+csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("dCreaimestamp"))
+                                +"','datetime_rec':'"+csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("datetime_rec"))
+                                +"','datetime_delete':'"+csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("datetime_delete"))
+                                +"'}";
+                        if (jsonDtl != "") {
+                            jsonDtl = "," + str;
+                        } else {
+                            jsonDtl = str;
+                        }
+                        recordDtlCount += 1;
+                    }
+                    csCheckRecordDtl.close();
+                    if (jsonMst != "") {
+                        jsonMst = "{'table':'qmCheckRecordMst', 'count':'1', 'records':["+jsonMst+"]}";
+                    
+                        if (jsonDtl != "") {
+                            jsonDtl = ",{'table':'qmCheckRecordDtl', 'count':'"+Integer.toString(recordDtlCount)+"', 'records':["+jsonDtl+"]}";
+                        } else {jsonDtl = "";}
+                    
+                        String params = comm.fmtHttpParams(jsonMst+jsonDtl);
+                        try {
+                            resultHttp = comm.invokeHttp(MainActivity.this, "uploadCheckRecord", params);
+                        } catch (Exception e) {
+                            Log.e(DEBUG_TAG, e.toString());
+                        }
+//                        处理返回结果
+                        if (resultHttp != "") {
+                            try {
+                                JSONObject json = new JSONObject(resultHttp);
+                                //如何返回成功
+                                if (json.getString("status").equals("succeed")) {
+                                    JSONArray jsonTableArray = json.getJSONArray("data");
+                                    for (int j=0; j < jsonTableArray.length(); j++) {
+                                        JSONObject jsonTable = jsonTableArray.getJSONObject(j);
+                                        if (jsonTable.getString("table").equals("qmCheckRecordMst")) {
+                                            JSONArray jsonRecordArray = jsonTable.getJSONArray("records");
+                                            for (int k=0; k < jsonRecordArray.length(); k++) {
+                                                JSONObject jsonRecordData = jsonRecordArray.getJSONObject(k);
+                                                
+                                                //上传QC图片
+                                                Log.d(DEBUG_TAG, "begin upload Picture");
+                                                recordDtlCount = 0;
+                                                Cursor cursor1 = dbhlp.querySQL("select iID, iMstID, sPhoto "
+                                                        + " from qmCheckRecordDtl where iMstID = " + jsonRecordData.getString("iID"));
+                                                while (cursor1.moveToNext()) {
+                                                    Log.d(DEBUG_TAG, "Build uploadCheckRecordDetail Pic rec:" + recordDtlCount++);
+                                                    try {
+                                                        resultHttp = comm.invokeHttp(MainActivity.this, "uploadCheckRecordPic"
+                                                                //组织文件名称，这样可以找到需要插入图片的那条记录
+                                                                , "user_id_opt(" + user_id 
+                                                                + ")iMstID(" + cursor1.getString(cursor1.getColumnIndex("iMstID"))
+                                                                + ")iID(" + cursor1.getString(cursor1.getColumnIndex("iID")) + ").png"
+                                                                , cursor1.getBlob(cursor1.getColumnIndex("sPhoto"))
+                                                                );
+                                                    } catch (Exception e) {
+                                                        Log.e(DEBUG_TAG, e.toString());
+                                                    }
+                                                }
+                                                Log.d(DEBUG_TAG, resultHttp);
+                                                Log.d(DEBUG_TAG, " finished upload Picture");
+//                                                dbhlp.updateSyncDatetime("qmCheckRecordMst", jsonRecordData.getInt("iID")
+//                                                        , jsonRecordData.getString("user_id_opt"),  jsonRecordData.getString("datetime_upload"));
+                                            }
+                                        }
+                                    }
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
                 resultHttp = "";
+                Log.d(DEBUG_TAG, " finished upload");
                 //更新进度
                 publishProgress(syncCurrentCount);
+                csCheckRecordMat.close();
             }
             return 0;
         }

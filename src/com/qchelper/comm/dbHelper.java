@@ -48,16 +48,15 @@ public class dbHelper extends SQLiteOpenHelper {
          * iItemID 检验项目
          * dChecdedDate 检验日期
          * sRemark 检验结论
-         * datetime_opt 操作时间，自动生成
-         * datetime_rec 记录时间，可修改
+         * datetime_rec 记录时间
          * datetime_upload 上传时间
          * datetime_delete 删除时间
          */
         
-        sql_create ="Create table qmCheckRecordMst(iID integer PRIMARY KEY "
+        sql_create ="Create table qmCheckRecordMst(iID integer primary key autoincrement "
                 + ", iFactoryID integer, sOrderNo nvarchar(50), sStyleNo nvarchar(50), sProductID nvarchar(50) "
                 + ", iItemID integer, dChecdedDate timestamp, sRemark nvarchar(500) "                
-                + ", datetime_rec timestamp default (datetime('now','localtime')), datetime_opt timestamp "
+                + ", datetime_rec timestamp default (datetime('now','localtime')) "
                 + ", datetime_upload timestamp, datetime_delete timestamp, user_id_opt integer);";
         db.execSQL(sql_create); 
         Log.d(DEBUG_TAG, "CREATE_2");
@@ -67,15 +66,14 @@ public class dbHelper extends SQLiteOpenHelper {
          * iMstID 父结构ID
          * sPhoto 图片
          * dCreateDate 创建时间
-         * datetime_opt 操作时间，自动生成
-         * datetime_rec 记录时间，可修改
+         * datetime_rec 记录时间
          * datetime_upload 上传时间
          * datetime_delete 删除时间
          */   
         
         sql_create =" Create table qmCheckRecordDtl(iID integer primary key autoincrement "
     	+ ", iMstID integer, sPhoto bolb, dCreaimestamp default (datetime('now','localtime')) "
-        + ", datetime_rec timestamp default (datetime('now','localtime')), datetime_opt timestamp "
+        + ", datetime_rec timestamp default (datetime('now','localtime')) "
         + ", datetime_delete timestamp );";
         db.execSQL(sql_create);        
         Log.d(DEBUG_TAG, "CREATE_3");

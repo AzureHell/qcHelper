@@ -1,9 +1,6 @@
 package com.qchelper.main;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-
-import com.qchelper.comm.dbHelper;
 
 import android.app.Activity;
 import android.content.Context;
@@ -26,6 +23,9 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.qchelper.comm.comm;
+import com.qchelper.comm.dbHelper;
 
 
 public class PicActivity extends Activity {
@@ -94,13 +94,13 @@ public class PicActivity extends Activity {
         		}
         		else {
                 	Bundle bundle = data.getExtras();
-                	PicData=(Bitmap) bundle.get("data");    			
-        		}        	
+                	PicData=(Bitmap) bundle.get("data");
+        		} 
           		
         		Log.d(TAG, "ActivityResult_ImageHeight:" + Integer.toString(PicData.getHeight())); 
             	if (PicData != null) {
             		dbHelper dbhlp = new dbHelper(this);
-            		if (dbhlp.insert("qmCheckRecordDtl", MstID, BitmapToBytes(PicData)) > 0) {
+            		if (dbhlp.insert("qmCheckRecordDtl", MstID, comm.bitmapToBytes(PicData)) > 0) {
             			Toast.makeText(this, R.string.Image_SuccessfullySaved, 1500).show();            			
             	        impAdapter = new ImageAdapter(this, R.layout.qcpicitem, GetImageData());
             	        gvPicView.setAdapter(impAdapter);
@@ -142,7 +142,7 @@ public class PicActivity extends Activity {
     		ItemKeyList = new int[cursor.getCount()];
     		while (cursor.moveToNext()) {
     			ItemKeyList[cursor.getPosition()] = cursor.getInt(0);
-    			Data[cursor.getPosition()] = BytesToBitmap(cursor.getBlob(1));
+    			Data[cursor.getPosition()] = comm.bytesTobitmap(cursor.getBlob(1));
     		}
     	}
     	Log.d(TAG, "GetImageData_End");
@@ -201,40 +201,39 @@ public class PicActivity extends Activity {
     	return bitmap;
     }
     
-    
-    public byte[] BitmapToBytes(Bitmap bmap) {
-    	ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    	bmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-    	return baos.toByteArray();
-    }
-    
-    public Bitmap BytesToBitmap(byte[] bytes) {
-    	if (bytes.length > 0){
-           /*
-    		BitmapFactory.Options options = new BitmapFactory.Options();        	
-        	options.inJustDecodeBounds = true;         	
-        	Log.d(TAG, "BytesToBitmap:1");     
-        	//计算缩放比  
-        	int be = (int)(options.outHeight / (float)ShowMaxHeight);  
-        	int ys = options.outHeight % ShowMaxHeight;//求余数  
-        	float fe = ys / (float)ShowMaxHeight;  
-        	if(fe>=0.5)be = be + 1;  
-        	if (be <= 0)  
-        	  be = 1;
-        	Log.d(TAG, "BytesToBitmap:" + Integer.toString(be) + "_" + Integer.toString(ys));    	
-        	options.inSampleSize = be; 
-        	
-        	//重新读入图片，注意这次要把options.inJustDecodeBounds 设为 false  
-        	options.inJustDecodeBounds = false;   		
-    		
-    		return BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);*/
-    		
-    		return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-    	}
-        else {
-        	return null;
-        }
-    }
+//    public byte[] BitmapToBytes(Bitmap bmap) {
+//    	ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//    	bmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+//    	return baos.toByteArray();
+//    }
+//    
+//    public Bitmap BytesToBitmap(byte[] bytes) {
+//    	if (bytes.length > 0){
+//           /*
+//    		BitmapFactory.Options options = new BitmapFactory.Options();        	
+//        	options.inJustDecodeBounds = true;         	
+//        	Log.d(TAG, "BytesToBitmap:1");     
+//        	//计算缩放比  
+//        	int be = (int)(options.outHeight / (float)ShowMaxHeight);  
+//        	int ys = options.outHeight % ShowMaxHeight;//求余数  
+//        	float fe = ys / (float)ShowMaxHeight;  
+//        	if(fe>=0.5)be = be + 1;  
+//        	if (be <= 0)  
+//        	  be = 1;
+//        	Log.d(TAG, "BytesToBitmap:" + Integer.toString(be) + "_" + Integer.toString(ys));    	
+//        	options.inSampleSize = be; 
+//        	
+//        	//重新读入图片，注意这次要把options.inJustDecodeBounds 设为 false  
+//        	options.inJustDecodeBounds = false;   		
+//    		
+//    		return BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);*/
+//    		
+//    		return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+//    	}
+//        else {
+//        	return null;
+//        }
+//    }
     
     public static boolean isHasSdcard() {    	
         String status = Environment.getExternalStorageState();  

@@ -1,27 +1,23 @@
 package com.qchelper.comm;
 
+import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.widget.Toast;
-
-import com.qchelper.main.LoginActivity;
 
 public class comm {
 
@@ -160,7 +156,7 @@ public class comm {
         return false;
     }
     
-    public static String invokeHttp(Context con, String actionName, String params) {
+    public static String getHttpUrl(Context con, String actionName) {
         String url = "";
         dbHelper dbhlp = new dbHelper(con);
         Cursor dbcur = dbhlp.select("ServerCon");
@@ -168,9 +164,15 @@ public class comm {
             dbcur.moveToFirst();
             if ((dbcur.getString(dbcur.getColumnIndex("server_ip")).length() > 0) && (dbcur.getString(dbcur.getColumnIndex("server_port")).length() > 0)) {
                 url = "http://" + dbcur.getString(dbcur.getColumnIndex("server_ip")) 
-                  + ":" + dbcur.getString(dbcur.getColumnIndex("server_port")) + "/"+actionName;
+                  + ":" + dbcur.getString(dbcur.getColumnIndex("server_port")) + "/" + actionName;
             }
         }
+        return url;
+    }
+    
+    public static String invokeHttp(Context con, String actionName, String params) {
+        String url = "";
+        url = getHttpUrl(con, actionName);
         if (url == ""){
             return null;
         }
@@ -179,18 +181,43 @@ public class comm {
         } catch (Exception e) {
             return null;
         }
+    }    
+    
+    public static String invokeHttp(Context con, String actionName, String fileName, byte [] pic) {
+        String url = "";
+        url = getHttpUrl(con, actionName);
+        if (url == ""){
+            return null;
+        }
+        try {
+            return httpHelper.invokePic(url, fileName, pic);
+        } catch (Exception e) {
+            return null;
+        }
     }
     
-    public static String fmtHttpParams(String status, String  error, Integer count, String data) {
-        return "{\"status\":\""+ status +"\", \"error\":\""+ error +"\", \"count\":\""+ Integer.toString(count) 
+    public static String fmtHttpParams(String status, String  error, String data) {
+        return "{\"status\":\""+ status +"\", \"error\":\""+ error 
                 +"\", \"data\":["+ data.replace("'", "\"") +"]}";
     }
     
-    public static String fmtHttpParams(Integer count, String data) {
-        return fmtHttpParams("succeed", "", count, data);
+    public static String fmtHttpParams(String data) {
+        return fmtHttpParams("succeed", "", data);
     }
     
-    public static String fmtHttpParams(String data) {
-        return fmtHttpParams(1, data);
+    //图片压缩
+    public static byte[] bitmapToBytes(Bitmap bitmap){
+        if (bitmap == null) {
+                return null;
+        }
+        final ByteArrayOutputStream os = new ByteArrayOutputStream();
+        // 将Bitmap压缩成PNG编码，质量为100%存储
+        bitmap.compress(Bitmap.CompressFormat.PNG, 90, os);//除了PNG还有很多常见格式，如jpeg等。
+        return os.toByteArray();
+    }
+    
+    //图片解压
+    public static Bitmap bytesTobitmap(byte[] bytes){
+        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length, null);
     }    
 }
