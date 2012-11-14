@@ -576,7 +576,7 @@ public class MainActivity extends Activity {
                                 +"','iID':'"+csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("iID"))
                                 +"','iMstID':'"+csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("iMstID"))
                                 //组织作为文件名称
-                                +"','sPhoto':'" + "user_id_opt(" + user_id
+                                +"','sFileName':'" + "user_id_opt(" + user_id
                                 + ")iMstID(" + csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("iMstID"))
                                 + ")iID(" + csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("iID")) + ").png"
 //                                +"','sPhoto':'"+Base64.encodeToString(csCheckRecordDtl.getBlob(csCheckRecordDtl.getColumnIndex("sPhoto")), Base64.DEFAULT)
@@ -622,12 +622,13 @@ public class MainActivity extends Activity {
                                                 //上传QC图片
                                                 Log.d(DEBUG_TAG, "begin upload Picture");
                                                 recordDtlCount = 0;
+                                                String resultHttpPic = "";
                                                 Cursor cursor1 = dbhlp.querySQL("select iID, iMstID, sPhoto "
                                                         + " from qmCheckRecordDtl where iMstID = " + jsonRecordData.getString("iID"));
                                                 while (cursor1.moveToNext()) {
                                                     Log.d(DEBUG_TAG, "Build uploadCheckRecordDetail Pic rec:" + recordDtlCount++);
                                                     try {
-                                                        resultHttp = comm.invokeHttp(MainActivity.this, "uploadCheckRecordPic"
+                                                        resultHttpPic = comm.invokeHttp(MainActivity.this, "uploadCheckRecordPic"
                                                                 //组织文件名称，这样可以找到需要插入图片的那条记录
                                                                 , "user_id_opt(" + user_id 
                                                                 + ")iMstID(" + cursor1.getString(cursor1.getColumnIndex("iMstID"))
@@ -638,10 +639,15 @@ public class MainActivity extends Activity {
                                                         Log.e(DEBUG_TAG, e.toString());
                                                     }
                                                 }
-                                                Log.d(DEBUG_TAG, resultHttp);
-                                                Log.d(DEBUG_TAG, " finished upload Picture");
-//                                                dbhlp.updateSyncDatetime("qmCheckRecordMst", jsonRecordData.getInt("iID")
-//                                                        , jsonRecordData.getString("user_id_opt"),  jsonRecordData.getString("datetime_upload"));
+                                                if (resultHttpPic != "") {
+                                                    JSONObject jsonPic = new JSONObject(resultHttpPic);
+                                                    //如何返回成功
+                                                    if (jsonPic.getString("status").equals("succeed")) {
+                                                        Log.d(DEBUG_TAG, " finished upload Picture");
+                                                    }
+                                                }
+                                                dbhlp.updateSyncDatetime("qmCheckRecordMst", jsonRecordData.getInt("iID")
+                                                        , jsonRecordData.getString("user_id_opt"),  jsonRecordData.getString("datetime_upload"));
                                             }
                                         }
                                     }

@@ -64,11 +64,11 @@ public abstract class httpHelper {
 //                mpEntity.addPart("fileName",  new StringBody(fileName));
                 try{
                     ByteArrayBody bab = new ByteArrayBody(pic, fileName);
-                    mpEntity.addPart("pic", bab);
+                    mpEntity.addPart("data", bab);
                 }
                 catch(Exception e){
                     Log.e(DEBUG_TAG, e.toString());
-                    mpEntity.addPart("pic", new StringBody(""));
+                    mpEntity.addPart("data", new StringBody(""));
                 }
                 httpPost.setEntity(mpEntity);
             }
