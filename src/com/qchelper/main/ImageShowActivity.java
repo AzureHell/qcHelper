@@ -1,4 +1,4 @@
-package com.qchelper.main;
+ï»¿package com.qchelper.main;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,9 +36,9 @@ public class ImageShowActivity extends Activity {
     ImageView imgView;
     Button btnImgShowBack;
     Button btnImgShowDelete;
-    final static int CURRENT_ROW = 0; //µ±Ç°¼ÇÂ¼
-    final static int NEXT_ROW = 1; //ÏÂÒ»¼ÇÂ¼
-    final static int PRIOR_ROW = 2; //ÉÏÒ»¼ÇÂ¼
+    final static int CURRENT_ROW = 0; //å½“å‰è®°å½•
+    final static int NEXT_ROW = 1; //ä¸‹ä¸€è®°å½•
+    final static int PRIOR_ROW = 2; //ä¸Šä¸€è®°å½•
     
     private Bitmap CurrMap;
     float x=0,y=0;
@@ -46,7 +46,7 @@ public class ImageShowActivity extends Activity {
 
     List<String> KeyList = new ArrayList<String>();
     
-    //Í¼Æ¬Ëõ·Å¿ØÖÆ
+    //å›¾ç‰‡ç¼©æ”¾æ§åˆ¶
 	private static final int NONE = 0;
 	private static final int DRAG = 1;
 	private static final int ZOOM = 2;	
@@ -57,12 +57,12 @@ public class ImageShowActivity extends Activity {
 	private PointF start = new PointF();
 	private PointF mid = new PointF();
 	
-	/* Í¼Æ¬×óÓÒÒÆ¶¯ */
-	// ÉùÃ÷Á½¸ö°´Å¥,·Ö±ğ´ú±íÏò×óºÍÏòÓÒ»¬¶¯
+	/* å›¾ç‰‡å·¦å³ç§»åŠ¨ */
+	// å£°æ˜ä¸¤ä¸ªæŒ‰é’®,åˆ†åˆ«ä»£è¡¨å‘å·¦å’Œå‘å³æ»‘åŠ¨
 
 	private ImageView btnLeft = null;  
 	private ImageView btnRight = null;  
-	// ÉèÖÃWindowManager
+	// è®¾ç½®WindowManager
 	private WindowManager wm = null;  
 	private WindowManager.LayoutParams wmParams = null;	
     
@@ -78,7 +78,7 @@ public class ImageShowActivity extends Activity {
         CurrMap = GetImageData(KeyID);
         imgView.setImageBitmap(CurrMap);
         
-        //»ñÈ¡Ö÷¼üÁĞ±í
+        //è·å–ä¸»é”®åˆ—è¡¨
         GetKeyList();
         
         btnImgShowBack = (Button) findViewById(R.id.btnShowBack);
@@ -140,39 +140,39 @@ public class ImageShowActivity extends Activity {
 			}}); 
         
         
-        // ³õÊ¼»¯×óÓÒ°´Å¥  
+        // åˆå§‹åŒ–å·¦å³æŒ‰é’®  
         initImageButtonView();        
         
     }
     
     
-    //³õÊ¼»¯Ğü¸¡°´Å¥    
+    //åˆå§‹åŒ–æ‚¬æµ®æŒ‰é’®    
     private void initImageButtonView() {
     	Log.d(TAG, "initImageButtonView_Begin");
-        // »ñÈ¡WindowManager  
+        // è·å–WindowManager  
         wm = (WindowManager) getApplicationContext().getSystemService("window");  
-        // ÉèÖÃLayoutParamsÏà¹Ø²ÎÊı  
+        // è®¾ç½®LayoutParamsç›¸å…³å‚æ•°  
         wmParams = new WindowManager.LayoutParams();  
-        // ÉèÖÃwindow type  
+        // è®¾ç½®window type  
         wmParams.type = LayoutParams.TYPE_PHONE;  
-        // ÉèÖÃÍ¼Æ¬¸ñÊ½,Ğ§¹ûÎª±³¾°Í¸Ã÷  
+        // è®¾ç½®å›¾ç‰‡æ ¼å¼,æ•ˆæœä¸ºèƒŒæ™¯é€æ˜  
         wmParams.format = PixelFormat.RGBA_8888;  
-        // ÉèÖÃWindow flag²ÎÊı  
+        // è®¾ç½®Window flagå‚æ•°  
         wmParams.flags = LayoutParams.FLAG_NOT_TOUCH_MODAL  
               | LayoutParams.FLAG_NOT_FOCUSABLE;  
-        // ÉèÖÃx¡¢y³õÊ¼Öµ  
+        // è®¾ç½®xã€yåˆå§‹å€¼  
         wmParams.x = 0;  
         wmParams.y = 0;  
-        // ÉèÖÃ´°¿Ú³¤¿íÊı¾İ  
+        // è®¾ç½®çª—å£é•¿å®½æ•°æ®  
         wmParams.width = 100;  
         wmParams.height = 100;         
-        // ´´½¨×óÓÒ°´Å¥  
+        // åˆ›å»ºå·¦å³æŒ‰é’®  
         createLeftButtonView();  
         createRightButtonView();
         Log.d(TAG, "initImageButtonView_End");
     } 
    
-    // ÉèÖÃ×ó±ß°´Å¥   
+    // è®¾ç½®å·¦è¾¹æŒ‰é’®   
     private void createLeftButtonView() {
     	Log.d(TAG, "createLeftButtonView_Begin");
         btnLeft = new ImageView(this);  
@@ -181,12 +181,12 @@ public class ImageShowActivity extends Activity {
         Log.d(TAG, "createLeftButtonView_1");
         btnLeft.setOnClickListener(new View.OnClickListener() {        	
             public void onClick(View arg0) {            	
-                // ÉÏÒ»¸öÍ¼Ïñ 
+                // ä¸Šä¸€ä¸ªå›¾åƒ 
             	if (KeyList.size() <= 0) {
-            		Toast.makeText(ImageShowActivity.this, "¼ìÑéÏîÄ¿ÖĞ²»´æÔÚÍ¼Æ¬", 1000).show();
+            		Toast.makeText(ImageShowActivity.this, "æ£€éªŒé¡¹ç›®ä¸­ä¸å­˜åœ¨å›¾ç‰‡", 1000).show();
             	} else {
                 	if ((PositionID - 1) < 0) {
-                    	Toast.makeText(ImageShowActivity.this, "ÒÑÊÇµÚÒ»ÕÅÍ¼Æ¬", 1000).show();                	
+                    	Toast.makeText(ImageShowActivity.this, "å·²æ˜¯ç¬¬ä¸€å¼ å›¾ç‰‡", 1000).show();                	
                     } 
                     else {
                     	PositionID = PositionID - 1;
@@ -196,27 +196,27 @@ public class ImageShowActivity extends Activity {
             	}            	  	
  
             } });  
-        // µ÷Õû´°¿Ú  
+        // è°ƒæ•´çª—å£  
         wmParams.gravity = Gravity.LEFT | Gravity.CENTER_VERTICAL;
         Log.d(TAG, "createLeftButtonView_2");
-        // ÏÔÊ¾Í¼Ïñ  
+        // æ˜¾ç¤ºå›¾åƒ  
         wm.addView(btnLeft, wmParams);
         Log.d(TAG, "createLeftButtonView_Begin");
     }  
     
-    // ÉèÖÃÓÒ±ß°´Å¥   
+    // è®¾ç½®å³è¾¹æŒ‰é’®   
     private void createRightButtonView() {    	
         btnRight = new ImageView(this);  
         btnRight.setImageResource(R.drawable.next);  
         btnRight.setAlpha(200);  
         btnRight.setOnClickListener(new View.OnClickListener() {        	
             public void onClick(View arg0) {             	
-                // ÏÂÒ»¸öÍ¼Ïñ
+                // ä¸‹ä¸€ä¸ªå›¾åƒ
             	if (KeyList.size() <= 0) {
-            		Toast.makeText(ImageShowActivity.this, "¼ìÑéÏîÄ¿ÖĞ²»´æÔÚÍ¼Æ¬", 1000).show();
+            		Toast.makeText(ImageShowActivity.this, "æ£€éªŒé¡¹ç›®ä¸­ä¸å­˜åœ¨å›¾ç‰‡", 1000).show();
             	} else {
                 	if ((PositionID + 1) >= KeyList.size()) {
-                    	Toast.makeText(ImageShowActivity.this, "ÒÑÊÇ×îºóÒ»ÕÅÍ¼Æ¬", 1000).show();                	
+                    	Toast.makeText(ImageShowActivity.this, "å·²æ˜¯æœ€åä¸€å¼ å›¾ç‰‡", 1000).show();                	
                     } 
                     else {
                     	PositionID = PositionID + 1;
@@ -227,9 +227,9 @@ public class ImageShowActivity extends Activity {
             	}            	
                
             } });  
-        // µ÷Õû´°¿Ú  
+        // è°ƒæ•´çª—å£  
         wmParams.gravity = Gravity.RIGHT | Gravity.CENTER_VERTICAL;  
-        // ÏÔÊ¾Í¼Ïñ  
+        // æ˜¾ç¤ºå›¾åƒ  
         wm.addView(btnRight, wmParams);  
     }
     
@@ -312,7 +312,7 @@ public class ImageShowActivity extends Activity {
                 else {
                 	imgView.setImageBitmap(null);
                 }
-                Toast.makeText(ImageShowActivity.this, "Í¼Æ¬ÒÑÉ¾³ı", 1500).show();
+                Toast.makeText(ImageShowActivity.this, "å›¾ç‰‡å·²åˆ é™¤", 1500).show();
 		    	dialog.dismiss();	
 			}
 
@@ -349,7 +349,7 @@ public class ImageShowActivity extends Activity {
     @Override
     public void onDestroy(){
         super.onDestroy();
-        //ÔÚ³ÌĞòÍË³ö(ActivityÏú»Ù£©Ê±Ïú»ÙĞü¸¡´°¿Ú
+        //åœ¨ç¨‹åºé€€å‡º(Activityé”€æ¯ï¼‰æ—¶é”€æ¯æ‚¬æµ®çª—å£
         wm.removeView(btnLeft);
         wm.removeView(btnRight);
     }     

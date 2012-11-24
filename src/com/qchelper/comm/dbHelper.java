@@ -1,4 +1,4 @@
-package com.qchelper.comm;
+ï»¿package com.qchelper.comm;
 
 import   java.text.SimpleDateFormat;     
 
@@ -24,15 +24,15 @@ public class dbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         /*
-         * iID ±àºÅ
-         * iFactoryID ¹¤³§
-         * sOrderNo ¶©µ¥ºÅ
-         * sStyleNo ¿îÊ½ºÅ
-         * sProductID ²ú±à
-         * dRequestCheck ¼ìÑéÈÕÆÚ
-         * sCheckItemDesc ¼ìÑéÄÚÈİ
-         * sQCUserID QC±àºÅ
-         * sUserID ÓÃ»§±àºÅ
+         * iID ç¼–å·
+         * iFactoryID å·¥å‚
+         * sOrderNo è®¢å•å·
+         * sStyleNo æ¬¾å¼å·
+         * sProductID äº§ç¼–
+         * dRequestCheck æ£€éªŒæ—¥æœŸ
+         * sCheckItemDesc æ£€éªŒå†…å®¹
+         * sQCUserID QCç¼–å·
+         * sUserID ç”¨æˆ·ç¼–å·
          */
         String sql_create ="Create table qmCheckPlan(iID integer PRIMARY KEY "
                 + ", iFactoryID integer, sOrderNo nvarchar(50), sStyleNo nvarchar(50), sProductID nvarchar(50) "
@@ -40,17 +40,17 @@ public class dbHelper extends SQLiteOpenHelper {
         db.execSQL(sql_create);
         Log.d(DEBUG_TAG, "CREATE_1");
         /*
-         * iID ±àºÅ 
-         * iFactoryID ¹¤³§
-         * sOrderNo ¶©µ¥ºÅ
-         * sStyleNo ¿îÊ½ºÅ
-         * sProductID ²ú±à
-         * iItemID ¼ìÑéÏîÄ¿
-         * dChecdedDate ¼ìÑéÈÕÆÚ
-         * sRemark ¼ìÑé½áÂÛ
-         * datetime_rec ¼ÇÂ¼Ê±¼ä
-         * datetime_upload ÉÏ´«Ê±¼ä
-         * datetime_delete É¾³ıÊ±¼ä
+         * iID ç¼–å· 
+         * iFactoryID å·¥å‚
+         * sOrderNo è®¢å•å·
+         * sStyleNo æ¬¾å¼å·
+         * sProductID äº§ç¼–
+         * iItemID æ£€éªŒé¡¹ç›®
+         * dChecdedDate æ£€éªŒæ—¥æœŸ
+         * sRemark æ£€éªŒç»“è®º
+         * datetime_rec è®°å½•æ—¶é—´
+         * datetime_upload ä¸Šä¼ æ—¶é—´
+         * datetime_delete åˆ é™¤æ—¶é—´
          */
         
         sql_create ="Create table qmCheckRecordMst(iID integer primary key autoincrement "
@@ -62,13 +62,13 @@ public class dbHelper extends SQLiteOpenHelper {
         Log.d(DEBUG_TAG, "CREATE_2");
         
         /*
-         * iID ×ÔÔöÁĞ
-         * iMstID ¸¸½á¹¹ID
-         * sPhoto Í¼Æ¬
-         * dCreateDate ´´½¨Ê±¼ä
-         * datetime_rec ¼ÇÂ¼Ê±¼ä
-         * datetime_upload ÉÏ´«Ê±¼ä
-         * datetime_delete É¾³ıÊ±¼ä
+         * iID è‡ªå¢åˆ—
+         * iMstID çˆ¶ç»“æ„ID
+         * sPhoto å›¾ç‰‡
+         * dCreateDate åˆ›å»ºæ—¶é—´
+         * datetime_rec è®°å½•æ—¶é—´
+         * datetime_upload ä¸Šä¼ æ—¶é—´
+         * datetime_delete åˆ é™¤æ—¶é—´
          */   
         
         sql_create =" Create table qmCheckRecordDtl(iID integer primary key autoincrement "
@@ -79,9 +79,9 @@ public class dbHelper extends SQLiteOpenHelper {
         Log.d(DEBUG_TAG, "CREATE_3");
         
         /*
-         * iID ×ÔÔöÁĞ
-         * server_ip ¹¤³§±àºÅ
-         * server_port ¹¤¶Î±àºÅ
+         * iID è‡ªå¢åˆ—
+         * server_ip å·¥å‚ç¼–å·
+         * server_port å·¥æ®µç¼–å·
          */   
         
         sql_create =" Create table ServerCon(iID integer primary key autoincrement "

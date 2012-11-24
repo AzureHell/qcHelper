@@ -1,4 +1,4 @@
-package com.qchelper.comm;
+﻿package com.qchelper.comm;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;

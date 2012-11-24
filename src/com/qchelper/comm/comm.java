@@ -1,4 +1,4 @@
-package com.qchelper.comm;
+ï»¿package com.qchelper.comm;
 
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
@@ -23,7 +23,7 @@ public class comm {
 
 //    public final static String webServiceURL = "http://116.211.12.192:8080/";
     /* 
-    * MD5¼ÓÃÜ 
+    * MD5åŠ å¯† 
     */  
     public static String getMD5Str(String str) {
           MessageDigest messageDigest = null;       
@@ -51,7 +51,7 @@ public class comm {
               else
                   md5StrBuff.append(Integer.toHexString(0xFF & byteArray[i]));       
           }
-          //16Î»¼ÓÃÜ£¬´ÓµÚ9Î»µ½25Î»  
+          //16ä½åŠ å¯†ï¼Œä»ç¬¬9ä½åˆ°25ä½  
           return md5StrBuff.substring(8, 24).toString().toUpperCase();      
       }
     
@@ -205,18 +205,18 @@ public class comm {
         return fmtHttpParams("succeed", "", data);
     }
     
-    //Í¼Æ¬Ñ¹Ëõ
+    //å›¾ç‰‡å‹ç¼©
     public static byte[] bitmapToBytes(Bitmap bitmap){
         if (bitmap == null) {
                 return null;
         }
         final ByteArrayOutputStream os = new ByteArrayOutputStream();
-        // ½«BitmapÑ¹Ëõ³ÉPNG±àÂë£¬ÖÊÁ¿Îª100%´æ´¢
-        bitmap.compress(Bitmap.CompressFormat.PNG, 90, os);//³ıÁËPNG»¹ÓĞºÜ¶à³£¼û¸ñÊ½£¬ÈçjpegµÈ¡£
+        // å°†Bitmapå‹ç¼©æˆPNGç¼–ç ï¼Œè´¨é‡ä¸º100%å­˜å‚¨
+        bitmap.compress(Bitmap.CompressFormat.PNG, 90, os);//é™¤äº†PNGè¿˜æœ‰å¾ˆå¤šå¸¸è§æ ¼å¼ï¼Œå¦‚jpegç­‰ã€‚
         return os.toByteArray();
     }
     
-    //Í¼Æ¬½âÑ¹
+    //å›¾ç‰‡è§£å‹
     public static Bitmap bytesTobitmap(byte[] bytes){
         return BitmapFactory.decodeByteArray(bytes, 0, bytes.length, null);
     }    

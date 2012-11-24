@@ -1,4 +1,4 @@
-package com.qchelper.main;
+ï»¿package com.qchelper.main;
 
 import java.io.File;
 
@@ -31,11 +31,11 @@ import com.qchelper.comm.dbHelper;
 public class PicActivity extends Activity {
 	final static String TAG="PicActivity";
 	
-	public static final String SDCARD_ROOT_PATH = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();//Â·¾¶  
-	public static final String SAVE_PATH_IN_SDCARD = "/QCHelper/PicTemp"; //Í¼Æ¬¼°ÆäËûÊı¾İ±£´æÎÄ¼ş¼Ğ  
-	public static final String IMAGE_CAPTURE_NAME = "cameraTmp.jpg"; //ÕÕÆ¬Ãû³Æ  
-	public final static int REQUEST_CODE_TAKE_PICTURE = 1; //ÉèÖÃÅÄÕÕ²Ù×÷µÄ±êÖ¾  
-	public final static int REQUEST_CODE_IMAGE_SHOW = 2; //ÉèÖÃ´óÍ¼ä¯ÀÀµÄ±êÖ¾
+	public static final String SDCARD_ROOT_PATH = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();//è·¯å¾„  
+	public static final String SAVE_PATH_IN_SDCARD = "/QCHelper/PicTemp"; //å›¾ç‰‡åŠå…¶ä»–æ•°æ®ä¿å­˜æ–‡ä»¶å¤¹  
+	public static final String IMAGE_CAPTURE_NAME = "cameraTmp.jpg"; //ç…§ç‰‡åç§°  
+	public final static int REQUEST_CODE_TAKE_PICTURE = 1; //è®¾ç½®æ‹ç…§æ“ä½œçš„æ ‡å¿—  
+	public final static int REQUEST_CODE_IMAGE_SHOW = 2; //è®¾ç½®å¤§å›¾æµè§ˆçš„æ ‡å¿—
 	
 	int MstID;
 	int[] ItemKeyList;
@@ -45,8 +45,8 @@ public class PicActivity extends Activity {
 	GridView gvPicView;
 	ImageAdapter impAdapter;
 	
-	int SaveMaxHeight = 800; //±£´æÍ¼Æ¬µÄ¸ß¶È,ÒÔºó¿É¿¼ÂÇÖ§³ÖÅäÖÃ
-	int ShowMaxHeight = 120; //ÏÔÊ¾ÁĞ±íÖĞÍ¼Æ¬¸ß¶È,ºó¿É¿¼ÂÇÖ§³ÖÅäÖÃ
+	int SaveMaxHeight = 800; //ä¿å­˜å›¾ç‰‡çš„é«˜åº¦,ä»¥åå¯è€ƒè™‘æ”¯æŒé…ç½®
+	int ShowMaxHeight = 120; //æ˜¾ç¤ºåˆ—è¡¨ä¸­å›¾ç‰‡é«˜åº¦,åå¯è€ƒè™‘æ”¯æŒé…ç½®
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -159,16 +159,16 @@ public class PicActivity extends Activity {
             View view = convertView;
             Log.d(TAG, "getView:" + Integer.toString(position));
             view = LayoutInflater.from(getContext()).inflate(R.layout.qcpicitem, null);
-            //ÏÔÊ¾Ãû³Æ
+            //æ˜¾ç¤ºåç§°
             ImageView imgView = (ImageView) view.findViewById(R.id.imgCheckPic);
             TextView txeDesc = (TextView) view.findViewById(R.id.imgPicDesc);
             
             Bitmap bmap = getItem(position);
             //imgView.setMaxHeight(60);
             imgView.setImageBitmap(bmap);
-            txeDesc.setText("Í¼ " + Integer.toString(position + 1));
+            txeDesc.setText("å›¾ " + Integer.toString(position + 1));
             
-            //·µ»ØÖØĞ´µÄview
+            //è¿”å›é‡å†™çš„view
             return view;
         }       
 
@@ -179,14 +179,14 @@ public class PicActivity extends Activity {
     	BitmapFactory.Options options = new BitmapFactory.Options();
     	
     	options.inJustDecodeBounds = true;  
-        // »ñÈ¡Õâ¸öÍ¼Æ¬µÄ¿íºÍ¸ß  
-    	Bitmap bitmap = BitmapFactory.decodeFile(imagePath, options); //´ËÊ±·µ»ØbitmapÎª¿Õ
+        // è·å–è¿™ä¸ªå›¾ç‰‡çš„å®½å’Œé«˜  
+    	Bitmap bitmap = BitmapFactory.decodeFile(imagePath, options); //æ­¤æ—¶è¿”å›bitmapä¸ºç©º
     	
     	Log.d(TAG, "getImage:1");
  
-    	//¼ÆËãËõ·Å±È  
+    	//è®¡ç®—ç¼©æ”¾æ¯”  
     	int be = (int)(options.outHeight / (float)SaveMaxHeight);  
-    	int ys = options.outHeight % SaveMaxHeight;//ÇóÓàÊı  
+    	int ys = options.outHeight % SaveMaxHeight;//æ±‚ä½™æ•°  
     	float fe = ys / (float)SaveMaxHeight;  
     	if(fe>=0.5)be = be + 1;  
     	if (be <= 0)  
@@ -194,7 +194,7 @@ public class PicActivity extends Activity {
     	Log.d(TAG, "getImage:" + Integer.toString(be) + "_" + Integer.toString(ys));    	
     	options.inSampleSize = be; 
     	
-    	//ÖØĞÂ¶ÁÈëÍ¼Æ¬£¬×¢ÒâÕâ´ÎÒª°Ñoptions.inJustDecodeBounds ÉèÎª false  
+    	//é‡æ–°è¯»å…¥å›¾ç‰‡ï¼Œæ³¨æ„è¿™æ¬¡è¦æŠŠoptions.inJustDecodeBounds è®¾ä¸º false  
     	options.inJustDecodeBounds = false;  
     	bitmap=BitmapFactory.decodeFile(imagePath,options);
     	Log.d(TAG, "getImage:End");
@@ -213,9 +213,9 @@ public class PicActivity extends Activity {
 //    		BitmapFactory.Options options = new BitmapFactory.Options();        	
 //        	options.inJustDecodeBounds = true;         	
 //        	Log.d(TAG, "BytesToBitmap:1");     
-//        	//¼ÆËãËõ·Å±È  
+//        	//è®¡ç®—ç¼©æ”¾æ¯”  
 //        	int be = (int)(options.outHeight / (float)ShowMaxHeight);  
-//        	int ys = options.outHeight % ShowMaxHeight;//ÇóÓàÊı  
+//        	int ys = options.outHeight % ShowMaxHeight;//æ±‚ä½™æ•°  
 //        	float fe = ys / (float)ShowMaxHeight;  
 //        	if(fe>=0.5)be = be + 1;  
 //        	if (be <= 0)  
@@ -223,7 +223,7 @@ public class PicActivity extends Activity {
 //        	Log.d(TAG, "BytesToBitmap:" + Integer.toString(be) + "_" + Integer.toString(ys));    	
 //        	options.inSampleSize = be; 
 //        	
-//        	//ÖØĞÂ¶ÁÈëÍ¼Æ¬£¬×¢ÒâÕâ´ÎÒª°Ñoptions.inJustDecodeBounds ÉèÎª false  
+//        	//é‡æ–°è¯»å…¥å›¾ç‰‡ï¼Œæ³¨æ„è¿™æ¬¡è¦æŠŠoptions.inJustDecodeBounds è®¾ä¸º false  
 //        	options.inJustDecodeBounds = false;   		
 //    		
 //    		return BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);*/
@@ -248,7 +248,7 @@ public class PicActivity extends Activity {
 		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		
 		if ((ItemKeyList == null) || (ItemKeyList.length < 15)) {
-			// ´æ´¢¿¨¿ÉÓÃ ½«ÕÕÆ¬´æ´¢ÔÚ sdcard(Ğ¡Ã×ÊÖ»úÖ±½Ó´ÓÏµÍ³Ïà»úÖĞ·µ»ØÍ¼Æ¬ÓĞÎÊÌâ)
+			// å­˜å‚¨å¡å¯ç”¨ å°†ç…§ç‰‡å­˜å‚¨åœ¨ sdcard(å°ç±³æ‰‹æœºç›´æ¥ä»ç³»ç»Ÿç›¸æœºä¸­è¿”å›å›¾ç‰‡æœ‰é—®é¢˜)
 			if(isHasSdcard()){
 				Log.d(TAG, SDCARD_ROOT_PATH+ SAVE_PATH_IN_SDCARD);
 				File DestDir = new File(SDCARD_ROOT_PATH+ SAVE_PATH_IN_SDCARD);

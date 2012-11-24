@@ -1,4 +1,4 @@
-package com.qchelper.main;
+ï»¿package com.qchelper.main;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +24,8 @@ import com.qchelper.comm.dbHelper;
 public class CheckActivity extends Activity {
 	final static String DEBUG_TAG = "CheckActivity";
 	
-	public final static int REQUEST_CODE_IMAGE= 1;//Í¼Æ¬ÏÔÊ¾  
-	public final static int REQUEST_CODE_RESULT= 2;//¼ìÑé½á¹û
+	public final static int REQUEST_CODE_IMAGE= 1;//å›¾ç‰‡æ˜¾ç¤º  
+	public final static int REQUEST_CODE_RESULT= 2;//æ£€éªŒç»“æœ
 	
     int MstID;
     Intent intent;
@@ -43,7 +43,7 @@ public class CheckActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check);
         
-        //»ñÈ¡µÇÂ¼ĞÅÏ¢
+        //è·å–ç™»å½•ä¿¡æ¯
         SharedPreferences setting = getSharedPreferences("Login",Context.MODE_WORLD_READABLE);
         String login_user_id = setting.getString("user_id", "");
         if (login_user_id == "") {
@@ -58,8 +58,8 @@ public class CheckActivity extends Activity {
         bundle = intent.getExtras();
         MstID = bundle.getInt("KeyID");
         
-        txtOrderNo.setText("¶©µ¥ºÅ:" + bundle.getString("OrderNo"));
-        txtStyleNo.setText("¿îºÅ:" + bundle.getString("StyleNo"));
+        txtOrderNo.setText("è®¢å•å·:" + bundle.getString("OrderNo"));
+        txtStyleNo.setText("æ¬¾å·:" + bundle.getString("StyleNo"));
 
         InitqmCheckRecordMstData(12, bundle.getString("OrderNo"), bundle.getString("StyleNo"), bundle.getString("ProductID"), login_user_id);
         
@@ -108,8 +108,8 @@ public class CheckActivity extends Activity {
             while (cursor.moveToNext()) {
             	ItemKeyList[cursor.getPosition()] = cursor.getInt(0);
                 data.add(cursor.getString(0)
-                        + "¡ù" + cursor.getString(1)
-                        + "¡ù" + cursor.getString(2)
+                        + "â€»" + cursor.getString(1)
+                        + "â€»" + cursor.getString(2)
                         );
             }
         }
@@ -128,7 +128,7 @@ public class CheckActivity extends Activity {
             View view = convertView;
             Log.d(DEBUG_TAG, "getView:" + Integer.toString(position));
             view = LayoutInflater.from(getContext()).inflate(R.layout.qccheckitem, null);
-            //ÏÔÊ¾Ãû³Æ
+            //æ˜¾ç¤ºåç§°
             TextView tv_iItemID = (TextView) view.findViewById(R.id.CheckItemID); 
             TextView tv_iCheckState = (TextView) view.findViewById(R.id.CheckState);           
             Button btn_CheckPic = (Button) view.findViewById(R.id.CheckPic);
@@ -146,27 +146,27 @@ public class CheckActivity extends Activity {
             	}});
             */
             
-            String[] strarray = getItem(position).split("¡ù");            
+            String[] strarray = getItem(position).split("â€»");            
             if (strarray.length == 3) {
-            	tv_iItemID.setText("µÚ" + strarray[1] + "µÀ¼ìÑé");
+            	tv_iItemID.setText("ç¬¬" + strarray[1] + "é“æ£€éªŒ");
             	Log.d(DEBUG_TAG, "getView:" + Integer.toString(strarray[2].length()));
             	if (strarray[2] == null || strarray[2].equals("") || strarray[2].equals("null") || strarray[2].length() <= 0) {
                 	tv_iCheckState.setText("-"); 
                 	Log.d(DEBUG_TAG, "getView_1");
             	}
             	else {
-                	tv_iCheckState.setText("¡Ì");
+                	tv_iCheckState.setText("âˆš");
                 	Log.d(DEBUG_TAG, "getView_2");
             	}
             	Log.d(DEBUG_TAG, strarray[2]);
             	
             }
             else if (strarray.length == 2) {
-            	tv_iItemID.setText("µÚ" + strarray[1] + "µÀ¼ìÑé");
+            	tv_iItemID.setText("ç¬¬" + strarray[1] + "é“æ£€éªŒ");
             	tv_iCheckState.setText("-");
             }
             
-            //·µ»ØÖØĞ´µÄview
+            //è¿”å›é‡å†™çš„view
             return view;
         }       
 

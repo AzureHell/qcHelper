@@ -1,4 +1,4 @@
-package com.qchelper.main;
+ï»¿package com.qchelper.main;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,17 +91,17 @@ public class MainActivity extends Activity {
     	Log.d(DEBUG_TAG, "InitInsertData1:" + Integer.toString(cursor.getCount()));
     	if (cursor.getCount() <= 0) {
     		dbhlp.getWritableDatabase().execSQL("insert into qmCheckPlan(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, dRequestCheck, sCheckItemDesc, sQCUserID, sUserID) "
-    				  + "values(?,?,?,?,?,?,?,?,?)", new Object[] {1, 12, "SC010", "QX7886", "P0000001", "2012-11-22", "1¡¢ÃæÁÏ¡¢¸¨ÁÏÆ·ÖÊÓÅÁ¼£¬·ûºÏ¿Í»§ÒªÇó; 2¡¢¿îÊ½ÅäÉ«×¼È·ÎÞÎó; 3¡¢°ü×°ÃÀ¹Û¡¢Åä±ÈÕýÈ·.", "U001", "U001"});
+    				  + "values(?,?,?,?,?,?,?,?,?)", new Object[] {1, 12, "SC010", "QX7886", "P0000001", "2012-11-22", "1ã€é¢æ–™ã€è¾…æ–™å“è´¨ä¼˜è‰¯ï¼Œç¬¦åˆå®¢æˆ·è¦æ±‚; 2ã€æ¬¾å¼é…è‰²å‡†ç¡®æ— è¯¯; 3ã€åŒ…è£…ç¾Žè§‚ã€é…æ¯”æ­£ç¡®.", "U001", "U001"});
     		dbhlp.getWritableDatabase().execSQL("insert into qmCheckPlan(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, dRequestCheck, sCheckItemDesc, sQCUserID, sUserID) "
-  				  + "values(?,?,?,?,?,?,?,?,?)", new Object[] {2, 12, "SC011", "TX7001", "P0000002", "2012-11-28", "1¡¢ÃæÁÏ¡¢¸¨ÁÏÆ·ÖÊÓÅÁ¼£¬·ûºÏ¿Í»§ÒªÇó; 2¡¢Ë®Ï´É«ÀÎ¶È; 3¡¢°ü×°ÃÀ¹Û¡¢Åä±ÈÕýÈ·.", "U001", "U001"});
+  				  + "values(?,?,?,?,?,?,?,?,?)", new Object[] {2, 12, "SC011", "TX7001", "P0000002", "2012-11-28", "1ã€é¢æ–™ã€è¾…æ–™å“è´¨ä¼˜è‰¯ï¼Œç¬¦åˆå®¢æˆ·è¦æ±‚; 2ã€æ°´æ´—è‰²ç‰¢åº¦; 3ã€åŒ…è£…ç¾Žè§‚ã€é…æ¯”æ­£ç¡®.", "U001", "U001"});
     		dbhlp.getWritableDatabase().execSQL("insert into qmCheckPlan(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, dRequestCheck, sCheckItemDesc, sQCUserID, sUserID) "
-  				  + "values(?,?,?,?,?,?,?,?,?)", new Object[] {3, 18, "SC011", "YW0006", "P0000003", "2012-11-30", "1¡¢¶ÔÉ«×¼È·£¬´ó»õ²¼µÄÑÕÉ«ºÍÈ·ÈÏÉ«µÄÉ«²îÖÁÉÙÓ¦ÔÚ3.5¼¶Ö®ÄÚ£¬²¢Ðè¾­¿Í»§È·ÈÏ; 2¡¢¿îÊ½ÅäÉ«×¼È·ÎÞÎó; 3¡¢°ü×°ÃÀ¹Û¡¢Åä±ÈÕýÈ·.", "U001", "U001"});
+  				  + "values(?,?,?,?,?,?,?,?,?)", new Object[] {3, 18, "SC011", "YW0006", "P0000003", "2012-11-30", "1ã€å¯¹è‰²å‡†ç¡®ï¼Œå¤§è´§å¸ƒçš„é¢œè‰²å’Œç¡®è®¤è‰²çš„è‰²å·®è‡³å°‘åº”åœ¨3.5çº§ä¹‹å†…ï¼Œå¹¶éœ€ç»å®¢æˆ·ç¡®è®¤; 2ã€æ¬¾å¼é…è‰²å‡†ç¡®æ— è¯¯; 3ã€åŒ…è£…ç¾Žè§‚ã€é…æ¯”æ­£ç¡®.", "U001", "U001"});
     		dbhlp.getWritableDatabase().execSQL("insert into qmCheckPlan(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, dRequestCheck, sCheckItemDesc, sQCUserID, sUserID) "
-  				  + "values(?,?,?,?,?,?,?,?,?)", new Object[] {4, 12, "SC012", "QX1111", "P0000004", "2012-12-08", "1¡¢²úÆ·¸É¾»¡¢Õû½à¡¢ÂôÏàºÃ; 2¡¢¿îÊ½ÅäÉ«×¼È·ÎÞÎó; 3¡¢°ü×°ÃÀ¹Û¡¢Åä±ÈÕýÈ·; 4¡¢ÃæÁÏ¡¢¸¨ÁÏÆ·ÖÊÓÅÁ¼£¬·ûºÏ¿Í»§ÒªÇó.", "U001", "U001"});
+  				  + "values(?,?,?,?,?,?,?,?,?)", new Object[] {4, 12, "SC012", "QX1111", "P0000004", "2012-12-08", "1ã€äº§å“å¹²å‡€ã€æ•´æ´ã€å–ç›¸å¥½; 2ã€æ¬¾å¼é…è‰²å‡†ç¡®æ— è¯¯; 3ã€åŒ…è£…ç¾Žè§‚ã€é…æ¯”æ­£ç¡®; 4ã€é¢æ–™ã€è¾…æ–™å“è´¨ä¼˜è‰¯ï¼Œç¬¦åˆå®¢æˆ·è¦æ±‚.", "U001", "U001"});
     		dbhlp.getWritableDatabase().execSQL("insert into qmCheckPlan(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, dRequestCheck, sCheckItemDesc, sQCUserID, sUserID) "
-  				  + "values(?,?,?,?,?,?,?,?,?)", new Object[] {5, 20, "SC012", "UK1256", "P0000005", "2012-12-12", "1¡¢²úÆ·¸É¾»¡¢Õû½à¡¢ÂôÏàºÃ; 2¡¢¿îÊ½ÅäÉ«×¼È·ÎÞÎó; 3¡¢°ü×°ÃÀ¹Û¡¢Åä±ÈÕýÈ·; 4¡¢Ë®Ï´É«ÀÎ¶È; 5¡¢ÃæÁÏ¡¢¸¨ÁÏÆ·ÖÊÓÅÁ¼£¬·ûºÏ¿Í»§ÒªÇó.", "U001", "U001"});
+  				  + "values(?,?,?,?,?,?,?,?,?)", new Object[] {5, 20, "SC012", "UK1256", "P0000005", "2012-12-12", "1ã€äº§å“å¹²å‡€ã€æ•´æ´ã€å–ç›¸å¥½; 2ã€æ¬¾å¼é…è‰²å‡†ç¡®æ— è¯¯; 3ã€åŒ…è£…ç¾Žè§‚ã€é…æ¯”æ­£ç¡®; 4ã€æ°´æ´—è‰²ç‰¢åº¦; 5ã€é¢æ–™ã€è¾…æ–™å“è´¨ä¼˜è‰¯ï¼Œç¬¦åˆå®¢æˆ·è¦æ±‚.", "U001", "U001"});
     		dbhlp.getWritableDatabase().execSQL("insert into qmCheckPlan(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, dRequestCheck, sCheckItemDesc, sQCUserID, sUserID) "
-  				  + "values(?,?,?,?,?,?,?,?,?)", new Object[] {6, 22, "SC022", "LP6589", "P0000006", "2012-12-22", "1¡¢ÃæÁÏ¡¢¸¨ÁÏÆ·ÖÊÓÅÁ¼£¬·ûºÏ¿Í»§ÒªÇó; 2¡¢¿îÊ½ÅäÉ«×¼È·ÎÞÎó; 3¡¢°ü×°ÃÀ¹Û¡¢Åä±ÈÕýÈ·.", "U001", "U001"});    		
+  				  + "values(?,?,?,?,?,?,?,?,?)", new Object[] {6, 22, "SC022", "LP6589", "P0000006", "2012-12-22", "1ã€é¢æ–™ã€è¾…æ–™å“è´¨ä¼˜è‰¯ï¼Œç¬¦åˆå®¢æˆ·è¦æ±‚; 2ã€æ¬¾å¼é…è‰²å‡†ç¡®æ— è¯¯; 3ã€åŒ…è£…ç¾Žè§‚ã€é…æ¯”æ­£ç¡®.", "U001", "U001"});    		
     	}
     	
     	cursor = dbhlp.querySQL("select iID from qmCheckRecordMst ");
@@ -155,7 +155,7 @@ public class MainActivity extends Activity {
     public boolean onPrepareOptionsMenu(Menu menu) {   
         // Set 'delete' menu item state depending on count   
         MenuItem loginItem = menu.findItem(LOGIN_ID);   
-        // µÇÂ¼ÑéÖ¤£¬Èç¹ûÎ´½øÐÐµÇÂ¼Ôòµ¯³öµÇÂ¼´°¿Ú
+        // ç™»å½•éªŒè¯ï¼Œå¦‚æžœæœªè¿›è¡Œç™»å½•åˆ™å¼¹å‡ºç™»å½•çª—å£
         SharedPreferences setting = getSharedPreferences("Login",Context.MODE_WORLD_READABLE);
         String login_user_id = setting.getString("user_id", "");
         if (login_user_id == "") {
@@ -241,19 +241,19 @@ public class MainActivity extends Activity {
             	ItemKeyList[cursor.getPosition()] = cursor.getInt(0);
             	Log.d(DEBUG_TAG, "getPlanList_7");
                 data.add(cursor.getString(1)
-                        + "¡ù" + cursor.getString(2)
-                        + "¡ù" + cursor.getString(3)
-                        + "¡ù" + cursor.getString(4)
-                        + "¡ù" + cursor.getString(5)
+                        + "â€»" + cursor.getString(2)
+                        + "â€»" + cursor.getString(3)
+                        + "â€»" + cursor.getString(4)
+                        + "â€»" + cursor.getString(5)
                         );
             }
             if (1 == 1) { //((ParamValue != null) && (ParamValue != ""))
-            	Toast.makeText(this, "ÕÒµ½" + Integer.toString(cursor.getCount()) + "Ìõ¼ÇÂ¼", 1500).show();            	
+            	Toast.makeText(this, "æ‰¾åˆ°" + Integer.toString(cursor.getCount()) + "æ¡è®°å½•", 1500).show();            	
             }
         }
         else {
         	if (1 == 1) { //((ParamValue != null) && (ParamValue != ""))
-        		Toast.makeText(this, "Ã»ÓÐÕÒµ½¼ÇÂ¼", 1500).show();        		
+        		Toast.makeText(this, "æ²¡æœ‰æ‰¾åˆ°è®°å½•", 1500).show();        		
         	}
         }
         dbhlp.close();
@@ -270,14 +270,14 @@ public class MainActivity extends Activity {
         public View getView(int position, View convertView, ViewGroup parent) {  
             View view = convertView;  
             view = LayoutInflater.from(getContext()).inflate(R.layout.qcplanitem, null);
-            //ÏÔÊ¾Ãû³Æ  
+            //æ˜¾ç¤ºåç§°  
             TextView tv_dRequestCheck = (TextView) view.findViewById(R.id.PlanCheckDate);
             TextView tv_sOrderNo = (TextView) view.findViewById(R.id.PlanOrderNo);
             TextView tv_sStyleNo = (TextView) view.findViewById(R.id.PlanStyleNo);
             TextView tv_sProductID = (TextView) view.findViewById(R.id.PlanProductID);
             TextView tv_sCheckItemDesc = (TextView) view.findViewById(R.id.PlanCheckDesc);
             
-            String[] strarray = getItem(position).split("¡ù");
+            String[] strarray = getItem(position).split("â€»");
             if (strarray.length == 5) {
             	tv_dRequestCheck.setText(strarray[0]);
             	tv_sOrderNo.setText(strarray[1]);
@@ -285,7 +285,7 @@ public class MainActivity extends Activity {
             	tv_sProductID.setText(strarray[3]);
             	tv_sCheckItemDesc.setText(strarray[4]);
             }
-            //·µ»ØÖØÐ´µÄview
+            //è¿”å›žé‡å†™çš„view
             return view;
         }
     }
@@ -326,7 +326,7 @@ public class MainActivity extends Activity {
                         comm.showMsg(MainActivity.this, R.string.network_inactive);
                         break;
                     }
-                    // µÇÂ¼ÑéÖ¤£¬Èç¹ûÎ´½øÐÐµÇÂ¼Ôòµ¯³öµÇÂ¼´°¿Ú
+                    // ç™»å½•éªŒè¯ï¼Œå¦‚æžœæœªè¿›è¡Œç™»å½•åˆ™å¼¹å‡ºç™»å½•çª—å£
                     SharedPreferences setting = getSharedPreferences("Login",Context.MODE_WORLD_READABLE);
                     String logined_user_id = setting.getString("user_id", "");
                     if (logined_user_id == "") {
@@ -411,7 +411,7 @@ public class MainActivity extends Activity {
     
     @Override
     protected Dialog onCreateDialog(int id) {
-        if (id == 0) {// ×¢Ïú  
+        if (id == 0) {// æ³¨é”€  
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage(comm.getResourceString(this, R.string.main_sure_logout))
                     .setCancelable(false)
@@ -483,7 +483,7 @@ public class MainActivity extends Activity {
                 String resultHttp = "";
                 dbHelper dbhlp = new dbHelper(MainActivity.this);
                 
-                // ÏÂÔØQC¼Æ»®
+                // ä¸‹è½½QCè®¡åˆ’
                 Log.d(DEBUG_TAG, "begin download");
                 int maxID = 1;
                 Cursor cursor = dbhlp.querySQL("select max(iID) as iID from qmCheckPlan");
@@ -504,18 +504,18 @@ public class MainActivity extends Activity {
                 if (resultHttp != "") {
                     try {
                          JSONObject json = new JSONObject(resultHttp);
-                         //ÈçºÎ·µ»Ø³É¹¦
+                         //å¦‚ä½•è¿”å›žæˆåŠŸ
                          if (json.getString("status").equals("succeed")) {
-                             //´¦Àí·µ»Ø±íÁÐ±í
+                             //å¤„ç†è¿”å›žè¡¨åˆ—è¡¨
                              JSONArray jsonTableArray = json.getJSONArray("data");
                              for (int j=0; j < jsonTableArray.length(); j++) {
-                                 //»ñÈ¡·µ»Ø±í
+                                 //èŽ·å–è¿”å›žè¡¨
                                  JSONObject jsonTable = jsonTableArray.getJSONObject(j);
                                  if (jsonTable.getString("table").equals("qmCheckPlan")) {
-                                     //»ñÈ¡·µ»Ø¼ÇÂ¼ÁÐ±í
+                                     //èŽ·å–è¿”å›žè®°å½•åˆ—è¡¨
                                      JSONArray jsonRecordArray = jsonTable.getJSONArray("records");
                                      for (int k=0;  k < jsonRecordArray.length(); k++) {
-                                         //»ñÈ¡·µ»Ø¼ÇÂ¼
+                                         //èŽ·å–è¿”å›žè®°å½•
                                          JSONObject jsonRecordData = jsonRecordArray.getJSONObject(k);
                                          ContentValues cv = new ContentValues();
                                          String str = "iID"; cv.put(str, jsonRecordData.getString(str));
@@ -538,12 +538,12 @@ public class MainActivity extends Activity {
                     }   
                 }
                 resultHttp = "";
-                //ÉÏ´«QC½á¹û
+                //ä¸Šä¼ QCç»“æžœ
                 Log.d(DEBUG_TAG, " begin upload");
                 String jsonMst = "", jsonDtl = "";
                 int recordDtlCount = 0;
                 
-                //ÔÝÊ±ÊÖ¶¯ÉèÖÃ
+                //æš‚æ—¶æ‰‹åŠ¨è®¾ç½®
                 user_id = "1";
                 
                 Cursor csCheckRecordMat = dbhlp.querySQL("select iID, iFactoryID, sOrderNo, sStyleNo, sProductID"
@@ -575,7 +575,7 @@ public class MainActivity extends Activity {
                         String str = "{'user_id_opt':'"+user_id
                                 +"','iID':'"+csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("iID"))
                                 +"','iMstID':'"+csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("iMstID"))
-                                //×éÖ¯×÷ÎªÎÄ¼þÃû³Æ
+                                //ç»„ç»‡ä½œä¸ºæ–‡ä»¶åç§°
                                 +"','sFileName':'" + "user_id_opt(" + user_id
                                 + ")iMstID(" + csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("iMstID"))
                                 + ")iID(" + csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("iID")) + ").png"
@@ -605,11 +605,11 @@ public class MainActivity extends Activity {
                         } catch (Exception e) {
                             Log.e(DEBUG_TAG, e.toString());
                         }
-//                        ´¦Àí·µ»Ø½á¹û
+//                        å¤„ç†è¿”å›žç»“æžœ
                         if (resultHttp != "") {
                             try {
                                 JSONObject json = new JSONObject(resultHttp);
-                                //ÈçºÎ·µ»Ø³É¹¦
+                                //å¦‚ä½•è¿”å›žæˆåŠŸ
                                 if (json.getString("status").equals("succeed")) {
                                     JSONArray jsonTableArray = json.getJSONArray("data");
                                     for (int j=0; j < jsonTableArray.length(); j++) {
@@ -619,7 +619,7 @@ public class MainActivity extends Activity {
                                             for (int k=0; k < jsonRecordArray.length(); k++) {
                                                 JSONObject jsonRecordData = jsonRecordArray.getJSONObject(k);
                                                 
-                                                //ÉÏ´«QCÍ¼Æ¬
+                                                //ä¸Šä¼ QCå›¾ç‰‡
                                                 Log.d(DEBUG_TAG, "begin upload Picture");
                                                 recordDtlCount = 0;
                                                 String resultHttpPic = "";
@@ -629,7 +629,7 @@ public class MainActivity extends Activity {
                                                     Log.d(DEBUG_TAG, "Build uploadCheckRecordDetail Pic rec:" + recordDtlCount++);
                                                     try {
                                                         resultHttpPic = comm.invokeHttp(MainActivity.this, "uploadCheckRecordPic"
-                                                                //×éÖ¯ÎÄ¼þÃû³Æ£¬ÕâÑù¿ÉÒÔÕÒµ½ÐèÒª²åÈëÍ¼Æ¬µÄÄÇÌõ¼ÇÂ¼
+                                                                //ç»„ç»‡æ–‡ä»¶åç§°ï¼Œè¿™æ ·å¯ä»¥æ‰¾åˆ°éœ€è¦æ’å…¥å›¾ç‰‡çš„é‚£æ¡è®°å½•
                                                                 , "user_id_opt(" + user_id 
                                                                 + ")iMstID(" + cursor1.getString(cursor1.getColumnIndex("iMstID"))
                                                                 + ")iID(" + cursor1.getString(cursor1.getColumnIndex("iID")) + ").png"
@@ -641,7 +641,7 @@ public class MainActivity extends Activity {
                                                 }
                                                 if (resultHttpPic != "") {
                                                     JSONObject jsonPic = new JSONObject(resultHttpPic);
-                                                    //ÈçºÎ·µ»Ø³É¹¦
+                                                    //å¦‚ä½•è¿”å›žæˆåŠŸ
                                                     if (jsonPic.getString("status").equals("succeed")) {
                                                         Log.d(DEBUG_TAG, " finished upload Picture");
                                                     }
@@ -660,7 +660,7 @@ public class MainActivity extends Activity {
                 }
                 resultHttp = "";
                 Log.d(DEBUG_TAG, " finished upload");
-                //¸üÐÂ½ø¶È
+                //æ›´æ–°è¿›åº¦
                 publishProgress(syncCurrentCount);
                 csCheckRecordMat.close();
             }

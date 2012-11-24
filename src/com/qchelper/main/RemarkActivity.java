@@ -1,4 +1,4 @@
-package com.qchelper.main;
+﻿package com.qchelper.main;
 
 import com.qchelper.comm.dbHelper;
 
