@@ -41,9 +41,6 @@ public class LoginActivity extends Activity implements OnClickListener {
         edtPassword = (EditText)findViewById(R.id.password);
         btnOk = (Button)findViewById(R.id.login_ok);
         btnOk.setOnClickListener(this);
-        
-        edtUserName.setText("test");
-        edtPassword.setText("123");
     }
     
     public void onClick(View v) {

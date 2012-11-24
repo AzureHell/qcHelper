@@ -47,8 +47,11 @@ public class ConsetActivity extends Activity {
         btnCancel = (Button) findViewById(R.id.setting_cancel);
         btnCancel.setOnClickListener(new ClickEvent());
         
-        edtIp.setText("192.168.100.200");
-        edtPort.setText("8080");
+        //edtIp.setText("192.168.100.200");
+        //如果为空，则设置默认值
+        if (edtPort.getText().toString() == "") {
+        	edtPort.setText("8080");
+        }
     }
     
     class ClickEvent implements View.OnClickListener {
