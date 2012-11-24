@@ -1,1 +1,1 @@
-Hi, GitHub
+Hi, It's a android app.
