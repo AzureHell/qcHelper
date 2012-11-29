@@ -33,10 +33,12 @@ public class dbHelper extends SQLiteOpenHelper {
          * sCheckItemDesc 检验内容
          * sQCUserID QC编号
          * sUserID 用户编号
+         * bApproved 已审核
          */
         String sql_create ="Create table qmCheckPlan(iID integer PRIMARY KEY "
                 + ", iFactoryID integer, sOrderNo nvarchar(50), sStyleNo nvarchar(50), sProductID nvarchar(50) "
-                + ", dRequestCheck timestamp, sCheckItemDesc nvarchar(500), sQCUserID nvarchar(50), sUserID nvarchar(50));";
+                + ", dRequestCheck timestamp, sCheckItemDesc nvarchar(500), sQCUserID nvarchar(50), sUserID nvarchar(50)) "
+                + ", bApproved bit default 0;";
         db.execSQL(sql_create);
         Log.d(DEBUG_TAG, "CREATE_1");
         /*

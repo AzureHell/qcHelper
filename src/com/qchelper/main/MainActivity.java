@@ -527,6 +527,7 @@ public class MainActivity extends Activity {
                                          str = "sCheckItemDesc"; cv.put(str, jsonRecordData.getString(str));
                                          str = "sCheckItemDesc"; cv.put(str, jsonRecordData.getString(str));
                                          str = "sUserID"; cv.put(str, jsonRecordData.getString(str));
+                                         str = "bApproved"; cv.put(str, jsonRecordData.getString(str));
                                          dbhlp.insert("qmCheckPlan", cv);
                                      }
                                  }
