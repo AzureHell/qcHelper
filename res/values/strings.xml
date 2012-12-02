@@ -47,6 +47,9 @@
     <string name="login_succeed">Login succeed</string>
     <string name="login_failed">Login failed</string>    
     
+    <string name="login_user_name_lost">User name lost</string>
+    <string name="login_password_lost">Password lost</string>
+    
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     

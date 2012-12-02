@@ -47,10 +47,16 @@ public class LoginActivity extends Activity implements OnClickListener {
         switch(v.getId()) {
             case R.id.login_ok: {
                 Log.d(DEBUG_TAG, "click ok");
-                if (edtUserName.getText().toString() != "" && edtPassword.getText().toString() != "") {
+                if (!edtUserName.getText().toString().equals("") && !edtPassword.getText().toString().equals("")) {
                     new loginAsyncTask().execute(edtUserName.getText().toString(), edtPassword.getText().toString());
                 } else {
-                    comm.showMsg(this, R.string.information_incomplete);
+                	if (edtUserName.getText().toString().equals("")) {
+                		comm.showMsg(this, R.string.login_user_name_lost);
+                	} else if (edtPassword.getText().toString().equals("")) {
+                		comm.showMsg(this, R.string.login_password_lost);
+                	} else {                	
+                		comm.showMsg(this, R.string.information_incomplete);
+                	}
                 }
                 break;
             }
@@ -90,7 +96,7 @@ public class LoginActivity extends Activity implements OnClickListener {
         protected void onPostExecute(String result) {
             Log.d(DEBUG_TAG, "onPostExecute");
             progressDialog.cancel();
-            if (result != "") {
+            if (result != null && result != "") {
                 try {
                     JSONObject json = new JSONObject(result);
                     if (json.getString("status").equals("succeed")) {
