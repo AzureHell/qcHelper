@@ -110,12 +110,17 @@ public class LoginActivity extends Activity implements OnClickListener {
                         .commit();
                         comm.showMsg(LoginActivity.this, R.string.login_succeed);
                         LoginActivity.this.finish();
+                    } else if (json.getString("status").equals("failed")) {
+                    	if (json.getString("error").equals("not return count!")) {
+                    		comm.showErrorMsg(LoginActivity.this, R.string.login_user_or_pass_error);
+                    	}
+                    	else comm.showErrorMsg(LoginActivity.this, json.getString("error"));
                     }
                 } catch (JSONException e) {
                     Log.e(DEBUG_TAG, e.toString());
                 }
             } else {
-                comm.showMsg(LoginActivity.this, R.string.login_failed);
+                comm.showErrorMsg(LoginActivity.this, R.string.login_failed);
             }
         }
     }

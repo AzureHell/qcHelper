@@ -55,6 +55,7 @@
     <string name="login_password_hint">输入你的密码</string>
     <string name="login_succeed">登录成功</string>
     <string name="login_failed">登录失败</string>
+    <string name="login_user_or_pass_error">用户名或密码错误</string>
     
     <string name="login_user_name_lost">用户名不能为空</string>
     <string name="login_password_lost">密码不能为空</string>
