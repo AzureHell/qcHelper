@@ -111,7 +111,7 @@ public class LoginActivity extends Activity implements OnClickListener {
                         comm.showMsg(LoginActivity.this, R.string.login_succeed);
                         LoginActivity.this.finish();
                     } else if (json.getString("status").equals("failed")) {
-                    	if (json.getString("error").equals("not return count!")) {
+                    	if (json.getString("error").equals("not record!")) {
                     		comm.showErrorMsg(LoginActivity.this, R.string.login_user_or_pass_error);
                     	}
                     	else comm.showErrorMsg(LoginActivity.this, json.getString("error"));

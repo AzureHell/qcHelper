@@ -501,7 +501,7 @@ public class MainActivity extends Activity {
                     }
                 }
                 cursor.close();
-                if (resultHttp != "") {
+                if (resultHttp != null && !resultHttp.equals("")) {
                     try {
                          JSONObject json = new JSONObject(resultHttp);
                          //如何返回成功
@@ -532,11 +532,20 @@ public class MainActivity extends Activity {
                                      }
                                  }
                              }
+                             //建峰，你要看到代码处理下这里，同步后刷新会报错！
 //                             refreshList();
+                         } else if (json.getString("status").equals("failed")) {
+//                         	if (json.getString("error").equals("not record!")) {
+//                        		comm.showErrorMsg(MainActivity.this, R.string.main_not_data_need_sync);
+//                        	}
+//                        	else comm.showErrorMsg(MainActivity.this, json.getString("error"));
+                        	 return 2;
                          }
                     } catch (JSONException e) {
                         e.printStackTrace();
-                    }   
+                    }
+                } else {
+                	return 1;
                 }
                 resultHttp = "";
                 //上传QC结果
@@ -607,7 +616,7 @@ public class MainActivity extends Activity {
                             Log.e(DEBUG_TAG, e.toString());
                         }
 //                        处理返回结果
-                        if (resultHttp != "") {
+                        if (resultHttp != null && !resultHttp.equals("")) {
                             try {
                                 JSONObject json = new JSONObject(resultHttp);
                                 //如何返回成功
@@ -652,10 +661,18 @@ public class MainActivity extends Activity {
                                             }
                                         }
                                     }
-                                }
+                                } else if (json.getString("status").equals("failed")) {
+//                                 	if (json.getString("error").equals("not record!")) {
+//                                		return 2;
+//                                	}
+//                                	else return 3;     
+                                	return 2;
+                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
+                        } else {
+                        	return 1;
                         }
                     }
                 }
@@ -677,7 +694,13 @@ public class MainActivity extends Activity {
         protected void onPostExecute(Integer result) {
             Log.d(DEBUG_TAG, "onPostExecute");
             progressDialog.cancel();
-            comm.showMsg(MainActivity.this, R.string.main_sync_completed);
+            if (result == 1) {
+            	comm.showErrorMsg(MainActivity.this, R.string.sync_failed);
+            } else if (result != -1) {
+            	comm.showMsg(MainActivity.this, R.string.main_sync_completed);
+            } else if (result == 2) {
+            	comm.showErrorMsg(MainActivity.this, R.string.main_not_data_need_sync);
+            }
         }
     }    
 }

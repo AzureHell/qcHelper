@@ -11,7 +11,7 @@ import android.util.Log;
 
 
 public class dbHelper extends SQLiteOpenHelper {
-    final static String DEBUG_TAG = "dbQC";
+    final static String DEBUG_TAG = "dbHelper";
     
     private final static String DATABASE_NAME="QCHelper";
     private final static int DATABASE_VERSION=1;
@@ -37,8 +37,8 @@ public class dbHelper extends SQLiteOpenHelper {
          */
         String sql_create ="Create table qmCheckPlan(iID integer PRIMARY KEY "
                 + ", iFactoryID integer, sOrderNo nvarchar(50), sStyleNo nvarchar(50), sProductID nvarchar(50) "
-                + ", dRequestCheck timestamp, sCheckItemDesc nvarchar(500), sQCUserID nvarchar(50), sUserID nvarchar(50)) "
-                + ", bApproved bit default 0;";
+                + ", dRequestCheck timestamp, sCheckItemDesc nvarchar(500), sQCUserID nvarchar(50), sUserID nvarchar(50) "
+                + ", bApproved bit default 0);";
         db.execSQL(sql_create);
         Log.d(DEBUG_TAG, "CREATE_1");
         /*
@@ -114,7 +114,8 @@ public class dbHelper extends SQLiteOpenHelper {
     
     @Override
     public synchronized SQLiteDatabase getReadableDatabase() {
-        return super.getReadableDatabase();
+        //return super.getReadableDatabase();
+        return super.getWritableDatabase();
     }
     
     public Cursor querySQL(String sql) {

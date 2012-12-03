@@ -62,9 +62,13 @@
     <string name="record_save_succeed">Save succeed!</string>
     <string name="record_save_failed">Save failed!</string>
     
+    <string name="main_not_data_need_sync">Not data need sync!</string>
+    <string name="main_sync_completed">Sync completed!</string>
     <string name="information_incomplete">Information incomplete!</string>
     <string name="process_wait">Process,waiting....</string>
     <string name="processing">Processing....</string>    
+    
+    <string name="sync_failed">Sync failed!</string>
     
     <string name="wifi_inactive">Wifi Inactive!</string>
     <string name="network_inactive">Network Inactive!</string>

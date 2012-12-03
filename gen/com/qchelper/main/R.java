@@ -118,7 +118,7 @@ public final class R {
         public static final int hello_world=0x7f050002;
         public static final int image_count_check=0x7f050022;
         public static final int image_not_exists=0x7f050021;
-        public static final int information_incomplete=0x7f050035;
+        public static final int information_incomplete=0x7f050037;
         public static final int login_failed=0x7f05002a;
         public static final int login_password_hint=0x7f050028;
         public static final int login_password_lost=0x7f05002d;
@@ -128,25 +128,26 @@ public final class R {
         public static final int login_user_name_lost=0x7f05002c;
         public static final int login_user_or_pass_error=0x7f05002b;
         public static final int main_need_login=0x7f050031;
-        public static final int main_not_data_need_sync=0x7f05003b;
+        public static final int main_not_data_need_sync=0x7f050035;
         public static final int main_sure_logout=0x7f050032;
-        public static final int main_sync_completed=0x7f05003c;
+        public static final int main_sync_completed=0x7f050036;
         public static final int menu_exit=0x7f050019;
         public static final int menu_login=0x7f050017;
         public static final int menu_logout=0x7f050018;
         public static final int menu_setting=0x7f050016;
         public static final int menu_settings=0x7f050003;
-        public static final int network_inactive=0x7f050039;
+        public static final int network_inactive=0x7f05003c;
         public static final int ok=0x7f05002e;
-        public static final int process_wait=0x7f050036;
-        public static final int processing=0x7f050037;
-        public static final int prompt_ipnotnull=0x7f05003a;
+        public static final int process_wait=0x7f050038;
+        public static final int processing=0x7f050039;
+        public static final int prompt_ipnotnull=0x7f05003d;
         public static final int prompt_protnotnull=0x7f05001d;
         public static final int record_save_failed=0x7f050034;
         public static final int record_save_succeed=0x7f050033;
         public static final int remember_password=0x7f050030;
         public static final int server_ip=0x7f05001b;
         public static final int server_port=0x7f05001c;
+        public static final int sync_failed=0x7f05003a;
         public static final int title_activity_check=0x7f050007;
         public static final int title_activity_conset=0x7f050023;
         public static final int title_activity_image_show=0x7f050012;
@@ -155,7 +156,7 @@ public final class R {
         public static final int title_activity_pic=0x7f05000d;
         public static final int title_activity_remark=0x7f050009;
         public static final int title_activity_setting=0x7f05001a;
-        public static final int wifi_inactive=0x7f050038;
+        public static final int wifi_inactive=0x7f05003b;
     }
     public static final class style {
         public static final int AppTheme=0x7f060000;

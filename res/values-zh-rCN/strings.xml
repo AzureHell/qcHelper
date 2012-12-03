@@ -71,7 +71,9 @@
     <string name="main_sync_completed">同步完成</string>
     <string name="information_incomplete">信息不完整！</string>
     <string name="process_wait">处理中，请等待....</string>
-    <string name="processing">处理中....</string>        
+    <string name="processing">处理中....</string>    
+    
+    <string name="sync_failed">数据同步失败</string>
     
     <string name="wifi_inactive">Wifi连接无效!</string>
     <string name="network_inactive">网络连接无效!</string>
