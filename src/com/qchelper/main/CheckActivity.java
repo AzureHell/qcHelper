@@ -77,7 +77,7 @@ public class CheckActivity extends Activity {
         Log.d(DEBUG_TAG, "insert into qmCheckRecordMst:" + Integer.toString(cursor.getCount()));
         
         if (cursor.getCount() <= 0) {
-            String insertSQL = "insert into qmCheckRecordMst(iFactoryID, sOrderNo, sStyleNo, sProductID, iItemID, user_id_opt) values(?,?,?,?,?,?) ";
+            String insertSQL = "insert into qmCheckRecordMst(iFactoryID, sOrderNo, sStyleNo, sProductID, iItemID, user_id_by_upload) values(?,?,?,?,?,?) ";
             dbhlp.getWritableDatabase().execSQL(insertSQL, new Object[] {FactoryID, OrderNo, StyleNo, ProductID, 1, login_user_id});
             dbhlp.getWritableDatabase().execSQL(insertSQL, new Object[] {FactoryID, OrderNo, StyleNo, ProductID, 2, login_user_id});
             dbhlp.getWritableDatabase().execSQL(insertSQL, new Object[] {FactoryID, OrderNo, StyleNo, ProductID, 3, login_user_id}); 

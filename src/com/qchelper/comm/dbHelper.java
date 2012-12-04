@@ -59,7 +59,7 @@ public class dbHelper extends SQLiteOpenHelper {
                 + ", iFactoryID integer, sOrderNo nvarchar(50), sStyleNo nvarchar(50), sProductID nvarchar(50) "
                 + ", iItemID integer, dChecdedDate timestamp, sRemark nvarchar(500) "                
                 + ", datetime_rec timestamp default (datetime('now','localtime')) "
-                + ", datetime_upload timestamp, datetime_delete timestamp, user_id_opt integer);";
+                + ", datetime_upload timestamp, datetime_delete timestamp, user_id_by_upload varchar(30));";
         db.execSQL(sql_create); 
         Log.d(DEBUG_TAG, "CREATE_2");
         
@@ -281,7 +281,7 @@ public class dbHelper extends SQLiteOpenHelper {
         String[] whereValue={Integer.toString(id)};
         ContentValues cv=new ContentValues(); 
         if (table_name == "qmCheckRecordMst") {
-            cv.put("user_id_opt", user_id);
+            cv.put("user_id_by_upload", user_id);
             cv.put("datetime_upload", datetime_upload);
         }
         return db.update(table_name, cv, where, whereValue);
