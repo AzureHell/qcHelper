@@ -496,7 +496,7 @@ public class MainActivity extends Activity {
                 
                 Cursor csCheckRecordMat = dbhlp.querySQL("select iID, iFactoryID, sOrderNo, sStyleNo, sProductID"
                         + " , iItemID, dChecdedDate, sRemark, datetime_rec, datetime_delete, user_id_by_upload "
-                        + " from qmCheckRecordMst a where datetime_upload is null and  exists (select 1 from qmCheckRecordDtl where iMstID = a.iID limit 1  ) ");
+                        + " from qmCheckRecordMst a where datetime_upload is null and exists (select 1 from qmCheckRecordDtl where iMstID = a.iID limit 1  )");
                 while (csCheckRecordMat.moveToNext()) {
                     Log.d(DEBUG_TAG, "Build uploadCheckRecordMaster Json rec:");
                     jsonMst = "{'iID':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("iID"))
