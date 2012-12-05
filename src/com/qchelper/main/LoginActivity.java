@@ -114,8 +114,8 @@ public class LoginActivity extends Activity implements OnClickListener {
                     } else if (json.getString("status").equals("failed")) {
                     	if (json.getString("error").equals("not record!")) {
                     		comm.showErrorMsg(LoginActivity.this, R.string.login_user_or_pass_error);
-                    	} else if (json.getString("error").equals("p record!")) {
-                    		comm.showErrorMsg(LoginActivity.this, R.string.login_user_or_pass_error);
+                    	} else if (json.getString("error").equals("password is null!")) {
+                    		comm.showErrorMsg(LoginActivity.this, R.string.login_password_is_null);
                     	}
                     	else comm.showErrorMsg(LoginActivity.this, json.getString("error"));
                     }

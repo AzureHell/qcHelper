@@ -47,6 +47,7 @@
     <string name="login_succeed">Login succeed</string>
     <string name="login_failed">Login failed</string>    
     <string name="login_user_or_pass_error">User or Password error</string>
+    <string name="login_password_is_null">sorry, password is invalid, modify your password in erp system please.</string>
     
     <string name="login_user_name_lost">User name lost</string>
     <string name="login_password_lost">Password lost</string>

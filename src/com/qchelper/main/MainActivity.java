@@ -424,11 +424,14 @@ public class MainActivity extends Activity {
                 // 下载QC计划
                 Log.d(DEBUG_TAG, "begin download");
                 int maxID = 1;
+                
                 Cursor cursor = dbhlp.querySQL("select max(iID) as iID from qmCheckPlan");
                 while (cursor.moveToNext()) {
                     Log.d(DEBUG_TAG, "download qmCheckPlan");
                     if (cursor.getString(cursor.getColumnIndex("iID")) != null) {
                         maxID = cursor.getInt(cursor.getColumnIndex("iID"));
+                    } else {
+                    	maxID = 0;
                     }
                     
                     String params = comm.fmtHttpParams("{'sQCUserID':'"+strJson[i]+"','iID':'"+Integer.toString(maxID)+"'}");
@@ -477,7 +480,7 @@ public class MainActivity extends Activity {
 //                        		comm.showErrorMsg(MainActivity.this, R.string.main_not_data_need_sync);
 //                        	}
 //                        	else comm.showErrorMsg(MainActivity.this, json.getString("error"));
-                        	 return 2;
+//                        	 return 2;
                          }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -601,7 +604,7 @@ public class MainActivity extends Activity {
 //                                		return 2;
 //                                	}
 //                                	else return 3;     
-                                	return 2;
+//                                	return 2;
                                  }
                             } catch (JSONException e) {
                                 e.printStackTrace();
