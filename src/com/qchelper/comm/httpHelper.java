@@ -39,6 +39,8 @@ public abstract class httpHelper {
             if (httpResponse.getStatusLine().getStatusCode() == 200) {
                 result = EntityUtils.toString(httpResponse.getEntity(), HTTP.UTF_8);
                 Log.d(DEBUG_TAG, "result is ( " + result + " )");
+            } else {
+            	return null;
             }
         } catch (Exception e) {
             Log.e(DEBUG_TAG, e.toString());
@@ -80,6 +82,8 @@ public abstract class httpHelper {
             if (httpResponse.getStatusLine().getStatusCode() == 200) {
                 result = EntityUtils.toString(httpResponse.getEntity(), HTTP.UTF_8);
                 Log.d(DEBUG_TAG, "result is ( " + result + " )");
+            } else {
+            	result = null;
             }
         } catch (Exception e) {
             Log.e(DEBUG_TAG, e.toString());

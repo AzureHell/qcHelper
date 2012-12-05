@@ -159,9 +159,9 @@ public class MainActivity extends Activity {
         SharedPreferences setting = getSharedPreferences("Login",Context.MODE_WORLD_READABLE);
         String login_user_id = setting.getString("user_id", "");
         if (login_user_id == "") {
-            loginItem.setTitle(R.string.menu_login);   
+            loginItem.setTitle(R.string.menu_login);
         } else {
-            loginItem.setTitle(R.string.menu_logout);   
+            loginItem.setTitle(R.string.menu_logout);
         }
         return super.onPrepareOptionsMenu(menu);   
     }      
@@ -346,69 +346,6 @@ public class MainActivity extends Activity {
     	}
     }
     
-    public Boolean download(String user_id) {
-        try {
-            dbHelper dbhlp = new dbHelper(MainActivity.this);
-            Cursor cursor = dbhlp.querySQL("select max(iID) as iID from qmCheckRecordMst");
-            String[] strJson = new String[cursor.getCount()];
-            int i = 0;
-            while (cursor.moveToNext()) {
-                Log.d(DEBUG_TAG, "Build sync Json rec:" + i);
-                strJson[i] = new JSONStringer().object()
-                        .key("sQCUserID").value(user_id)
-                        .key("iID").value(cursor.getString(cursor.getColumnIndex("iID")))
-                        .endObject().toString();
-                Log.d(DEBUG_TAG, "sync Json: " + strJson[i]);
-                i++;
-            }
-            if (strJson.length > 0) {
-                new syncAsyncTask().execute(strJson);
-            } else {
-                comm.showMsg(MainActivity.this, R.string.main_not_data_need_sync);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return true;
-    }
-    
-    public Boolean upload(String user_id) {
-        try {
-            dbHelper dbhlp = new dbHelper(MainActivity.this);
-            Cursor cursor = dbhlp.querySQL("select iID, iFactoryID, sOrderNo, sStyleNo, sProductID"
-                    + "iItemID, dChecdedDate, sRemark, datetime_rec, datetime_delete, user_id_opt"
-                    + " from qmCheckRecordMst where datetime_upload is null");
-            String[] strJson = new String[cursor.getCount()];
-            int i = 0;
-            while (cursor.moveToNext()) {
-                Log.d(DEBUG_TAG, "Build sync Json rec:" + i);
-                strJson[i] = new JSONStringer().object()
-                        .key("user_id_opt").value(user_id)
-                        .key("iID").value(cursor.getString(cursor.getColumnIndex("iID")))
-                        .key("iFactoryID").value(cursor.getString(cursor.getColumnIndex("iFactoryID")))
-                        .key("sOrderNo").value(cursor.getString(cursor.getColumnIndex("sOrderNo")))
-                        .key("sStyleNo").value(cursor.getString(cursor.getColumnIndex("sStyleNo")))
-                        .key("sProductID").value(cursor.getString(cursor.getColumnIndex("sProductID")))
-                        .key("iItemID").value(cursor.getString(cursor.getColumnIndex("iItemID")))
-                        .key("dChecdedDate").value(cursor.getString(cursor.getColumnIndex("dChecdedDate")))
-                        .key("sRemark").value(cursor.getString(cursor.getColumnIndex("sRemark")))
-                        .key("datetime_rec").value(cursor.getString(cursor.getColumnIndex("datetime_rec")))
-                        .key("datetime_delete").value(cursor.getString(cursor.getColumnIndex("datetime_delete")))
-                        .endObject().toString();
-                Log.d(DEBUG_TAG, "sync Json: " + strJson[i]);
-                i++;
-            }
-            if (strJson.length > 0) {
-                new syncAsyncTask().execute(strJson);
-            } else {
-                comm.showMsg(MainActivity.this, R.string.main_not_data_need_sync);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return true;
-    }
-    
     @Override
     protected Dialog onCreateDialog(int id) {
         if (id == 0) {// 注销  
@@ -478,7 +415,8 @@ public class MainActivity extends Activity {
             syncMaxCount = strJson.length;
             
             for (int i = 0; i < strJson.length; i++) {
-//                user_id = strJson[i];
+                user_id = strJson[i];
+                Log.d(DEBUG_TAG, "begin user_id: " + user_id);
                 syncCurrentCount = i + 1;
                 String resultHttp = "";
                 dbHelper dbhlp = new dbHelper(MainActivity.this);
@@ -486,11 +424,14 @@ public class MainActivity extends Activity {
                 // 下载QC计划
                 Log.d(DEBUG_TAG, "begin download");
                 int maxID = 1;
+                
                 Cursor cursor = dbhlp.querySQL("select max(iID) as iID from qmCheckPlan");
                 while (cursor.moveToNext()) {
                     Log.d(DEBUG_TAG, "download qmCheckPlan");
                     if (cursor.getString(cursor.getColumnIndex("iID")) != null) {
                         maxID = cursor.getInt(cursor.getColumnIndex("iID"));
+                    } else {
+                    	maxID = 0;
                     }
                     
                     String params = comm.fmtHttpParams("{'sQCUserID':'"+strJson[i]+"','iID':'"+Integer.toString(maxID)+"'}");
@@ -501,7 +442,7 @@ public class MainActivity extends Activity {
                     }
                 }
                 cursor.close();
-                if (resultHttp != "") {
+                if (resultHttp != null && !resultHttp.equals("")) {
                     try {
                          JSONObject json = new JSONObject(resultHttp);
                          //如何返回成功
@@ -532,11 +473,20 @@ public class MainActivity extends Activity {
                                      }
                                  }
                              }
+                             //建峰，你要看到代码处理下这里，同步后刷新会报错！
 //                             refreshList();
+                         } else if (json.getString("status").equals("failed")) {
+//                         	if (json.getString("error").equals("not record!")) {
+//                        		comm.showErrorMsg(MainActivity.this, R.string.main_not_data_need_sync);
+//                        	}
+//                        	else comm.showErrorMsg(MainActivity.this, json.getString("error"));
+//                        	 return 2;
                          }
                     } catch (JSONException e) {
                         e.printStackTrace();
-                    }   
+                    }
+                } else {
+                	return 1;
                 }
                 resultHttp = "";
                 //上传QC结果
@@ -544,12 +494,9 @@ public class MainActivity extends Activity {
                 String jsonMst = "", jsonDtl = "";
                 int recordDtlCount = 0;
                 
-                //暂时手动设置
-                user_id = "1";
-                
                 Cursor csCheckRecordMat = dbhlp.querySQL("select iID, iFactoryID, sOrderNo, sStyleNo, sProductID"
-                        + " , iItemID, dChecdedDate, sRemark, datetime_rec, datetime_delete, user_id_opt "
-                        + " from qmCheckRecordMst a where datetime_upload is null and  exists (select 1 from qmCheckRecordDtl where iMstID = a.iID limit 1  ) ");
+                        + " , iItemID, dChecdedDate, sRemark, datetime_rec, datetime_delete, user_id_by_upload "
+                        + " from qmCheckRecordMst a where datetime_upload is null and exists (select 1 from qmCheckRecordDtl where iMstID = a.iID limit 1  )");
                 while (csCheckRecordMat.moveToNext()) {
                     Log.d(DEBUG_TAG, "Build uploadCheckRecordMaster Json rec:");
                     jsonMst = "{'iID':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("iID"))
@@ -562,7 +509,7 @@ public class MainActivity extends Activity {
                             +"','sRemark':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("sRemark"))
                             +"','datetime_rec':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("datetime_rec"))
                             +"','datetime_delete':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("datetime_delete"))
-                            +"','user_id_opt':'" + user_id 
+                            +"','user_id_by_upload':'" + user_id 
                             +"'}";
                     
                     jsonDtl = "";
@@ -573,11 +520,11 @@ public class MainActivity extends Activity {
                             + " from qmCheckRecordDtl where iMstID = " + csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("iID")));
                     while (csCheckRecordDtl.moveToNext()) {
                         Log.d(DEBUG_TAG, "Build uploadCheckRecordDetail Json rec:" + recordDtlCount);
-                        String str = "{'user_id_opt':'"+user_id
+                        String str = "{'user_id_by_upload':'"+user_id
                                 +"','iID':'"+csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("iID"))
                                 +"','iMstID':'"+csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("iMstID"))
                                 //组织作为文件名称
-                                +"','sFileName':'" + "user_id_opt(" + user_id
+                                +"','sFileName':'" + "user_id_by_upload(" + user_id
                                 + ")iMstID(" + csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("iMstID"))
                                 + ")iID(" + csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("iID")) + ").png"
 //                                +"','sPhoto':'"+Base64.encodeToString(csCheckRecordDtl.getBlob(csCheckRecordDtl.getColumnIndex("sPhoto")), Base64.DEFAULT)
@@ -607,7 +554,7 @@ public class MainActivity extends Activity {
                             Log.e(DEBUG_TAG, e.toString());
                         }
 //                        处理返回结果
-                        if (resultHttp != "") {
+                        if (resultHttp != null && !resultHttp.equals("")) {
                             try {
                                 JSONObject json = new JSONObject(resultHttp);
                                 //如何返回成功
@@ -631,7 +578,7 @@ public class MainActivity extends Activity {
                                                     try {
                                                         resultHttpPic = comm.invokeHttp(MainActivity.this, "uploadCheckRecordPic"
                                                                 //组织文件名称，这样可以找到需要插入图片的那条记录
-                                                                , "user_id_opt(" + user_id 
+                                                                , "user_id_by_upload(" + user_id 
                                                                 + ")iMstID(" + cursor1.getString(cursor1.getColumnIndex("iMstID"))
                                                                 + ")iID(" + cursor1.getString(cursor1.getColumnIndex("iID")) + ").png"
                                                                 , cursor1.getBlob(cursor1.getColumnIndex("sPhoto"))
@@ -648,14 +595,22 @@ public class MainActivity extends Activity {
                                                     }
                                                 }
                                                 dbhlp.updateSyncDatetime("qmCheckRecordMst", jsonRecordData.getInt("iID")
-                                                        , jsonRecordData.getString("user_id_opt"),  jsonRecordData.getString("datetime_upload"));
+                                                        , jsonRecordData.getString("user_id_by_upload"),  jsonRecordData.getString("datetime_upload"));
                                             }
                                         }
                                     }
-                                }
+                                } else if (json.getString("status").equals("failed")) {
+//                                 	if (json.getString("error").equals("not record!")) {
+//                                		return 2;
+//                                	}
+//                                	else return 3;     
+//                                	return 2;
+                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
+                        } else {
+                        	return 1;
                         }
                     }
                 }
@@ -677,7 +632,13 @@ public class MainActivity extends Activity {
         protected void onPostExecute(Integer result) {
             Log.d(DEBUG_TAG, "onPostExecute");
             progressDialog.cancel();
-            comm.showMsg(MainActivity.this, R.string.main_sync_completed);
+            if (result == 1) {
+            	comm.showErrorMsg(MainActivity.this, R.string.sync_failed);
+            } else if (result != -1) {
+            	comm.showMsg(MainActivity.this, R.string.main_sync_completed);
+            } else if (result == 2) {
+            	comm.showErrorMsg(MainActivity.this, R.string.main_not_data_need_sync);
+            }
         }
     }    
 }

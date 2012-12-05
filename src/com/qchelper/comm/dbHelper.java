@@ -11,7 +11,7 @@ import android.util.Log;
 
 
 public class dbHelper extends SQLiteOpenHelper {
-    final static String DEBUG_TAG = "dbQC";
+    final static String DEBUG_TAG = "dbHelper";
     
     private final static String DATABASE_NAME="QCHelper";
     private final static int DATABASE_VERSION=1;
@@ -37,8 +37,8 @@ public class dbHelper extends SQLiteOpenHelper {
          */
         String sql_create ="Create table qmCheckPlan(iID integer PRIMARY KEY "
                 + ", iFactoryID integer, sOrderNo nvarchar(50), sStyleNo nvarchar(50), sProductID nvarchar(50) "
-                + ", dRequestCheck timestamp, sCheckItemDesc nvarchar(500), sQCUserID nvarchar(50), sUserID nvarchar(50)) "
-                + ", bApproved bit default 0;";
+                + ", dRequestCheck timestamp, sCheckItemDesc nvarchar(500), sQCUserID nvarchar(50), sUserID nvarchar(50) "
+                + ", bApproved bit default 0);";
         db.execSQL(sql_create);
         Log.d(DEBUG_TAG, "CREATE_1");
         /*
@@ -59,7 +59,7 @@ public class dbHelper extends SQLiteOpenHelper {
                 + ", iFactoryID integer, sOrderNo nvarchar(50), sStyleNo nvarchar(50), sProductID nvarchar(50) "
                 + ", iItemID integer, dChecdedDate timestamp, sRemark nvarchar(500) "                
                 + ", datetime_rec timestamp default (datetime('now','localtime')) "
-                + ", datetime_upload timestamp, datetime_delete timestamp, user_id_opt integer);";
+                + ", datetime_upload timestamp, datetime_delete timestamp, user_id_by_upload varchar(30));";
         db.execSQL(sql_create); 
         Log.d(DEBUG_TAG, "CREATE_2");
         
@@ -114,7 +114,8 @@ public class dbHelper extends SQLiteOpenHelper {
     
     @Override
     public synchronized SQLiteDatabase getReadableDatabase() {
-        return super.getReadableDatabase();
+        //return super.getReadableDatabase();
+        return super.getWritableDatabase();
     }
     
     public Cursor querySQL(String sql) {
@@ -280,7 +281,7 @@ public class dbHelper extends SQLiteOpenHelper {
         String[] whereValue={Integer.toString(id)};
         ContentValues cv=new ContentValues(); 
         if (table_name == "qmCheckRecordMst") {
-            cv.put("user_id_opt", user_id);
+            cv.put("user_id_by_upload", user_id);
             cv.put("datetime_upload", datetime_upload);
         }
         return db.update(table_name, cv, where, whereValue);

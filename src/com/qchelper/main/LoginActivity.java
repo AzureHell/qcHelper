@@ -26,7 +26,7 @@ public class LoginActivity extends Activity implements OnClickListener {
     final static String DEBUG_TAG = "LoginActivity";
 
     TextView vlogin_info;
-    EditText edtUserName, edtPassword;
+    EditText edtuser_id, edtPassword;
     Button btnOk;    
     /** Called when the activity is first created. */
     @Override
@@ -37,7 +37,7 @@ public class LoginActivity extends Activity implements OnClickListener {
         setContentView(R.layout.activity_login);
         
         vlogin_info = (TextView)findViewById(R.id.login_hint);
-        edtUserName = (EditText)findViewById(R.id.user_id);
+        edtuser_id = (EditText)findViewById(R.id.user_id);
         edtPassword = (EditText)findViewById(R.id.password);
         btnOk = (Button)findViewById(R.id.login_ok);
         btnOk.setOnClickListener(this);
@@ -47,10 +47,10 @@ public class LoginActivity extends Activity implements OnClickListener {
         switch(v.getId()) {
             case R.id.login_ok: {
                 Log.d(DEBUG_TAG, "click ok");
-                if (!edtUserName.getText().toString().equals("") && !edtPassword.getText().toString().equals("")) {
-                    new loginAsyncTask().execute(edtUserName.getText().toString(), edtPassword.getText().toString());
+                if (!edtuser_id.getText().toString().equals("") && !edtPassword.getText().toString().equals("")) {
+                    new loginAsyncTask().execute(edtuser_id.getText().toString(), edtPassword.getText().toString());
                 } else {
-                	if (edtUserName.getText().toString().equals("")) {
+                	if (edtuser_id.getText().toString().equals("")) {
                 		comm.showMsg(this, R.string.login_user_name_lost);
                 	} else if (edtPassword.getText().toString().equals("")) {
                 		comm.showMsg(this, R.string.login_password_lost);
@@ -70,10 +70,11 @@ public class LoginActivity extends Activity implements OnClickListener {
         protected String doInBackground(String... strJson) {
             Log.d(DEBUG_TAG, "doInBackground");
             
-            String username = strJson[0];
+            String user_id = strJson[0];
             String password = strJson[1];
             
-            String params = comm.fmtHttpParams("{'username':'"+username+"','password':'"+comm.getMD5DStr(password)+"'}");
+            // 为了与环思框架同步，密码增加后缀HUANSI
+            String params = comm.fmtHttpParams("{'user_id':'"+user_id+"','password':'"+comm.getMD5DStr(password+"HUANSI")+"'}");
             try {
             	return comm.invokeHttp(LoginActivity.this, "checkuser", params);
             } catch (Exception e) {
@@ -111,8 +112,10 @@ public class LoginActivity extends Activity implements OnClickListener {
                         comm.showMsg(LoginActivity.this, R.string.login_succeed);
                         LoginActivity.this.finish();
                     } else if (json.getString("status").equals("failed")) {
-                    	if (json.getString("error").equals("not return count!")) {
+                    	if (json.getString("error").equals("not record!")) {
                     		comm.showErrorMsg(LoginActivity.this, R.string.login_user_or_pass_error);
+                    	} else if (json.getString("error").equals("password is null!")) {
+                    		comm.showErrorMsg(LoginActivity.this, R.string.login_password_is_null);
                     	}
                     	else comm.showErrorMsg(LoginActivity.this, json.getString("error"));
                     }
