@@ -56,6 +56,7 @@
     <string name="login_succeed">登录成功</string>
     <string name="login_failed">登录失败</string>
     <string name="login_user_or_pass_error">用户名或密码错误</string>
+    <string name="login_password_is_null">对不起，密码无效，请到ERP系统中修改密码。谢谢！</string>
     
     <string name="login_user_name_lost">用户名不能为空</string>
     <string name="login_password_lost">密码不能为空</string>
@@ -71,7 +72,9 @@
     <string name="main_sync_completed">同步完成</string>
     <string name="information_incomplete">信息不完整！</string>
     <string name="process_wait">处理中，请等待....</string>
-    <string name="processing">处理中....</string>        
+    <string name="processing">处理中....</string>    
+    
+    <string name="sync_failed">数据同步失败</string>
     
     <string name="wifi_inactive">Wifi连接无效!</string>
     <string name="network_inactive">网络连接无效!</string>

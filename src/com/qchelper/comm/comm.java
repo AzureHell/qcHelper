@@ -177,7 +177,7 @@ public class comm {
             return null;
         }
         try {
-            return  httpHelper.invoke(url, params);
+            return httpHelper.invoke(url, params);
         } catch (Exception e) {
             return null;
         }

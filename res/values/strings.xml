@@ -47,6 +47,7 @@
     <string name="login_succeed">Login succeed</string>
     <string name="login_failed">Login failed</string>    
     <string name="login_user_or_pass_error">User or Password error</string>
+    <string name="login_password_is_null">sorry, password is invalid, modify your password in erp system please.</string>
     
     <string name="login_user_name_lost">User name lost</string>
     <string name="login_password_lost">Password lost</string>
@@ -62,9 +63,13 @@
     <string name="record_save_succeed">Save succeed!</string>
     <string name="record_save_failed">Save failed!</string>
     
+    <string name="main_not_data_need_sync">Not data need sync!</string>
+    <string name="main_sync_completed">Sync completed!</string>
     <string name="information_incomplete">Information incomplete!</string>
     <string name="process_wait">Process,waiting....</string>
     <string name="processing">Processing....</string>    
+    
+    <string name="sync_failed">Sync failed!</string>
     
     <string name="wifi_inactive">Wifi Inactive!</string>
     <string name="network_inactive">Network Inactive!</string>
