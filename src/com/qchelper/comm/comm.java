@@ -33,7 +33,7 @@ public class comm {
          
               messageDigest.reset();
          
-              messageDigest.update(str.getBytes("UTF-8"));       
+              messageDigest.update(str.getBytes("UTF-8"));
           } catch (NoSuchAlgorithmException e) {       
               System.out.println("NoSuchAlgorithmException caught!");
               System.exit(-1);
@@ -51,8 +51,10 @@ public class comm {
               else
                   md5StrBuff.append(Integer.toHexString(0xFF & byteArray[i]));       
           }
-          //16位加密，从第9位到25位  
-          return md5StrBuff.substring(8, 24).toString().toUpperCase();      
+          //16位加密，从第9位到25位
+          // 修改成32位加密
+          //return md5StrBuff.substring(8, 24).toString().toUpperCase();
+          return md5StrBuff.substring(0, 32).toString();
       }
     
     public static String getMD5DStr(String str) {
