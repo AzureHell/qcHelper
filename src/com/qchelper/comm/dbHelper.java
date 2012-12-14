@@ -24,6 +24,14 @@ public class dbHelper extends SQLiteOpenHelper {
     
     @Override
     public void onCreate(SQLiteDatabase db) {
+    	String sql_create = "";
+        /*
+         * iID 编号
+         * sItemName 检验项目名称
+         */
+        sql_create = "Create table qmCheckItem (iID integer primary key, sItemName varchar(50));";
+        db.execSQL(sql_create);
+        Log.d(DEBUG_TAG, "create qmCheckItem");
         /*
          * iID 编号
          * iFactoryID 工厂
@@ -36,12 +44,12 @@ public class dbHelper extends SQLiteOpenHelper {
          * sUserID 用户编号
          * bApproved 已审核
          */
-        String sql_create ="Create table qmCheckPlan(iID integer PRIMARY KEY "
+        sql_create ="Create table qmCheckPlan(iID integer PRIMARY KEY "
                 + ", iFactoryID integer, sOrderNo nvarchar(50), sStyleNo nvarchar(50), sProductID nvarchar(50) "
                 + ", dRequestCheck timestamp, sCheckItemDesc nvarchar(500), sQCUserID nvarchar(50), sUserID nvarchar(50) "
                 + ", bApproved bit default 0);";
         db.execSQL(sql_create);
-        Log.d(DEBUG_TAG, "CREATE_1");
+        Log.d(DEBUG_TAG, "create qmCheckPlan");
         /*
          * iID 编号 
          * iFactoryID 工厂
@@ -63,7 +71,7 @@ public class dbHelper extends SQLiteOpenHelper {
                 + ", datetime_modify timestamp default (datetime('now','localtime')) "
                 + ", datetime_upload timestamp, datetime_delete timestamp);";
         db.execSQL(sql_create);
-        Log.d(DEBUG_TAG, "CREATE_2");
+        Log.d(DEBUG_TAG, "create qmCheckRecordMst");
         
         /*
          * uID 自增列
@@ -81,37 +89,39 @@ public class dbHelper extends SQLiteOpenHelper {
     	+ ", datetime_modify timestamp default (datetime('now','localtime')) "
         + ", datetime_delete timestamp );";
         db.execSQL(sql_create);
-        Log.d(DEBUG_TAG, "CREATE_3");
-        
+        Log.d(DEBUG_TAG, "create qmCheckRecordDtl");
         /*
          * iID 自增列
          * server_ip 工厂编号
          * server_port 工段编号
          */   
-        
         sql_create =" Create table ServerCon(iID integer primary key autoincrement "
     	+ ", server_ip varchar(40), server_port varchar(20));";
         db.execSQL(sql_create);
-        Log.d(DEBUG_TAG, "CREATE_4");
+        Log.d(DEBUG_TAG, "create ServerCon");
     }
     
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        String sql_check=" DROP TABLE IF EXISTS qmCheckPlan";
+    	Log.d(DEBUG_TAG, "drop table");
+    	
+        String sql_check = "";
+        
+        sql_check=" DROP TABLE IF EXISTS qmCheckItem";
+        db.execSQL(sql_check);        
+        
+        sql_check=" DROP TABLE IF EXISTS qmCheckPlan";
         db.execSQL(sql_check);
-        Log.d(DEBUG_TAG, "DROP_1");
         
         sql_check=" DROP TABLE IF EXISTS qmCheckRecordMst";
         db.execSQL(sql_check);
-        Log.d(DEBUG_TAG, "DROP_2");
         
         sql_check=" DROP TABLE IF EXISTS qmCheckRecordDtl";
         db.execSQL(sql_check);
-        Log.d(DEBUG_TAG, "DROP_3");
         
         sql_check=" DROP TABLE IF EXISTS ServerCon";
         db.execSQL(sql_check);
-        Log.d(DEBUG_TAG, "DROP_4");
+        
         onCreate(db);
     }
     
@@ -142,7 +152,7 @@ public class dbHelper extends SQLiteOpenHelper {
     }
     
     public Cursor select(String table_name) {
-        return select(table_name, null, null, null, 20);
+        return select(table_name, null, null, null, 100);
     }
 
     public Cursor select(String table_name, String columns, Integer limit) {
@@ -168,18 +178,17 @@ public class dbHelper extends SQLiteOpenHelper {
         
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = null;
+        String orderby = null;
         if (table_name == "qmCheckPlan") {
-            cursor = db.query(table_name, columnarray, selection, selectionArgs, null, null, " dRequestCheck asc", Integer.toString(limit));
+            orderby = "dRequestCheck asc";
         }
         else if (table_name == "qmCheckRecordMst") {
-        	cursor = db.query(table_name, columnarray, selection, selectionArgs, null, null, "iItemID asc", Integer.toString(limit));
+        	orderby = "iItemID asc";
         }
         else if (table_name == "qmCheckRecordDtl") {
-            cursor = db.query(table_name, columnarray, selection, selectionArgs, null, null, "dCreateDate asc", Integer.toString(limit));        
-        }        
-        else if (table_name == "ServerCon") {
-        	cursor = db.query(table_name, columnarray, selection, selectionArgs, null, null,  null, Integer.toString(limit));        	
+            orderby = "dCreateDate asc";        
         }
+        cursor = db.query(table_name, columnarray, selection, selectionArgs, null, null,  orderby, Integer.toString(limit));
         return cursor;
     }
 
@@ -239,7 +248,7 @@ public class dbHelper extends SQLiteOpenHelper {
     
     public int updateRemark(String table_name, String id, String remark) {
         Log.d(DEBUG_TAG, "updateRemark");
-        return update(table_name, id, "sRemark", new String[]{remark});
+        return update(table_name, id, "sRemark,dCheckedDate", new String[]{remark,comm.getNowStringDateTime()});
     }
     
     public int updateOptDatetime(String table_name, String id) {
