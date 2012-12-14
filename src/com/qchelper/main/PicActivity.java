@@ -37,8 +37,8 @@ public class PicActivity extends Activity {
 	public final static int REQUEST_CODE_TAKE_PICTURE = 1; //设置拍照操作的标志  
 	public final static int REQUEST_CODE_IMAGE_SHOW = 2; //设置大图浏览的标志
 	
-	int MstID;
-	int[] ItemKeyList;
+	String MstID;
+	String[] ItemKeyList;
 	
 	Button btnPicBack;
 	Button btnGetPic;
@@ -56,7 +56,7 @@ public class PicActivity extends Activity {
         
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
-        MstID = bundle.getInt("KeyID");
+        MstID = bundle.getString("KeyID");
         
         btnPicBack = (Button) findViewById(R.id.btnPicBack);
         btnPicBack.setOnClickListener(new ButtonClickEvent());
@@ -100,20 +100,19 @@ public class PicActivity extends Activity {
         		Log.d(TAG, "ActivityResult_ImageHeight:" + Integer.toString(PicData.getHeight())); 
             	if (PicData != null) {
             		dbHelper dbhlp = new dbHelper(this);
-            		if (dbhlp.insert("qmCheckRecordDtl", MstID, comm.bitmapToBytes(PicData)) > 0) {
-            			Toast.makeText(this, R.string.Image_SuccessfullySaved, 1500).show();            			
+            		if (dbhlp.insertCheckRecordDtl("qmCheckRecordDtl", MstID, comm.bitmapToBytes(PicData)) > 0) {
+            			comm.showMsg(this, R.string.Image_SuccessfullySaved);
             	        impAdapter = new ImageAdapter(this, R.layout.qcpicitem, GetImageData());
             	        gvPicView.setAdapter(impAdapter);
-            	        dbhlp.UpdateOptDatetime("qmCheckRecordMst", MstID, "U001");
-            	        
+            	        dbhlp.updateOptDatetime("qmCheckRecordMst", MstID);
             		}
             		else {
-            			Toast.makeText(this, R.string.Image_FailSaved, 1500).show();
+            			comm.showErrorMsg(this, R.string.Image_FailSaved);
             		}            			
             	}       		
         	} 
     		else {
-    			Toast.makeText(this, R.string.Image_CancelPicture, 1500).show();    			
+    			comm.showMsg(this, R.string.Image_CancelPicture);
     		}
     	}
     	else if (requestCode == REQUEST_CODE_IMAGE_SHOW) {
@@ -126,26 +125,18 @@ public class PicActivity extends Activity {
     }
     
     private Bitmap[] GetImageData() {
-    	Log.d(TAG, "GetImageData_Begin");
+    	Log.d(TAG, "GetImageData");
     	Bitmap[] Data = new Bitmap[15];
     	
-    	Log.d(TAG, "GetImageData_1:" + Integer.toString(MstID));
-    	
     	dbHelper dbhlp = new dbHelper(this);
-    	Log.d(TAG, "GetImageData_2");
-    	Cursor cursor = dbhlp.querySQL("select iID, sPhoto from qmCheckRecordDtl where iMstID=" + Integer.toString(MstID)
-    			+ " order by iID asc "
-    			+ " limit 15 ");
-    	Log.d(TAG, "GetImageData_3");
+    	Cursor cursor = dbhlp.select("qmCheckRecordDtl", "uID,sPhoto", "uMstID = ?", new String[]{MstID});
     	if (cursor.getCount() > 0) {
-    		//Data = new Bitmap[cursor.getCount()];
-    		ItemKeyList = new int[cursor.getCount()];
+    		ItemKeyList = new String[cursor.getCount()];
     		while (cursor.moveToNext()) {
-    			ItemKeyList[cursor.getPosition()] = cursor.getInt(0);
+    			ItemKeyList[cursor.getPosition()] = cursor.getString(0);
     			Data[cursor.getPosition()] = comm.bytesTobitmap(cursor.getBlob(1));
     		}
     	}
-    	Log.d(TAG, "GetImageData_End");
     	return Data;    	
     }
     
@@ -171,7 +162,6 @@ public class PicActivity extends Activity {
             //返回重写的view
             return view;
         }       
-
     }    
     
     private Bitmap getImage(String imagePath){
@@ -200,40 +190,6 @@ public class PicActivity extends Activity {
     	Log.d(TAG, "getImage:End");
     	return bitmap;
     }
-    
-//    public byte[] BitmapToBytes(Bitmap bmap) {
-//    	ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//    	bmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-//    	return baos.toByteArray();
-//    }
-//    
-//    public Bitmap BytesToBitmap(byte[] bytes) {
-//    	if (bytes.length > 0){
-//           /*
-//    		BitmapFactory.Options options = new BitmapFactory.Options();        	
-//        	options.inJustDecodeBounds = true;         	
-//        	Log.d(TAG, "BytesToBitmap:1");     
-//        	//计算缩放比  
-//        	int be = (int)(options.outHeight / (float)ShowMaxHeight);  
-//        	int ys = options.outHeight % ShowMaxHeight;//求余数  
-//        	float fe = ys / (float)ShowMaxHeight;  
-//        	if(fe>=0.5)be = be + 1;  
-//        	if (be <= 0)  
-//        	  be = 1;
-//        	Log.d(TAG, "BytesToBitmap:" + Integer.toString(be) + "_" + Integer.toString(ys));    	
-//        	options.inSampleSize = be; 
-//        	
-//        	//重新读入图片，注意这次要把options.inJustDecodeBounds 设为 false  
-//        	options.inJustDecodeBounds = false;   		
-//    		
-//    		return BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);*/
-//    		
-//    		return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-//    	}
-//        else {
-//        	return null;
-//        }
-//    }
     
     public static boolean isHasSdcard() {    	
         String status = Environment.getExternalStorageState();  
@@ -302,9 +258,6 @@ public class PicActivity extends Activity {
 				break;
 			}
 			}
-			
 		}
-    	
     }
-    
 }

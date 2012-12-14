@@ -73,4 +73,7 @@
     
     <string name="wifi_inactive">Wifi Inactive!</string>
     <string name="network_inactive">Network Inactive!</string>
+    
+    <string name="not_record">not record!</string>
+    <string name="have_records">have %1$d records</string>
 </resources>

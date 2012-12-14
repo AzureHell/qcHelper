@@ -53,19 +53,17 @@ public abstract class httpHelper {
         return invoke(actionName, null);
     }
     
-    public static String invokePic(String actionName, String fileName, byte[] pic) {
+    public static String invokePic(String actionName, String key, byte[] pic) {
         String result = null;
         try {           
             String url = actionName;
             Log.d(DEBUG_TAG, "url is: " + url);
             HttpPost httpPost = new HttpPost(url);
             
-//            httpPost.addHeader("Content-Type", "multipart/form-data");
             if (pic != null) {
                 MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
-//                mpEntity.addPart("fileName",  new StringBody(fileName));
                 try{
-                    ByteArrayBody bab = new ByteArrayBody(pic, fileName);
+                    ByteArrayBody bab = new ByteArrayBody(pic, key);
                     mpEntity.addPart("data", bab);
                 }
                 catch(Exception e){

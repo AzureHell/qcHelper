@@ -61,11 +61,12 @@ public class MainActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(DEBUG_TAG, "MainActivity_CREATE");
+        Log.d(DEBUG_TAG, "onCreate");
         setContentView(R.layout.activity_main);
         //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED);
         this.setTitle(R.string.title_activity_main);
-//        InitInsertData();
+        // 保留，用于初始化检验项目
+        InitInsertData();
         
         MainSearch = (Button) findViewById(R.id.MainSearch);
         MainSearch.setOnClickListener(new ButtonClickEvent());
@@ -87,58 +88,71 @@ public class MainActivity extends Activity {
     public void InitInsertData() {
     	Log.d(DEBUG_TAG, "InitInsertData");
     	dbHelper dbhlp = new dbHelper(this);
-    	Cursor cursor = dbhlp.querySQL("select iID from qmCheckPlan ");
-    	Log.d(DEBUG_TAG, "InitInsertData1:" + Integer.toString(cursor.getCount()));
+//    	Cursor cursor = dbhlp.querySQL("select iID from qmCheckPlan");
+//    	Log.d(DEBUG_TAG, "InitInsertData1:" + Integer.toString(cursor.getCount()));
+    	
+    	Cursor cursor = dbhlp.select("qmCheckItem");
     	if (cursor.getCount() <= 0) {
-    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckPlan(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, dRequestCheck, sCheckItemDesc, sQCUserID, sUserID) "
-    				  + "values(?,?,?,?,?,?,?,?,?)", new Object[] {1, 12, "SC010", "QX7886", "P0000001", "2012-11-22", "1、面料、辅料品质优良，符合客户要求; 2、款式配色准确无误; 3、包装美观、配比正确.", "U001", "U001"});
-    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckPlan(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, dRequestCheck, sCheckItemDesc, sQCUserID, sUserID) "
-  				  + "values(?,?,?,?,?,?,?,?,?)", new Object[] {2, 12, "SC011", "TX7001", "P0000002", "2012-11-28", "1、面料、辅料品质优良，符合客户要求; 2、水洗色牢度; 3、包装美观、配比正确.", "U001", "U001"});
-    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckPlan(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, dRequestCheck, sCheckItemDesc, sQCUserID, sUserID) "
-  				  + "values(?,?,?,?,?,?,?,?,?)", new Object[] {3, 18, "SC011", "YW0006", "P0000003", "2012-11-30", "1、对色准确，大货布的颜色和确认色的色差至少应在3.5级之内，并需经客户确认; 2、款式配色准确无误; 3、包装美观、配比正确.", "U001", "U001"});
-    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckPlan(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, dRequestCheck, sCheckItemDesc, sQCUserID, sUserID) "
-  				  + "values(?,?,?,?,?,?,?,?,?)", new Object[] {4, 12, "SC012", "QX1111", "P0000004", "2012-12-08", "1、产品干净、整洁、卖相好; 2、款式配色准确无误; 3、包装美观、配比正确; 4、面料、辅料品质优良，符合客户要求.", "U001", "U001"});
-    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckPlan(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, dRequestCheck, sCheckItemDesc, sQCUserID, sUserID) "
-  				  + "values(?,?,?,?,?,?,?,?,?)", new Object[] {5, 20, "SC012", "UK1256", "P0000005", "2012-12-12", "1、产品干净、整洁、卖相好; 2、款式配色准确无误; 3、包装美观、配比正确; 4、水洗色牢度; 5、面料、辅料品质优良，符合客户要求.", "U001", "U001"});
-    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckPlan(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, dRequestCheck, sCheckItemDesc, sQCUserID, sUserID) "
-  				  + "values(?,?,?,?,?,?,?,?,?)", new Object[] {6, 22, "SC022", "LP6589", "P0000006", "2012-12-22", "1、面料、辅料品质优良，符合客户要求; 2、款式配色准确无误; 3、包装美观、配比正确.", "U001", "U001"});    		
+	    	dbhlp.insert("qmCheckItem", "sItemName", new String[]{"辅料检测报告"});
+	    	dbhlp.insert("qmCheckItem", "sItemName", new String[]{"产前会议记录"});
+	    	dbhlp.insert("qmCheckItem", "sItemName", new String[]{"首件样报告"});
+	    	dbhlp.insert("qmCheckItem", "sItemName", new String[]{"中期查货报告"});
+	    	dbhlp.insert("qmCheckItem", "sItemName", new String[]{"尾期查货报告"});
+	    	dbhlp.insert("qmCheckItem", "sItemName", new String[]{"包装检验流程标准"});
+	    	dbhlp.insert("qmCheckItem", "sItemName", new String[]{"干湿度测试报告"});
+	    	dbhlp.insert("qmCheckItem", "sItemName", new String[]{"生产进度表"});
     	}
     	
-    	cursor = dbhlp.querySQL("select iID from qmCheckRecordMst ");
-    	Log.d(DEBUG_TAG, "InitInsertData2:" + Integer.toString(cursor.getCount()));
-    	if (cursor.getCount() <= 0) {
-    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckRecordMst(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, iItemID) "
-    				  + "values(?,?,?,?,?,?)", new Object[] {1, 12, "SC010", "QX7886", "P0000001", 1});
-    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckRecordMst(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, iItemID) "
-  				  + "values(?,?,?,?,?,?)", new Object[] {2, 12, "SC010", "QX7886", "P0000001", 2});
-    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckRecordMst(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, iItemID) "
-  				  + "values(?,?,?,?,?,?)", new Object[] {3, 12, "SC010", "QX7886", "P0000001", 3}); 
-    		
-    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckRecordMst(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, iItemID) "
-  				  + "values(?,?,?,?,?,?)", new Object[] {4, 12, "SC011", "TX7001", "P0000002", 1});
-    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckRecordMst(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, iItemID) "
-				  + "values(?,?,?,?,?,?)", new Object[] {5, 12, "SC011", "TX7001", "P0000002", 2});
-    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckRecordMst(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, iItemID) "
-				  + "values(?,?,?,?,?,?)", new Object[] {6, 12, "SC011", "TX7001", "P0000002", 3});    		
-    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckRecordMst(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, iItemID) "
-    			  + "values(?,?,?,?,?,?)", new Object[] {7, 12, "SC011", "TX7001", "P0000002", 4});    		
- 
-    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckRecordMst(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, iItemID) "
-      			  + "values(?,?,?,?,?,?)", new Object[] {8, 18, "SC011", "YW0006", "P0000003", 1});     		
-    		
-    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckRecordMst(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, iItemID) "
-    			  + "values(?,?,?,?,?,?)", new Object[] {9, 12, "SC012", "QX1111", "P0000004", 1}); 
-    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckRecordMst(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, iItemID) "
-  				  + "values(?,?,?,?,?,?)", new Object[] {10, 12, "SC012", "QX1111", "P0000004", 2});      		
-    		
-    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckRecordMst(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, iItemID) "
-    			  + "values(?,?,?,?,?,?)", new Object[] {11, 20, "SC012", "UK1256", "P0000005", 1});		
-    		
-    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckRecordMst(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, iItemID) "
-    			  + "values(?,?,?,?,?,?)", new Object[] {12, 22, "SC022", "LP6589", "P0000006", 1});
-    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckRecordMst(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, iItemID) "
-  				  + "values(?,?,?,?,?,?)", new Object[] {13, 22, "SC022", "LP6589", "P0000006", 2});       		
-    	}
+//    	if (cursor.getCount() <= 0) {
+//    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckPlan(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, dRequestCheck, sCheckItemDesc, sQCUserID, sUserID) "
+//    				  + "values(?,?,?,?,?,?,?,?,?)", new Object[] {1, 12, "SC010", "QX7886", "P0000001", "2012-11-22", "1、面料、辅料品质优良，符合客户要求; 2、款式配色准确无误; 3、包装美观、配比正确.", "U001", "U001"});
+//    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckPlan(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, dRequestCheck, sCheckItemDesc, sQCUserID, sUserID) "
+//  				  + "values(?,?,?,?,?,?,?,?,?)", new Object[] {2, 12, "SC011", "TX7001", "P0000002", "2012-11-28", "1、面料、辅料品质优良，符合客户要求; 2、水洗色牢度; 3、包装美观、配比正确.", "U001", "U001"});
+//    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckPlan(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, dRequestCheck, sCheckItemDesc, sQCUserID, sUserID) "
+//  				  + "values(?,?,?,?,?,?,?,?,?)", new Object[] {3, 18, "SC011", "YW0006", "P0000003", "2012-11-30", "1、对色准确，大货布的颜色和确认色的色差至少应在3.5级之内，并需经客户确认; 2、款式配色准确无误; 3、包装美观、配比正确.", "U001", "U001"});
+//    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckPlan(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, dRequestCheck, sCheckItemDesc, sQCUserID, sUserID) "
+//  				  + "values(?,?,?,?,?,?,?,?,?)", new Object[] {4, 12, "SC012", "QX1111", "P0000004", "2012-12-08", "1、产品干净、整洁、卖相好; 2、款式配色准确无误; 3、包装美观、配比正确; 4、面料、辅料品质优良，符合客户要求.", "U001", "U001"});
+//    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckPlan(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, dRequestCheck, sCheckItemDesc, sQCUserID, sUserID) "
+//  				  + "values(?,?,?,?,?,?,?,?,?)", new Object[] {5, 20, "SC012", "UK1256", "P0000005", "2012-12-12", "1、产品干净、整洁、卖相好; 2、款式配色准确无误; 3、包装美观、配比正确; 4、水洗色牢度; 5、面料、辅料品质优良，符合客户要求.", "U001", "U001"});
+//    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckPlan(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, dRequestCheck, sCheckItemDesc, sQCUserID, sUserID) "
+//  				  + "values(?,?,?,?,?,?,?,?,?)", new Object[] {6, 22, "SC022", "LP6589", "P0000006", "2012-12-22", "1、面料、辅料品质优良，符合客户要求; 2、款式配色准确无误; 3、包装美观、配比正确.", "U001", "U001"});    		
+//    	}
+//    	
+//    	cursor = dbhlp.querySQL("select uID from qmCheckRecordMst ");
+//    	Log.d(DEBUG_TAG, "InitInsertData2:" + Integer.toString(cursor.getCount()));
+//    	if (cursor.getCount() <= 0) {
+//    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckRecordMst(uID, iFactoryID, sOrderNo, sStyleNo, sProductID, iItemID) "
+//    				  + "values(?,?,?,?,?,?)", new Object[] {1, 12, "SC010", "QX7886", "P0000001", 1});
+//    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckRecordMst(uID, iFactoryID, sOrderNo, sStyleNo, sProductID, iItemID) "
+//  				  + "values(?,?,?,?,?,?)", new Object[] {2, 12, "SC010", "QX7886", "P0000001", 2});
+//    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckRecordMst(uID, iFactoryID, sOrderNo, sStyleNo, sProductID, iItemID) "
+//  				  + "values(?,?,?,?,?,?)", new Object[] {3, 12, "SC010", "QX7886", "P0000001", 3}); 
+//    		
+//    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckRecordMst(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, iItemID) "
+//  				  + "values(?,?,?,?,?,?)", new Object[] {4, 12, "SC011", "TX7001", "P0000002", 1});
+//    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckRecordMst(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, iItemID) "
+//				  + "values(?,?,?,?,?,?)", new Object[] {5, 12, "SC011", "TX7001", "P0000002", 2});
+//    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckRecordMst(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, iItemID) "
+//				  + "values(?,?,?,?,?,?)", new Object[] {6, 12, "SC011", "TX7001", "P0000002", 3});    		
+//    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckRecordMst(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, iItemID) "
+//    			  + "values(?,?,?,?,?,?)", new Object[] {7, 12, "SC011", "TX7001", "P0000002", 4});    		
+// 
+//    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckRecordMst(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, iItemID) "
+//      			  + "values(?,?,?,?,?,?)", new Object[] {8, 18, "SC011", "YW0006", "P0000003", 1});     		
+//    		
+//    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckRecordMst(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, iItemID) "
+//    			  + "values(?,?,?,?,?,?)", new Object[] {9, 12, "SC012", "QX1111", "P0000004", 1}); 
+//    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckRecordMst(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, iItemID) "
+//  				  + "values(?,?,?,?,?,?)", new Object[] {10, 12, "SC012", "QX1111", "P0000004", 2});      		
+//    		
+//    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckRecordMst(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, iItemID) "
+//    			  + "values(?,?,?,?,?,?)", new Object[] {11, 20, "SC012", "UK1256", "P0000005", 1});		
+//    		
+//    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckRecordMst(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, iItemID) "
+//    			  + "values(?,?,?,?,?,?)", new Object[] {12, 22, "SC022", "LP6589", "P0000006", 1});
+//    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckRecordMst(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, iItemID) "
+//  				  + "values(?,?,?,?,?,?)", new Object[] {13, 22, "SC022", "LP6589", "P0000006", 2});       		
+//    	}
     	cursor.close();
     	dbhlp.close();
     }
@@ -209,37 +223,19 @@ public class MainActivity extends Activity {
         Log.d(DEBUG_TAG, "getPlanList_1");
         List<String> data = new ArrayList<String>();
         
-        String SqlText;
- 
+        String selection = null;
+        String[] selectionArgs = null;
         dbHelper dbhlp = new dbHelper(this);
-        if ((ParamValue == null) || (ParamValue == "")) {
-        	SqlText = "select iID, dRequestCheck, sOrderNo, sStyleNo "
-                + ", sProductID, sCheckItemDesc "
-                + " from qmCheckPlan "
-                + " order by dRequestCheck asc "
-                + " limit 20 ";
-        	Log.d(DEBUG_TAG, "getPlanList_2_1");
+        if ((ParamValue != null) && (ParamValue != "")) {
+        	selection = "sOrderNo like '%?%' or sStyleNo like '%?%'";
+        	selectionArgs = new String[] {ParamValue, ParamValue};
         }
-        else {
-        	SqlText = "select iID, dRequestCheck, sOrderNo, sStyleNo "
-                + ", sProductID, sCheckItemDesc "
-                + " from qmCheckPlan "
-                + " where (sOrderNo like '%" + ParamValue + "%') or (sStyleNo like '%" + ParamValue + "%') "
-                + " order by dRequestCheck asc "
-                + " limit 20 ";
-        	Log.d(DEBUG_TAG, "getPlanList_2_2:" + ParamValue);
-        }
-        Log.d(DEBUG_TAG, "getPlanList_3");
-        Cursor cursor = dbhlp.querySQL(SqlText);
-        Log.d(DEBUG_TAG, "getPlanList_4");
+        Cursor cursor = dbhlp.select("qmCheckPlan", "iID,dRequestCheck,sOrderNo,sStyleNo,sProductID,sCheckItemDesc,iFactoryID,sQCUserID", selection, selectionArgs, 20);
 
         if (cursor.getCount() > 0) {
         	ItemKeyList = new int[cursor.getCount()];
-        	Log.d(DEBUG_TAG, "getPlanList_5");
             while (cursor.moveToNext()) {
-            	Log.d(DEBUG_TAG, "getPlanList_6");
             	ItemKeyList[cursor.getPosition()] = cursor.getInt(0);
-            	Log.d(DEBUG_TAG, "getPlanList_7");
                 data.add(cursor.getString(1)
                         + "※" + cursor.getString(2)
                         + "※" + cursor.getString(3)
@@ -247,14 +243,10 @@ public class MainActivity extends Activity {
                         + "※" + cursor.getString(5)
                         );
             }
-            if (1 == 1) { //((ParamValue != null) && (ParamValue != ""))
-            	Toast.makeText(this, "找到" + Integer.toString(cursor.getCount()) + "条记录", 1500).show();            	
-            }
+            comm.showMsg(this, String.format(getResources().getString(R.string.have_records), cursor.getCount()));
         }
         else {
-        	if (1 == 1) { //((ParamValue != null) && (ParamValue != ""))
-        		Toast.makeText(this, "没有找到记录", 1500).show();        		
-        	}
+        	comm.showMsg(this, R.string.not_record);
         }
         dbhlp.close();
         cursor.close();
@@ -458,18 +450,19 @@ public class MainActivity extends Activity {
                                      for (int k=0;  k < jsonRecordArray.length(); k++) {
                                          //获取返回记录
                                          JSONObject jsonRecordData = jsonRecordArray.getJSONObject(k);
-                                         ContentValues cv = new ContentValues();
-                                         String str = "iID"; cv.put(str, jsonRecordData.getString(str));
-                                         str = "iFactoryID"; cv.put(str, jsonRecordData.getString(str));
-                                         str = "sOrderNo"; cv.put(str, jsonRecordData.getString(str));
-                                         str = "sStyleNo"; cv.put(str, jsonRecordData.getString(str));
-                                         str = "sProductID"; cv.put(str, jsonRecordData.getString(str));
-                                         str = "dRequestCheck"; cv.put(str, jsonRecordData.getString(str));
-                                         str = "sCheckItemDesc"; cv.put(str, jsonRecordData.getString(str));
-                                         str = "sCheckItemDesc"; cv.put(str, jsonRecordData.getString(str));
-                                         str = "sUserID"; cv.put(str, jsonRecordData.getString(str));
-                                         str = "bApproved"; cv.put(str, jsonRecordData.getString(str));
-                                         dbhlp.insert("qmCheckPlan", cv);
+                                         dbhlp.insert("qmCheckPlan", "iID,iFactoryID,sOrderNo,sStyleNo,sProductID,dRequestCheck,sCheckItemDesc,sQCUserID," +
+                                         		"sUserID,bApproved", new String[]{
+                                        		 jsonRecordData.getString("iID"), 
+                                        		 jsonRecordData.getString("iFactoryID"),
+                                        		 jsonRecordData.getString("sOrderNo"), 
+                                        		 jsonRecordData.getString("sStyleNo"), 
+                                        		 jsonRecordData.getString("sProductID"), 
+                                        		 jsonRecordData.getString("dRequestCheck"), 
+                                        		 jsonRecordData.getString("sCheckItemDesc"), 
+                                        		 jsonRecordData.getString("sQCUserID"), 
+                                        		 jsonRecordData.getString("sUserID"), 
+                                        		 jsonRecordData.getString("bApproved"), 
+                                        		 });
                                      }
                                  }
                              }
@@ -494,48 +487,53 @@ public class MainActivity extends Activity {
                 String jsonMst = "", jsonDtl = "";
                 int recordDtlCount = 0;
                 
-                Cursor csCheckRecordMat = dbhlp.querySQL("select iID, iFactoryID, sOrderNo, sStyleNo, sProductID"
-                        + " , iItemID, dChecdedDate, sRemark, datetime_rec, datetime_delete, user_id_by_upload "
-                        + " from qmCheckRecordMst a where datetime_upload is null and exists (select 1 from qmCheckRecordDtl where iMstID = a.iID limit 1  )");
+//                Cursor csCheckRecordMat = dbhlp.querySQL("select uID, iFactoryID, sOrderNo, sStyleNo, sProductID"
+//                        + " , iItemID, dChecdedDate, sRemark, sUserID, datetime_rec, datetime_modify, datetime_delete "
+//                        + " from qmCheckRecordMst a where datetime_modify > coalesce(datetime_upload, 0)");
+                Cursor csCheckRecordMat = dbhlp.select("qmCheckRecordMst", "uID, iFactoryID, sOrderNo, sStyleNo, sProductID" 
+                		+ ", iItemID, dCheckedDate, sRemark, sUserID, datetime_rec, datetime_modify, datetime_delete, datetime_upload"
+                		, "dCheckedDate is not null and datetime_modify > coalesce(datetime_upload, date('1900-01-01'))", null);
                 while (csCheckRecordMat.moveToNext()) {
                     Log.d(DEBUG_TAG, "Build uploadCheckRecordMaster Json rec:");
-                    jsonMst = "{'iID':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("iID"))
+                    jsonMst = "{'uMobileKey':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("uID"))
                             +"','iFactoryID':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("iFactoryID"))
                             +"','sOrderNo':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("sOrderNo"))
                             +"','sStyleNo':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("sStyleNo"))
                             +"','sProductID':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("sProductID"))
                             +"','iItemID':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("iItemID"))
-                            +"','dChecdedDate':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("dChecdedDate"))
+                            +"','dCheckedDate':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("dCheckedDate"))
                             +"','sRemark':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("sRemark"))
+                            +"','sUserID':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("sUserID"))
                             +"','datetime_rec':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("datetime_rec"))
+                            +"','datetime_modify':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("datetime_modify"))
                             +"','datetime_delete':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("datetime_delete"))
-                            +"','user_id_by_upload':'" + user_id 
                             +"'}";
                     
                     jsonDtl = "";
                     recordDtlCount = 0;
                     
-                    Cursor csCheckRecordDtl = dbhlp.querySQL("select iID, iMstID, sPhoto, dCreaimestamp, "
-                            + " datetime_rec, datetime_delete "
-                            + " from qmCheckRecordDtl where iMstID = " + csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("iID")));
+                    Cursor csCheckRecordDtl = dbhlp.querySQL("select b.uID, b.uMstID, b.dCreateDate, "
+                            + " b.datetime_rec, b.datetime_modify, b.datetime_delete "
+                            + " from qmCheckRecordMst a inner join qmCheckRecordDtl b on b.uMstID = a.uID "
+                            + " where a.uID = ? and b.datetime_modify > coalesce(a.datetime_upload, date('1900-01-01'))"
+                    		, new String[]{csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("uID"))});
+//                    Cursor csCheckRecordDtl = dbhlp.select("qmCheckRecordDtl", "uID, uMstID, sPhoto, dCreateDate, "
+//                            + " datetime_rec, datetime_modify, datetime_delete"
+//                    		, "uMstID = ? and datetime_modify > coalesce(?, 0)" 
+//                    		, new String[]{csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("uID"))
+//                    		, csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("datetime_upload"))});
                     while (csCheckRecordDtl.moveToNext()) {
                         Log.d(DEBUG_TAG, "Build uploadCheckRecordDetail Json rec:" + recordDtlCount);
-                        String str = "{'user_id_by_upload':'"+user_id
-                                +"','iID':'"+csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("iID"))
-                                +"','iMstID':'"+csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("iMstID"))
-                                //组织作为文件名称
-                                +"','sFileName':'" + "user_id_by_upload(" + user_id
-                                + ")iMstID(" + csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("iMstID"))
-                                + ")iID(" + csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("iID")) + ").png"
-//                                +"','sPhoto':'"+Base64.encodeToString(csCheckRecordDtl.getBlob(csCheckRecordDtl.getColumnIndex("sPhoto")), Base64.DEFAULT)
-                                +"','dCreaimestamp':'"+csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("dCreaimestamp"))
+                        String str = "{'uMobileKey':'"+csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("uID"))
+                                +"','dCreateDate':'"+csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("dCreateDate"))
                                 +"','datetime_rec':'"+csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("datetime_rec"))
+                                +"','datetime_modify':'"+csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("datetime_modify"))
                                 +"','datetime_delete':'"+csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("datetime_delete"))
                                 +"'}";
-                        if (jsonDtl != "") {
-                            jsonDtl = "," + str;
+                        if (jsonDtl.equals("")) {
+                        	jsonDtl = str;
                         } else {
-                            jsonDtl = str;
+                        	jsonDtl += "," + str;
                         }
                         recordDtlCount += 1;
                     }
@@ -571,16 +569,17 @@ public class MainActivity extends Activity {
                                                 Log.d(DEBUG_TAG, "begin upload Picture");
                                                 recordDtlCount = 0;
                                                 String resultHttpPic = "";
-                                                Cursor cursor1 = dbhlp.querySQL("select iID, iMstID, sPhoto "
-                                                        + " from qmCheckRecordDtl where iMstID = " + jsonRecordData.getString("iID"));
+                                                Cursor cursor1 = dbhlp.querySQL("select b.uID, b.sPhoto "
+                                                        + " from qmCheckRecordMst a inner join qmCheckRecordDtl b on b.uMstID = a.uID "
+                                                        + " where a.uID = ? and b.datetime_modify > coalesce(a.datetime_upload, date('1900-01-01'))"
+                                                		, new String[]{jsonRecordData.getString("uMobileKey")});
+//                                                Cursor cursor1 = dbhlp.select("qmCheckRecordDtl", "uID,sPhoto", "uMstID = ?", new String[]{jsonRecordData.getString("uMobileKey")});
                                                 while (cursor1.moveToNext()) {
                                                     Log.d(DEBUG_TAG, "Build uploadCheckRecordDetail Pic rec:" + recordDtlCount++);
                                                     try {
                                                         resultHttpPic = comm.invokeHttp(MainActivity.this, "uploadCheckRecordPic"
                                                                 //组织文件名称，这样可以找到需要插入图片的那条记录
-                                                                , "user_id_by_upload(" + user_id 
-                                                                + ")iMstID(" + cursor1.getString(cursor1.getColumnIndex("iMstID"))
-                                                                + ")iID(" + cursor1.getString(cursor1.getColumnIndex("iID")) + ").png"
+                                                                , cursor1.getString(cursor1.getColumnIndex("uID"))
                                                                 , cursor1.getBlob(cursor1.getColumnIndex("sPhoto"))
                                                                 );
                                                     } catch (Exception e) {
@@ -594,8 +593,8 @@ public class MainActivity extends Activity {
                                                         Log.d(DEBUG_TAG, " finished upload Picture");
                                                     }
                                                 }
-                                                dbhlp.updateSyncDatetime("qmCheckRecordMst", jsonRecordData.getInt("iID")
-                                                        , jsonRecordData.getString("user_id_by_upload"),  jsonRecordData.getString("datetime_upload"));
+                                                dbhlp.updateSyncDatetime("qmCheckRecordMst", jsonRecordData.getString("uMobileKey"), jsonRecordData.getString("datetime_upload"));
+                                                cursor1.close();
                                             }
                                         }
                                     }
@@ -619,6 +618,7 @@ public class MainActivity extends Activity {
                 //更新进度
                 publishProgress(syncCurrentCount);
                 csCheckRecordMat.close();
+                dbhlp.close();
             }
             return 0;
         }
