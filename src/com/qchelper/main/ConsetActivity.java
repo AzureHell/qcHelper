@@ -1,5 +1,6 @@
 ﻿package com.qchelper.main;
 
+import com.qchelper.comm.comm;
 import com.qchelper.comm.dbHelper;
 
 import android.app.Activity;
@@ -72,17 +73,17 @@ public class ConsetActivity extends Activity {
     	      		    }
     	      		    
 	      		    	if (currid > 0) {
-                            if (dbhlp.update("ServerCon", currid, edtIp.getText().toString() + "," + edtPort.getText().toString()) > 0) {
-                                Toast.makeText(ConsetActivity.this, R.string.conset_success, 1500).show();
+	      		    		if (dbhlp.update("ServerCon", Integer.toString(currid), "server_ip,server_port", new String[]{edtIp.getText().toString(), edtPort.getText().toString()}) > 0) {
+	      		    			comm.showMsg(ConsetActivity.this, R.string.conset_success);
                                 finish();
                             }
-	  	      		    }
-	  	      		    else {
+	  	      		    } else {
 	  		      		    dbhlp.delete("ServerCon", currid);
-	  		      		    if (dbhlp.insert("ServerCon", edtIp.getText().toString() + "," + edtPort.getText().toString()) > 0) {
-	  		      		    	finish();	      		     	
-	  		      		    }		      		    	
-    	      		    }     		    
+	  		      		    if (dbhlp.insert("ServerCon", "server_ip,server_port", new String[]{edtIp.getText().toString(), edtPort.getText().toString()}) > 0) {
+	  		      		    	comm.showMsg(ConsetActivity.this, R.string.conset_success);
+	  		      		    	finish();      		     	
+	  		      		    }
+    	      		    }
     	      		    break;
     			}
     	        //else if (v == btnCancel)

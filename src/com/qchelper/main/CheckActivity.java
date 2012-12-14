@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +38,7 @@ public class CheckActivity extends Activity {
     ListView CheckList;
     CheckAdapter checkAdapter;
     
-    int[] ItemKeyList;
+    String[] ItemKeyList;
     
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,18 +72,17 @@ public class CheckActivity extends Activity {
     public void InitqmCheckRecordMstData(int FactoryID, String OrderNo, String StyleNo, String ProductID, String login_user_id) {
         Log.d(DEBUG_TAG, "insert into qmCheckRecordMst");
         dbHelper dbhlp = new dbHelper(this);
-        Cursor cursor = dbhlp.querySQL("select iID from qmCheckRecordMst "
+        Cursor curCheckMst = dbhlp.querySQL("select uID from qmCheckRecordMst "
                 + " where iFactoryID = ? and sOrderNo = ? and sStyleNo = ? and sProductID = ?"
                 , new String[] {Integer.toString(FactoryID), OrderNo, StyleNo, ProductID});
-        Log.d(DEBUG_TAG, "insert into qmCheckRecordMst:" + Integer.toString(cursor.getCount()));
-        
-        if (cursor.getCount() <= 0) {
-            String insertSQL = "insert into qmCheckRecordMst(iFactoryID, sOrderNo, sStyleNo, sProductID, iItemID, user_id_by_upload) values(?,?,?,?,?,?) ";
-            dbhlp.getWritableDatabase().execSQL(insertSQL, new Object[] {FactoryID, OrderNo, StyleNo, ProductID, 1, login_user_id});
-            dbhlp.getWritableDatabase().execSQL(insertSQL, new Object[] {FactoryID, OrderNo, StyleNo, ProductID, 2, login_user_id});
-            dbhlp.getWritableDatabase().execSQL(insertSQL, new Object[] {FactoryID, OrderNo, StyleNo, ProductID, 3, login_user_id}); 
+        if (curCheckMst.getCount() <= 0) {
+        	Cursor curItem = dbhlp.select("qmCheckItem");
+        	while (curItem.moveToNext()) {
+        		dbhlp.insert("qmCheckRecordMst", "iFactoryID,sOrderNo,sStyleNo,sProductID,iItemID,sUserID", new String[] {Integer.toString(FactoryID), OrderNo, StyleNo, ProductID, curItem.getString(curItem.getColumnIndex("iID")), login_user_id});        		
+        	}
+            curItem.close();
         }
-        cursor.close();
+        curCheckMst.close();
         dbhlp.close();
     }
     
@@ -97,19 +97,21 @@ public class CheckActivity extends Activity {
         String[] WhereParam = new String[1];
         WhereParam[0]=String.valueOf(MstID);
         dbHelper dbhlp = new dbHelper(this);
-        Cursor cursor = dbhlp.querySQL("select a.iID, a.iItemID, a.dChecdedDate "
+        Cursor cursor = dbhlp.querySQL("select a.uID, a.iItemID, c.sItemName, a.dCheckedDate "
                 + " from qmCheckRecordMst a "
                 + " inner join qmCheckPlan b on a.iFactoryID=b.iFactoryID and a.sProductID=b.sProductID and a.sOrderNo = b.sOrderNo and a.sStyleNo = b.sStyleNo "
-                + " where b.iID=? "
+                + " inner join qmCheckItem c on c.iID = a.iItemID "
+                + " where b.iID = ? "
                 + " order by a.iItemID asc ", WhereParam);
 
         if (cursor.getCount() > 0) {
-        	ItemKeyList = new int[cursor.getCount()];
+        	ItemKeyList = new String[cursor.getCount()];
             while (cursor.moveToNext()) {
-            	ItemKeyList[cursor.getPosition()] = cursor.getInt(0);
+            	ItemKeyList[cursor.getPosition()] = cursor.getString(0);
                 data.add(cursor.getString(0)
                         + "※" + cursor.getString(1)
                         + "※" + cursor.getString(2)
+                        + "※" + cursor.getString(3)
                         );
             }
         }
@@ -147,10 +149,10 @@ public class CheckActivity extends Activity {
             */
             
             String[] strarray = getItem(position).split("※");            
-            if (strarray.length == 3) {
-            	tv_iItemID.setText("第" + strarray[1] + "道检验");
+            if (strarray.length == 4) {
+            	tv_iItemID.setText(strarray[1] + "." + strarray[2]);
             	Log.d(DEBUG_TAG, "getView:" + Integer.toString(strarray[2].length()));
-            	if (strarray[2] == null || strarray[2].equals("") || strarray[2].equals("null") || strarray[2].length() <= 0) {
+            	if (strarray[3] == null || strarray[3].equals("") || strarray[3].equals("null") || strarray[3].length() <= 0) {
                 	tv_iCheckState.setText("-"); 
                 	Log.d(DEBUG_TAG, "getView_1");
             	}
@@ -161,10 +163,11 @@ public class CheckActivity extends Activity {
             	Log.d(DEBUG_TAG, strarray[2]);
             	
             }
-            else if (strarray.length == 2) {
-            	tv_iItemID.setText("第" + strarray[1] + "道检验");
-            	tv_iCheckState.setText("-");
-            }
+            // 好像没有长度等于3的数据集？
+//            else if (strarray.length == 3) {
+//            	tv_iItemID.setText("第" + strarray[1] + "道检验");
+//            	tv_iCheckState.setText("-");
+//            }
             
             //返回重写的view
             return view;

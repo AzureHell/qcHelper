@@ -115,6 +115,7 @@ public final class R {
         public static final int conset_success=0x7f05001e;
         public static final int dialog_askinfo=0x7f050014;
         public static final int dialog_titile=0x7f050015;
+        public static final int have_records=0x7f05003f;
         public static final int hello_world=0x7f050002;
         public static final int image_count_check=0x7f050022;
         public static final int image_not_exists=0x7f050021;
@@ -138,10 +139,11 @@ public final class R {
         public static final int menu_setting=0x7f050016;
         public static final int menu_settings=0x7f050003;
         public static final int network_inactive=0x7f05003d;
+        public static final int not_record=0x7f05003e;
         public static final int ok=0x7f05002f;
         public static final int process_wait=0x7f050039;
         public static final int processing=0x7f05003a;
-        public static final int prompt_ipnotnull=0x7f05003e;
+        public static final int prompt_ipnotnull=0x7f050040;
         public static final int prompt_protnotnull=0x7f05001d;
         public static final int record_save_failed=0x7f050035;
         public static final int record_save_succeed=0x7f050034;
