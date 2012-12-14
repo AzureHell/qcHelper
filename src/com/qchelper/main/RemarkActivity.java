@@ -6,23 +6,27 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 public class RemarkActivity extends Activity {
-    int KeyID;
+	final static String DEBUG_TAG = "RemarkActivity";
+	
+    String KeyID;
     Button btnRemarkOk;
     Button btnRemarkCancel;
     EditText edtRemark;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
+    	Log.d(DEBUG_TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_remark);
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
-        KeyID = bundle.getInt("KeyID");
+        KeyID = bundle.getString("KeyID");
         
         btnRemarkOk = (Button) findViewById(R.id.btnRemarkOk);
         btnRemarkOk.setOnClickListener(new ButtonClickEvent());
@@ -41,14 +45,15 @@ public class RemarkActivity extends Activity {
     */
     
     private String GetRemarkData(){
-    	String Data=null;
+    	Log.d(DEBUG_TAG, "GetRemarkData");
+    	String Data = null;
     	dbHelper dbhlp = new dbHelper(this);
-    	Cursor cursor = dbhlp.querySQL("select sRemark from qmCheckRecordMst where iID=" + Integer.toString(KeyID));
+    	Cursor cursor = dbhlp.select("qmCheckRecordMst", "sRemark", "uID = ?", new String[]{KeyID});
     	if (cursor.getCount() > 0){
     		cursor.moveToFirst();
     		Data = cursor.getString(0);
     	}
-    	dbhlp.close();    	
+    	dbhlp.close();
     	cursor.close();
     	return Data;
     }

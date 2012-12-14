@@ -104,14 +104,14 @@ public class MainActivity extends Activity {
   				  + "values(?,?,?,?,?,?,?,?,?)", new Object[] {6, 22, "SC022", "LP6589", "P0000006", "2012-12-22", "1、面料、辅料品质优良，符合客户要求; 2、款式配色准确无误; 3、包装美观、配比正确.", "U001", "U001"});    		
     	}
     	
-    	cursor = dbhlp.querySQL("select iID from qmCheckRecordMst ");
+    	cursor = dbhlp.querySQL("select uID from qmCheckRecordMst ");
     	Log.d(DEBUG_TAG, "InitInsertData2:" + Integer.toString(cursor.getCount()));
     	if (cursor.getCount() <= 0) {
-    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckRecordMst(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, iItemID) "
+    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckRecordMst(uID, iFactoryID, sOrderNo, sStyleNo, sProductID, iItemID) "
     				  + "values(?,?,?,?,?,?)", new Object[] {1, 12, "SC010", "QX7886", "P0000001", 1});
-    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckRecordMst(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, iItemID) "
+    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckRecordMst(uID, iFactoryID, sOrderNo, sStyleNo, sProductID, iItemID) "
   				  + "values(?,?,?,?,?,?)", new Object[] {2, 12, "SC010", "QX7886", "P0000001", 2});
-    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckRecordMst(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, iItemID) "
+    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckRecordMst(uID, iFactoryID, sOrderNo, sStyleNo, sProductID, iItemID) "
   				  + "values(?,?,?,?,?,?)", new Object[] {3, 12, "SC010", "QX7886", "P0000001", 3}); 
     		
     		dbhlp.getWritableDatabase().execSQL("insert into qmCheckRecordMst(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, iItemID) "
@@ -209,37 +209,20 @@ public class MainActivity extends Activity {
         Log.d(DEBUG_TAG, "getPlanList_1");
         List<String> data = new ArrayList<String>();
         
-        String SqlText;
- 
+        String SqlText = "";
+        String selection = null;
+        String[] selectionArgs = null;
         dbHelper dbhlp = new dbHelper(this);
-        if ((ParamValue == null) || (ParamValue == "")) {
-        	SqlText = "select iID, dRequestCheck, sOrderNo, sStyleNo "
-                + ", sProductID, sCheckItemDesc "
-                + " from qmCheckPlan "
-                + " order by dRequestCheck asc "
-                + " limit 20 ";
-        	Log.d(DEBUG_TAG, "getPlanList_2_1");
+        if ((ParamValue != null) && (ParamValue != "")) {
+        	selection = "sOrderNo like '%?%' or sStyleNo like '%?%'";
+        	selectionArgs = new String[] {ParamValue, ParamValue};
         }
-        else {
-        	SqlText = "select iID, dRequestCheck, sOrderNo, sStyleNo "
-                + ", sProductID, sCheckItemDesc "
-                + " from qmCheckPlan "
-                + " where (sOrderNo like '%" + ParamValue + "%') or (sStyleNo like '%" + ParamValue + "%') "
-                + " order by dRequestCheck asc "
-                + " limit 20 ";
-        	Log.d(DEBUG_TAG, "getPlanList_2_2:" + ParamValue);
-        }
-        Log.d(DEBUG_TAG, "getPlanList_3");
-        Cursor cursor = dbhlp.querySQL(SqlText);
-        Log.d(DEBUG_TAG, "getPlanList_4");
+        Cursor cursor = dbhlp.select("qmCheckPlan", "iID,dRequestCheck,sOrderNo,sStyleNo,sProductID,sCheckItemDesc,iFactoryID,sQCUserID", selection, selectionArgs, 20);
 
         if (cursor.getCount() > 0) {
         	ItemKeyList = new int[cursor.getCount()];
-        	Log.d(DEBUG_TAG, "getPlanList_5");
             while (cursor.moveToNext()) {
-            	Log.d(DEBUG_TAG, "getPlanList_6");
             	ItemKeyList[cursor.getPosition()] = cursor.getInt(0);
-            	Log.d(DEBUG_TAG, "getPlanList_7");
                 data.add(cursor.getString(1)
                         + "※" + cursor.getString(2)
                         + "※" + cursor.getString(3)
@@ -247,14 +230,10 @@ public class MainActivity extends Activity {
                         + "※" + cursor.getString(5)
                         );
             }
-            if (1 == 1) { //((ParamValue != null) && (ParamValue != ""))
-            	Toast.makeText(this, "找到" + Integer.toString(cursor.getCount()) + "条记录", 1500).show();            	
-            }
+            comm.showMsg(this, String.format(getResources().getString(R.string.have_records), cursor.getCount()));
         }
         else {
-        	if (1 == 1) { //((ParamValue != null) && (ParamValue != ""))
-        		Toast.makeText(this, "没有找到记录", 1500).show();        		
-        	}
+        	comm.showMsg(this, R.string.not_record);
         }
         dbhlp.close();
         cursor.close();
@@ -458,18 +437,19 @@ public class MainActivity extends Activity {
                                      for (int k=0;  k < jsonRecordArray.length(); k++) {
                                          //获取返回记录
                                          JSONObject jsonRecordData = jsonRecordArray.getJSONObject(k);
-                                         ContentValues cv = new ContentValues();
-                                         String str = "iID"; cv.put(str, jsonRecordData.getString(str));
-                                         str = "iFactoryID"; cv.put(str, jsonRecordData.getString(str));
-                                         str = "sOrderNo"; cv.put(str, jsonRecordData.getString(str));
-                                         str = "sStyleNo"; cv.put(str, jsonRecordData.getString(str));
-                                         str = "sProductID"; cv.put(str, jsonRecordData.getString(str));
-                                         str = "dRequestCheck"; cv.put(str, jsonRecordData.getString(str));
-                                         str = "sCheckItemDesc"; cv.put(str, jsonRecordData.getString(str));
-                                         str = "sCheckItemDesc"; cv.put(str, jsonRecordData.getString(str));
-                                         str = "sUserID"; cv.put(str, jsonRecordData.getString(str));
-                                         str = "bApproved"; cv.put(str, jsonRecordData.getString(str));
-                                         dbhlp.insert("qmCheckPlan", cv);
+                                         dbhlp.insert("qmCheckPlan", "iID,iFactoryID,sOrderNo,sStyleNo,sProductID,dRequestCheck,sCheckItemDesc,sQCUserID," +
+                                         		"sUserID,bApproved", new String[]{
+                                        		 jsonRecordData.getString("iID"), 
+                                        		 jsonRecordData.getString("iFactoryID"),
+                                        		 jsonRecordData.getString("sOrderNo"), 
+                                        		 jsonRecordData.getString("sStyleNo"), 
+                                        		 jsonRecordData.getString("sProductID"), 
+                                        		 jsonRecordData.getString("dRequestCheck"), 
+                                        		 jsonRecordData.getString("sCheckItemDesc"), 
+                                        		 jsonRecordData.getString("sQCUserID"), 
+                                        		 jsonRecordData.getString("sUserID"), 
+                                        		 jsonRecordData.getString("bApproved"), 
+                                        		 });
                                      }
                                  }
                              }
@@ -494,48 +474,53 @@ public class MainActivity extends Activity {
                 String jsonMst = "", jsonDtl = "";
                 int recordDtlCount = 0;
                 
-                Cursor csCheckRecordMat = dbhlp.querySQL("select iID, iFactoryID, sOrderNo, sStyleNo, sProductID"
-                        + " , iItemID, dChecdedDate, sRemark, datetime_rec, datetime_delete, user_id_by_upload "
-                        + " from qmCheckRecordMst a where datetime_upload is null and exists (select 1 from qmCheckRecordDtl where iMstID = a.iID limit 1  )");
+//                Cursor csCheckRecordMat = dbhlp.querySQL("select uID, iFactoryID, sOrderNo, sStyleNo, sProductID"
+//                        + " , iItemID, dChecdedDate, sRemark, sUserID, datetime_rec, datetime_modify, datetime_delete "
+//                        + " from qmCheckRecordMst a where datetime_modify > coalesce(datetime_upload, 0)");
+                Cursor csCheckRecordMat = dbhlp.select("qmCheckRecordMst", "uID, iFactoryID, sOrderNo, sStyleNo, sProductID" 
+                		+ ", iItemID, dCheckedDate, sRemark, sUserID, datetime_rec, datetime_modify, datetime_delete, datetime_upload"
+                		, " datetime_modify > coalesce(datetime_upload, date('1900-01-01'))", null);
                 while (csCheckRecordMat.moveToNext()) {
                     Log.d(DEBUG_TAG, "Build uploadCheckRecordMaster Json rec:");
-                    jsonMst = "{'iID':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("iID"))
+                    jsonMst = "{'uMobileKey':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("uID"))
                             +"','iFactoryID':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("iFactoryID"))
                             +"','sOrderNo':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("sOrderNo"))
                             +"','sStyleNo':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("sStyleNo"))
                             +"','sProductID':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("sProductID"))
                             +"','iItemID':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("iItemID"))
-                            +"','dChecdedDate':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("dChecdedDate"))
+                            +"','dCheckedDate':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("dCheckedDate"))
                             +"','sRemark':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("sRemark"))
+                            +"','sUserID':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("sUserID"))
                             +"','datetime_rec':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("datetime_rec"))
+                            +"','datetime_modify':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("datetime_modify"))
                             +"','datetime_delete':'"+csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("datetime_delete"))
-                            +"','user_id_by_upload':'" + user_id 
                             +"'}";
                     
                     jsonDtl = "";
                     recordDtlCount = 0;
                     
-                    Cursor csCheckRecordDtl = dbhlp.querySQL("select iID, iMstID, sPhoto, dCreaimestamp, "
-                            + " datetime_rec, datetime_delete "
-                            + " from qmCheckRecordDtl where iMstID = " + csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("iID")));
+                    Cursor csCheckRecordDtl = dbhlp.querySQL("select b.uID, b.uMstID, b.dCreateDate, "
+                            + " b.datetime_rec, b.datetime_modify, b.datetime_delete "
+                            + " from qmCheckRecordMst a inner join qmCheckRecordDtl b on b.uMstID = a.uID "
+                            + " where a.uID = ? and b.datetime_modify > coalesce(a.datetime_upload, date('1900-01-01'))"
+                    		, new String[]{csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("uID"))});
+//                    Cursor csCheckRecordDtl = dbhlp.select("qmCheckRecordDtl", "uID, uMstID, sPhoto, dCreateDate, "
+//                            + " datetime_rec, datetime_modify, datetime_delete"
+//                    		, "uMstID = ? and datetime_modify > coalesce(?, 0)" 
+//                    		, new String[]{csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("uID"))
+//                    		, csCheckRecordMat.getString(csCheckRecordMat.getColumnIndex("datetime_upload"))});
                     while (csCheckRecordDtl.moveToNext()) {
                         Log.d(DEBUG_TAG, "Build uploadCheckRecordDetail Json rec:" + recordDtlCount);
-                        String str = "{'user_id_by_upload':'"+user_id
-                                +"','iID':'"+csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("iID"))
-                                +"','iMstID':'"+csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("iMstID"))
-                                //组织作为文件名称
-                                +"','sFileName':'" + "user_id_by_upload(" + user_id
-                                + ")iMstID(" + csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("iMstID"))
-                                + ")iID(" + csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("iID")) + ").png"
-//                                +"','sPhoto':'"+Base64.encodeToString(csCheckRecordDtl.getBlob(csCheckRecordDtl.getColumnIndex("sPhoto")), Base64.DEFAULT)
-                                +"','dCreaimestamp':'"+csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("dCreaimestamp"))
+                        String str = "{'uMobileKey':'"+csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("uID"))
+                                +"','dCreateDate':'"+csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("dCreateDate"))
                                 +"','datetime_rec':'"+csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("datetime_rec"))
+                                +"','datetime_modify':'"+csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("datetime_modify"))
                                 +"','datetime_delete':'"+csCheckRecordDtl.getString(csCheckRecordDtl.getColumnIndex("datetime_delete"))
                                 +"'}";
-                        if (jsonDtl != "") {
-                            jsonDtl = "," + str;
+                        if (jsonDtl.equals("")) {
+                        	jsonDtl = str;
                         } else {
-                            jsonDtl = str;
+                        	jsonDtl += "," + str;
                         }
                         recordDtlCount += 1;
                     }
@@ -571,16 +556,17 @@ public class MainActivity extends Activity {
                                                 Log.d(DEBUG_TAG, "begin upload Picture");
                                                 recordDtlCount = 0;
                                                 String resultHttpPic = "";
-                                                Cursor cursor1 = dbhlp.querySQL("select iID, iMstID, sPhoto "
-                                                        + " from qmCheckRecordDtl where iMstID = " + jsonRecordData.getString("iID"));
+                                                Cursor cursor1 = dbhlp.querySQL("select b.uID, b.sPhoto "
+                                                        + " from qmCheckRecordMst a inner join qmCheckRecordDtl b on b.uMstID = a.uID "
+                                                        + " where a.uID = ? and b.datetime_modify > coalesce(a.datetime_upload, date('1900-01-01'))"
+                                                		, new String[]{jsonRecordData.getString("uMobileKey")});
+//                                                Cursor cursor1 = dbhlp.select("qmCheckRecordDtl", "uID,sPhoto", "uMstID = ?", new String[]{jsonRecordData.getString("uMobileKey")});
                                                 while (cursor1.moveToNext()) {
                                                     Log.d(DEBUG_TAG, "Build uploadCheckRecordDetail Pic rec:" + recordDtlCount++);
                                                     try {
                                                         resultHttpPic = comm.invokeHttp(MainActivity.this, "uploadCheckRecordPic"
                                                                 //组织文件名称，这样可以找到需要插入图片的那条记录
-                                                                , "user_id_by_upload(" + user_id 
-                                                                + ")iMstID(" + cursor1.getString(cursor1.getColumnIndex("iMstID"))
-                                                                + ")iID(" + cursor1.getString(cursor1.getColumnIndex("iID")) + ").png"
+                                                                , cursor1.getString(cursor1.getColumnIndex("uID"))
                                                                 , cursor1.getBlob(cursor1.getColumnIndex("sPhoto"))
                                                                 );
                                                     } catch (Exception e) {
@@ -594,8 +580,7 @@ public class MainActivity extends Activity {
                                                         Log.d(DEBUG_TAG, " finished upload Picture");
                                                     }
                                                 }
-                                                dbhlp.updateSyncDatetime("qmCheckRecordMst", jsonRecordData.getInt("iID")
-                                                        , jsonRecordData.getString("user_id_by_upload"),  jsonRecordData.getString("datetime_upload"));
+                                                dbhlp.updateSyncDatetime("qmCheckRecordMst", jsonRecordData.getString("uMobileKey"), jsonRecordData.getString("datetime_upload"));
                                             }
                                         }
                                     }

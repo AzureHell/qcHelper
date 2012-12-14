@@ -30,9 +30,10 @@ import android.widget.Toast;
 
 public class ImageShowActivity extends Activity {
 	final static String TAG = "ImageShowActivity";
-    int KeyID;
+    
     int PositionID = -1;
-    int MstID;
+    String KeyID, MstID;
+    
     ImageView imgView;
     Button btnImgShowBack;
     Button btnImgShowDelete;
@@ -72,7 +73,7 @@ public class ImageShowActivity extends Activity {
         setContentView(R.layout.activity_image_show);
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
-        KeyID = bundle.getInt("KeyID"); 
+        KeyID = bundle.getString("KeyID"); 
                
         imgView = (ImageView) findViewById(R.id.ivImageShow);
         CurrMap = GetImageData(KeyID);
@@ -190,7 +191,7 @@ public class ImageShowActivity extends Activity {
                     } 
                     else {
                     	PositionID = PositionID - 1;
-                    	CurrMap = GetImageData(Integer.parseInt(KeyList.get(PositionID)));
+                    	CurrMap = GetImageData(KeyList.get(PositionID));
                     	imgView.setImageBitmap(CurrMap);
                     }              		
             	}            	  	
@@ -220,7 +221,7 @@ public class ImageShowActivity extends Activity {
                     } 
                     else {
                     	PositionID = PositionID + 1;
-                    	CurrMap = GetImageData(Integer.parseInt(KeyList.get(PositionID)));                    	
+                    	CurrMap = GetImageData(KeyList.get(PositionID));                    	
                     	imgView.setImageBitmap(CurrMap);
                     }              		
                 	
@@ -242,19 +243,15 @@ public class ImageShowActivity extends Activity {
     }
     */
 
-    private Bitmap GetImageData(int CurrID) {
+    private Bitmap GetImageData(String CurrID) {
     	Log.d(TAG, "GetImageData_Begin");
     	Bitmap Data = null;
     	
-    	String SqlText = "select iMstID, sPhoto from qmCheckRecordDtl where iID=" + Integer.toString(CurrID);
-    	
     	dbHelper dbhlp = new dbHelper(this);
-    	Log.d(TAG, "GetImageData_1");
-    	Cursor cursor = dbhlp.querySQL(SqlText);
-    	Log.d(TAG, "GetImageData_2");
+    	Cursor cursor = dbhlp.select("qmCheckRecordDtl", "uMstID, sPhoto", "uID = ?", new String[]{CurrID});
     	if (cursor.getCount() > 0) {
     		cursor.moveToFirst();
-    		MstID = cursor.getInt(0); 
+    		MstID = cursor.getString(0);
     		Data = BytesToBitmap(cursor.getBlob(1));
     	}
     	Log.d(TAG, "GetImageData_End");
@@ -263,21 +260,16 @@ public class ImageShowActivity extends Activity {
     } 
     
     private void GetKeyList() {
-    	String SqlText = "select iID from qmCheckRecordDtl where iMstID=" + Integer.toString(MstID);
-    	
     	dbHelper dbhlp = new dbHelper(this);
-    	Log.d(TAG, "GetImageData_1");
-    	Cursor cursor = dbhlp.querySQL(SqlText);
-    	Log.d(TAG, "GetImageData_2");
+    	Cursor cursor = dbhlp.select("qmCheckRecordDtl", "uID", "uMstID = ?", new String[]{MstID});
     	if (cursor.getCount() > 0) {
     		while (cursor.moveToNext()) {
     			KeyList.add(cursor.getString(0));
-    			if (KeyID == cursor.getInt(0)) {
+    			if (KeyID.equals(cursor.getString(0))) {
     				PositionID = cursor.getPosition();
     			}
     		}
     	}    	
-    	
     }
     
     public Bitmap BytesToBitmap(byte[] bytes) {
@@ -303,10 +295,10 @@ public class ImageShowActivity extends Activity {
                 dbhlp.delete("qmCheckRecordDtl", Integer.parseInt(StrKey));
                 KeyList.remove(PositionID);
                 if ((PositionID + 1) > KeyList.size()) {
-                	PositionID = PositionID - 1;                	
+                	PositionID = PositionID - 1;
                 }
                 if (KeyList.size() > 0) {
-                    CurrMap = GetImageData(Integer.parseInt(KeyList.get(PositionID)));
+                    CurrMap = GetImageData(KeyList.get(PositionID));
                     imgView.setImageBitmap(CurrMap);                	
                 }
                 else {

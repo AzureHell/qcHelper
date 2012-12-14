@@ -78,4 +78,7 @@
     
     <string name="wifi_inactive">Wifi连接无效!</string>
     <string name="network_inactive">网络连接无效!</string>
+    
+    <string name="not_record">没有记录！</string>
+    <string name="have_records">找到 %1$d 条记录</string>
 </resources>

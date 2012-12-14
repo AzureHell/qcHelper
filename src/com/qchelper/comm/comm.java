@@ -100,13 +100,13 @@ public class comm {
 
     public static String getNowStringDateTime() {
         return getStringDateTime(new Date());
-     }        
-    
+    }
+
     public static String getStringDateTime(Date dt) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String dateString = formatter.format(dt);
         return dateString;
-     }    
+    }
     
     public static Date getDateTime(Date dt, String type, Integer i) {
         Calendar canlandar = Calendar.getInstance();
@@ -185,14 +185,14 @@ public class comm {
         }
     }    
     
-    public static String invokeHttp(Context con, String actionName, String fileName, byte [] pic) {
+    public static String invokeHttp(Context con, String actionName, String key, byte [] pic) {
         String url = "";
         url = getHttpUrl(con, actionName);
         if (url == ""){
             return null;
         }
         try {
-            return httpHelper.invokePic(url, fileName, pic);
+            return httpHelper.invokePic(url, key, pic);
         } catch (Exception e) {
             return null;
         }
