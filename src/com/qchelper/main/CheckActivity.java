@@ -62,7 +62,7 @@ public class CheckActivity extends Activity {
         txtOrderNo.setText("订单号:" + bundle.getString("OrderNo"));
         txtStyleNo.setText("款号:" + bundle.getString("StyleNo"));
 
-        InitqmCheckRecordMstData(12, bundle.getString("OrderNo"), bundle.getString("StyleNo"), bundle.getString("ProductID"), login_user_id);
+        InitqmCheckRecordMstData(1, bundle.getString("OrderNo"), bundle.getString("StyleNo"), bundle.getString("ProductID"), login_user_id);
         
         CheckList = (ListView) findViewById(R.id.check_list);
         checkAdapter = new CheckAdapter(this, R.layout.qccheckitem, getCheckData());
@@ -74,7 +74,7 @@ public class CheckActivity extends Activity {
         dbHelper dbhlp = new dbHelper(this);
         Cursor curCheckMst = dbhlp.querySQL("select uID from qmCheckRecordMst "
                 + " where iFactoryID = ? and sOrderNo = ? and sStyleNo = ? and sProductID = ?"
-                , new String[] {Integer.toString(FactoryID), OrderNo, StyleNo, ProductID});
+        		, new String[] {Integer.toString(FactoryID), OrderNo, StyleNo, ProductID});
         if (curCheckMst.getCount() <= 0) {
         	Cursor curItem = dbhlp.select("qmCheckItem");
         	while (curItem.moveToNext()) {
@@ -99,7 +99,9 @@ public class CheckActivity extends Activity {
         dbHelper dbhlp = new dbHelper(this);
         Cursor cursor = dbhlp.querySQL("select a.uID, a.iItemID, c.sItemName, a.dCheckedDate "
                 + " from qmCheckRecordMst a "
-                + " inner join qmCheckPlan b on a.iFactoryID=b.iFactoryID and a.sProductID=b.sProductID and a.sOrderNo = b.sOrderNo and a.sStyleNo = b.sStyleNo "
+        		// 这里暂时忽略iFactoryID的判断
+//                + " inner join qmCheckPlan b on a.iFactoryID=b.iFactoryID and a.sProductID=b.sProductID and a.sOrderNo = b.sOrderNo and a.sStyleNo = b.sStyleNo "
+                + " inner join qmCheckPlan b on a.sProductID=b.sProductID and a.sOrderNo = b.sOrderNo and a.sStyleNo = b.sStyleNo "
                 + " inner join qmCheckItem c on c.iID = a.iItemID "
                 + " where b.iID = ? "
                 + " order by a.iItemID asc ", WhereParam);
