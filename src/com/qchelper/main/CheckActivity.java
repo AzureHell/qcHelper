@@ -51,6 +51,7 @@ public class CheckActivity extends Activity {
             comm.showErrorMsg(this, R.string.main_need_login);
             finish();
         }        
+//        String login_user_id = "admin";
         
         txtOrderNo = (TextView) findViewById(R.id.txtCheckOrderNo);
         txtStyleNo = (TextView) findViewById(R.id.txtCheckStyleNo);
@@ -155,7 +156,7 @@ public class CheckActivity extends Activity {
             	tv_iItemID.setText(strarray[1] + "." + strarray[2]);
             	Log.d(DEBUG_TAG, "getView:" + Integer.toString(strarray[2].length()));
             	if (strarray[3] == null || strarray[3].equals("") || strarray[3].equals("null") || strarray[3].length() <= 0) {
-                	tv_iCheckState.setText("-"); 
+                	tv_iCheckState.setText("－"); 
                 	Log.d(DEBUG_TAG, "getView_1");
             	}
             	else {

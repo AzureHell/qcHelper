@@ -2,51 +2,123 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content" >    
 
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         >
         
-        <LinearLayout 
+        <RelativeLayout 
 			android:id="@+id/main_top"
 			android:layout_width="fill_parent"
-			android:layout_height="50dip"
+			android:layout_height="45dip"
 			android:orientation="horizontal"
 			style="@android:style/ButtonBar"
+			android:padding="1dip"
 			>
-			
+            <Button
+                android:id="@+id/MainSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_alignParentRight="true"
+                android:text="@string/btn_Search"
+                android:layout_marginBottom="-5dip" 
+                android:textSize="16sp"/>			
+            <EditText
+                android:id="@+id/edtSearch"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_toLeftOf="@+id/MainSearch"
+                android:gravity="center_vertical"
+                android:padding="1dip"
+                android:layout_marginBottom="-5dip"
+                android:textSize="14sp" >
+            </EditText>
+                           
+  	    </RelativeLayout>       
+  	    
+	    
+	    <LinearLayout
+	        android:id="@+id/main_bottom" 
+	        android:layout_width="fill_parent"
+	        android:layout_height="55dip"
+			android:orientation="horizontal"
+			style="@android:style/ButtonBar"
+			android:padding="1dip"
+			android:layout_alignParentBottom="true"		        
+	        >
+
+            <Button 
+                android:id="@+id/main_login" 
+                android:text="@string/menu_login"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:padding="1dip"
+                android:layout_marginBottom="-5dip"
+                android:textSize="14sp" 
+                /> 
+                
             <Button 
                 android:id="@+id/main_sync" 
                 android:text="@string/btn_sync"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:layout_weight="1"
-                />              
+                android:padding="1dip"
+                android:layout_marginLeft="-7dip"
+                android:layout_marginBottom="-5dip"
+                android:textSize="14sp" 
+                android:singleLine="false"
+                />        
+                
             <Button 
-                android:id="@+id/MainSearch" 
-                android:text="@string/btn_Search"
+                android:id="@+id/main_conn" 
+                android:text="@string/menu_setting"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:layout_weight="1"
-                />                 
-            <EditText
-                android:id="@+id/edtSearch"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
+                android:padding="1dip"
+                android:layout_marginLeft="-7dip"
+                android:layout_marginBottom="-5dip"
                 android:textSize="14sp"
+                android:singleLine="false" 
+                />                
+                
+            <Button 
+                android:id="@+id/main_choose" 
+                android:text="@string/title_activity_choose_camera"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
                 android:layout_weight="1"
-                />                           
-  	    </LinearLayout>
-  	    
-	    <LinearLayout
+                android:padding="1dip"
+                android:layout_marginLeft="-7dip"
+                android:layout_marginBottom="-5dip"
+                android:textSize="14sp" 
+                android:singleLine="false"
+                />               
+                
+            <Button 
+                android:id="@+id/main_exit" 
+                android:text="@string/menu_exit"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:padding="1dip"
+                android:layout_marginLeft="-7dip"
+                android:layout_marginBottom="-5dip"
+                android:textSize="14sp" 
+                />             	        
+	    </LinearLayout>  
+	    
+        <LinearLayout
 			android:id="@+id/main_plan"
 			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
+			android:layout_height="match_parent"
 			android:orientation="vertical"
 			android:layout_below="@id/main_top"
+			android:layout_above="@id/main_bottom"
 	    	>
 	        <ListView
 				android:id="@+id/Plan_list"
@@ -54,7 +126,7 @@
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				/>
-	    </LinearLayout>        
+	    </LinearLayout> 	    	    	         	    
         
     </RelativeLayout>
 

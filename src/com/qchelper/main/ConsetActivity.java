@@ -20,7 +20,7 @@ public class ConsetActivity extends Activity {
 	Button btnCancel;
 	EditText edtIp;
 	EditText edtPort;
-	int currid;
+	int currid = 0;
     private dbHelper dbhlp;
     
     @Override
@@ -55,45 +55,53 @@ public class ConsetActivity extends Activity {
         }
     }
     
-    class ClickEvent implements View.OnClickListener {
+	class ClickEvent implements View.OnClickListener {
 
 		public void onClick(View v) {
-	      	  //if (v == btnOk)
-			switch(v.getId()) {
-    			case R.id.setting_ok: {
-    	      		    if (edtIp.getText().length() <= 0){
-    	      		    	PromptDialog(1);
-    	      		    	edtIp.requestFocus();
-    	      		    	break;
-    	      		    }
-    	      		    if (edtPort.getText().length() <= 0){
-    	      		    	PromptDialog(2);
-    	      		    	edtPort.requestFocus();
-    	      		    	break;
-    	      		    }
-    	      		    
-	      		    	if (currid > 0) {
-	      		    		if (dbhlp.update("ServerCon", Integer.toString(currid), "server_ip,server_port", new String[]{edtIp.getText().toString(), edtPort.getText().toString()}) > 0) {
-	      		    			comm.showMsg(ConsetActivity.this, R.string.conset_success);
-                                finish();
-                            }
-	  	      		    } else {
-	  		      		    dbhlp.delete("ServerCon", currid);
-	  		      		    if (dbhlp.insert("ServerCon", "server_ip,server_port", new String[]{edtIp.getText().toString(), edtPort.getText().toString()}) > 0) {
-	  		      		    	comm.showMsg(ConsetActivity.this, R.string.conset_success);
-	  		      		    	finish();      		     	
-	  		      		    }
-    	      		    }
-    	      		    break;
-    			}
-    	        //else if (v == btnCancel)
-    			case R.id.setting_cancel: {
-            		finish();
-            		break;
-    			}
-    		}	  
+			// if (v == btnOk)
+			switch (v.getId()) {
+			case R.id.setting_ok: {
+				if (edtIp.getText().length() <= 0) {
+					PromptDialog(1);
+					edtIp.requestFocus();
+					break;
+				}
+				if (edtPort.getText().length() <= 0) {
+					PromptDialog(2);
+					edtPort.requestFocus();
+					break;
+				}
+
+				if (currid > 0) {
+					if (dbhlp.update("ServerCon", Integer.toString(currid),
+							"server_ip,server_port", new String[] {
+									edtIp.getText().toString(),
+									edtPort.getText().toString() }) > 0) {
+						comm.showMsg(ConsetActivity.this,
+								R.string.conset_success);
+						finish();
+					}
+				} else {
+					dbhlp.delete("ServerCon", currid);
+					if (dbhlp.insert("ServerCon", "server_ip,server_port",
+							new String[] { edtIp.getText().toString(),
+									edtPort.getText().toString() }) > 0) {
+						comm.showMsg(ConsetActivity.this,
+								R.string.conset_success);
+						finish();
+						
+					}
+				}
+				break;
+			}
+				// else if (v == btnCancel)
+			case R.id.setting_cancel: {
+				finish();
+				break;
+			}
+			}
 		}
-      }  
+	}
    
     public void PromptDialog(int infotype) {
     	AlertDialog.Builder builder = new AlertDialog.Builder(ConsetActivity.this);

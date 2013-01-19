@@ -99,6 +99,16 @@ public class dbHelper extends SQLiteOpenHelper {
     	+ ", server_ip varchar(40), server_port varchar(20));";
         db.execSQL(sql_create);
         Log.d(DEBUG_TAG, "create ServerCon");
+        
+        /*
+         * iID 整型主键
+         * ParamName 参数名称
+         * ParamValue 参数植
+         */ 
+        sql_create =" Create table HelperParam(iID integer primary key "
+        	+ ", ParamName varchar(100), ParamValue varchar(100));";
+            db.execSQL(sql_create);
+            Log.d(DEBUG_TAG, "create HelperParam");       
     }
     
     @Override
@@ -120,6 +130,9 @@ public class dbHelper extends SQLiteOpenHelper {
         db.execSQL(sql_check);
         
         sql_check=" DROP TABLE IF EXISTS ServerCon";
+        db.execSQL(sql_check);
+        
+        sql_check=" DROP TABLE IF EXISTS HelperParam";
         db.execSQL(sql_check);
         
         onCreate(db);
@@ -175,20 +188,27 @@ public class dbHelper extends SQLiteOpenHelper {
     	if (columns != null && !columns.equals("")) {
     		columnarray = columns.split(",");
     	}
-        
+    	Log.d(DEBUG_TAG, "select_2");
+    	 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = null;
         String orderby = null;
         if (table_name == "qmCheckPlan") {
-            orderby = "dRequestCheck asc";
+            orderby = " dRequestCheck asc";
         }
         else if (table_name == "qmCheckRecordMst") {
-        	orderby = "iItemID asc";
+        	orderby = " iItemID asc";
         }
         else if (table_name == "qmCheckRecordDtl") {
-            orderby = "dCreateDate asc";        
+            orderby = " dCreateDate asc";        
         }
-        cursor = db.query(table_name, columnarray, selection, selectionArgs, null, null,  orderby, Integer.toString(limit));
+        Log.d(DEBUG_TAG, "select_3");
+        String StrLimit = "100";
+        if (limit > 0) {
+        	StrLimit = Integer.toString(limit);	
+        }
+        cursor = db.query(table_name, columnarray, selection, selectionArgs, null, null, orderby, StrLimit);
+    
         return cursor;
     }
 
@@ -223,8 +243,21 @@ public class dbHelper extends SQLiteOpenHelper {
     
     public long insertCheckRecordDtl(String table_name, String mstid, byte[] pic ) {
         Log.d(DEBUG_TAG, "insertCheckRecordDtl");
+        if ((pic == null) || (pic.length <= 0)) {
+        	Log.d(DEBUG_TAG, "insertCheckRecordDtl_PicIsNull");
+        	return 0;
+        }
+        if ((mstid == "") || (mstid == null)) {
+        	Log.d(DEBUG_TAG, "insertCheckRecordDtl_MstIDIsNull");
+        	return 0;       	
+        }
+        String uID = UUID.randomUUID().toString();
+        if ((uID == "") || (uID == null)) {
+        	Log.d(DEBUG_TAG, "insertCheckRecordDtl_uIDIsNull");
+        	return 0;       	
+        }        
         ContentValues cv=new ContentValues();
-    	cv.put("uID", UUID.randomUUID().toString());
+    	cv.put("uID", uID);
     	cv.put("uMstID", mstid);
     	cv.put("sPhoto", pic);
         long row = insert(table_name, null, cv);
@@ -238,13 +271,25 @@ public class dbHelper extends SQLiteOpenHelper {
         return row;
     }
     
-    public void delete(String table_name, int id)
+    public int delete(String table_name, int id)
     {
-        String where="iID=?";
+    	Log.d(DEBUG_TAG, "DataDelete_1");
+    	String where = "iID = ?";       
         String[] whereValue={Integer.toString(id)};
+        Log.d(DEBUG_TAG, "DataDelete_2");
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(table_name, where, whereValue);
+        return db.delete(table_name, where, whereValue);
     }
+    
+    public int delete(String table_name, String KeyValue)
+    {
+    	Log.d(DEBUG_TAG, "DataDelete_1");
+    	String where = "uID = ?";      
+        String[] whereValue={KeyValue};
+        Log.d(DEBUG_TAG, "DataDelete_2");
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(table_name, where, whereValue);
+    }    
     
     public int updateRemark(String table_name, String id, String remark) {
         Log.d(DEBUG_TAG, "updateRemark");

@@ -27,6 +27,9 @@ import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
+import android.widget.LinearLayout;
+
+import android.view.KeyEvent;
 
 public class ImageShowActivity extends Activity {
 	final static String TAG = "ImageShowActivity";
@@ -65,15 +68,22 @@ public class ImageShowActivity extends Activity {
 	private ImageView btnRight = null;  
 	// 设置WindowManager
 	private WindowManager wm = null;  
-	private WindowManager.LayoutParams wmParams = null;	
+	private WindowManager.LayoutParams wmParams = null;
+	
+	LinearLayout ImageShowLayout;
+	
+	boolean IsDelete; //是否进行删除操作
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        IsDelete = false;
         setContentView(R.layout.activity_image_show);
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
         KeyID = bundle.getString("KeyID"); 
+        
+        ImageShowLayout = (LinearLayout) findViewById(R.id.main_ImageShow);
                
         imgView = (ImageView) findViewById(R.id.ivImageShow);
         CurrMap = GetImageData(KeyID);
@@ -190,6 +200,10 @@ public class ImageShowActivity extends Activity {
                     	Toast.makeText(ImageShowActivity.this, "已是第一张图片", 1000).show();                	
                     } 
                     else {
+//                    	ImageShowLayout.removeView(imgView);
+//                    	imgView = (ImageView) findViewById(R.id.ivImageShow);
+//                    	ImageShowLayout.addView(imgView);
+                    	
                     	PositionID = PositionID - 1;
                     	CurrMap = GetImageData(KeyList.get(PositionID));
                     	imgView.setImageBitmap(CurrMap);
@@ -281,34 +295,40 @@ public class ImageShowActivity extends Activity {
         }
     }
     
-    public void AskDialog() {
-    	AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    	builder.setMessage(R.string.dialog_askinfo);
-        builder.setTitle(R.string.dialog_titile);
-                
-        builder.setPositiveButton(R.string.btn_Ok, new DialogInterface.OnClickListener() {
+	public void AskDialog() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage(R.string.dialog_askinfo);
+		builder.setTitle(R.string.dialog_titile);
 
-			public void onClick(DialogInterface dialog, int which) {
-				String StrKey = KeyList.get(PositionID);
-				
-                dbHelper dbhlp = new dbHelper(ImageShowActivity.this);
-                dbhlp.delete("qmCheckRecordDtl", Integer.parseInt(StrKey));
-                KeyList.remove(PositionID);
-                if ((PositionID + 1) > KeyList.size()) {
-                	PositionID = PositionID - 1;
-                }
-                if (KeyList.size() > 0) {
-                    CurrMap = GetImageData(KeyList.get(PositionID));
-                    imgView.setImageBitmap(CurrMap);                	
-                }
-                else {
-                	imgView.setImageBitmap(null);
-                }
-                Toast.makeText(ImageShowActivity.this, "图片已删除", 1500).show();
-		    	dialog.dismiss();	
-			}
+		builder.setPositiveButton(R.string.btn_Ok,
+				new DialogInterface.OnClickListener() {
 
-    	});
+					public void onClick(DialogInterface dialog, int which) {					 
+						String StrKey = KeyList.get(PositionID);
+                        
+						Log.d(TAG, "ImageDelete");
+						Log.d(TAG, StrKey);
+						
+						dbHelper dbhlp = new dbHelper(ImageShowActivity.this);
+						if (dbhlp.delete("qmCheckRecordDtl", StrKey) > 0) {
+							IsDelete = true;
+							KeyList.remove(PositionID);
+							if ((PositionID + 1) > KeyList.size()) {
+								PositionID = PositionID - 1;
+							}
+							if (KeyList.size() > 0) {
+								CurrMap = GetImageData(KeyList.get(PositionID));
+								imgView.setImageBitmap(CurrMap);
+							} else {
+								imgView.setImageBitmap(null);
+							}
+							Toast.makeText(ImageShowActivity.this, "图片已删除",
+									1500).show();
+						}
+						dialog.dismiss();
+					}
+
+				});
         
     	builder.setNegativeButton(R.string.btn_Cancel, new DialogInterface.OnClickListener() {
 
@@ -324,10 +344,18 @@ public class ImageShowActivity extends Activity {
 		public void onClick(View v) {
 			switch (v.getId()){
 			case R.id.btnDeleteImage: {
+				if (KeyList.isEmpty()) {
+					Toast.makeText(ImageShowActivity.this, "没有可删除的图片",
+							1500).show();							
+					break;
+				}				
 				AskDialog();
 				break;
 			}
 			case R.id.btnShowBack: {
+		        Intent intent = ImageShowActivity.this.getIntent();
+		        intent.putExtra("IsDelete", IsDelete);
+		        ImageShowActivity.this.setResult(RESULT_OK, intent);
 				ImageShowActivity.this.finish();
 				break;
 			}
@@ -335,12 +363,25 @@ public class ImageShowActivity extends Activity {
 			
 		}
     	
+    } 
+    
+    @Override 
+    public boolean onKeyDown(int keyCode, KeyEvent event) { 
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) { 
+            Intent intent = ImageShowActivity.this.getIntent();
+            intent.putExtra("IsDelete", IsDelete);
+            ImageShowActivity.this.setResult(RESULT_OK, intent);
+            this.finish();
+            return true; 
+        } 
+        return super.onKeyDown(keyCode, event); 
     }    
-
+    
     
     @Override
-    public void onDestroy(){
+    public void onDestroy(){   	
         super.onDestroy();
+        
         //在程序退出(Activity销毁）时销毁悬浮窗口
         wm.removeView(btnLeft);
         wm.removeView(btnRight);

@@ -81,4 +81,13 @@
     
     <string name="not_record">没有记录！</string>
     <string name="have_records">找到 %1$d 条记录</string>
+    
+    <string name="title_activity_camera">相机</string>
+    
+    <string name="btn_retake">重拍</string>
+    
+    <string name="choose_camera">选择使用相机</string>
+    <string name="using_in_camera">使用内置相机</string>
+    <string name="using_app_camera">使用相机应用</string>
+    <string name="title_activity_choose_camera">相机选项</string>    
 </resources>
