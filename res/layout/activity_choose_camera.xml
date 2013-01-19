@@ -1,0 +1,62 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        >
+        
+        <LinearLayout 
+			android:id="@+id/ChooseCamera_top"
+			android:layout_width="fill_parent"
+			android:layout_height="50dip"
+			android:layout_alignParentBottom="true"
+			android:orientation="horizontal"
+			style="@android:style/ButtonBar"			
+			>         
+            <Button 
+                 android:id="@+id/btnChooseCancel" 
+                 android:text="@string/btn_Cancel"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_weight="1"
+                 /> 
+             <Button
+                 android:id="@+id/btnChooseOk"
+                 android:text="@string/btn_Ok"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_weight="1"
+                 />        
+  	    </LinearLayout> 
+  	    
+	    <LinearLayout
+			android:id="@+id/main_ChooseCemera"
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:orientation="vertical"
+			android:layout_above="@id/ChooseCamera_top"
+	    	>
+	        <RadioGroup
+	            android:id="@+id/rg_ChooseCamera"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            >
+	            <RadioButton
+	                android:id="@+id/rb_UsingInCamera"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="@string/using_in_camera"></RadioButton>
+	            <RadioButton
+	                android:id="@+id/rb_UsingAppCamera"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="@string/using_app_camera"></RadioButton>	            
+	            </RadioGroup>
+	    </LinearLayout>        
+        
+    </RelativeLayout>
+
+</RelativeLayout>
