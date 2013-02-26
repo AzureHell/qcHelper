@@ -53,7 +53,7 @@ public class MainActivity extends Activity {
     
 	ListView PlanList;
 	PlanAdapter planAdapter;
-	Button MainSearch, btnSync;
+	Button MainSearch, btnSync, btnConn, btnLogin, btnChoose, btnExit;
 	EditText edtSearch;
 	
 	int[] ItemKeyList;
@@ -74,6 +74,18 @@ public class MainActivity extends Activity {
         btnSync.setOnClickListener(new ButtonClickEvent());        
         edtSearch = (EditText) findViewById(R.id.edtSearch);
         edtSearch.setHint(R.string.Search_Hint);
+        
+        btnConn = (Button) findViewById(R.id.main_conn);
+        btnConn.setOnClickListener(new ButtonClickEvent());
+        
+        btnLogin = (Button) findViewById(R.id.main_login);
+        btnLogin.setOnClickListener(new ButtonClickEvent());
+        
+        btnChoose = (Button) findViewById(R.id.main_choose);
+        btnChoose.setOnClickListener(new ButtonClickEvent());        
+        
+        btnExit = (Button) findViewById(R.id.main_exit);
+        btnExit.setOnClickListener(new ButtonClickEvent());        
         
         refreshList();
     }
@@ -102,7 +114,18 @@ public class MainActivity extends Activity {
 	    	dbhlp.insert("qmCheckItem", "sItemName", new String[]{"干湿度测试报告"});
 	    	dbhlp.insert("qmCheckItem", "sItemName", new String[]{"生产进度表"});
     	}
+    	cursor.close();
+    	dbhlp.close();
     	
+    	cursor = dbhlp.select("HelperParam");
+    	if (cursor.getCount() <= 0) {
+    		dbhlp.getWritableDatabase().execSQL("insert into HelperParam(iID, ParamName, ParamValue) "
+    				+ "values(?,?,?)", new Object[]{1, this.getString(R.string.choose_camera), "0"});
+    	}
+    	cursor.close();
+    	dbhlp.close();    	
+    	
+//    	cursor = dbhlp.select("qmCheckPlan");
 //    	if (cursor.getCount() <= 0) {
 //    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckPlan(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, dRequestCheck, sCheckItemDesc, sQCUserID, sUserID) "
 //    				  + "values(?,?,?,?,?,?,?,?,?)", new Object[] {1, 12, "SC010", "QX7886", "P0000001", "2012-11-22", "1、面料、辅料品质优良，符合客户要求; 2、款式配色准确无误; 3、包装美观、配比正确.", "U001", "U001"});
@@ -117,6 +140,8 @@ public class MainActivity extends Activity {
 //    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckPlan(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, dRequestCheck, sCheckItemDesc, sQCUserID, sUserID) "
 //  				  + "values(?,?,?,?,?,?,?,?,?)", new Object[] {6, 22, "SC022", "LP6589", "P0000006", "2012-12-22", "1、面料、辅料品质优良，符合客户要求; 2、款式配色准确无误; 3、包装美观、配比正确.", "U001", "U001"});    		
 //    	}
+//    	cursor.close();
+//    	dbhlp.close();    	
 //    	
 //    	cursor = dbhlp.querySQL("select uID from qmCheckRecordMst ");
 //    	Log.d(DEBUG_TAG, "InitInsertData2:" + Integer.toString(cursor.getCount()));
@@ -153,30 +178,30 @@ public class MainActivity extends Activity {
 //    		dbhlp.getWritableDatabase().execSQL("insert into qmCheckRecordMst(iID, iFactoryID, sOrderNo, sStyleNo, sProductID, iItemID) "
 //  				  + "values(?,?,?,?,?,?)", new Object[] {13, 22, "SC022", "LP6589", "P0000006", 2});       		
 //    	}
-    	cursor.close();
-    	dbhlp.close();
+//    	cursor.close();
+//    	dbhlp.close();
     }
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(0, LOGIN_ID, 0, R.string.menu_login).setIcon(android.R.drawable.ic_menu_preferences);
-        menu.add(0, CONSETTING_ID, 0, R.string.menu_setting).setIcon(android.R.drawable.ic_menu_preferences);
-        menu.add(0, EXIT_ID, 0, R.string.menu_exit).setIcon(android.R.drawable.ic_menu_info_details);           
+//        menu.add(0, LOGIN_ID, 0, R.string.menu_login).setIcon(android.R.drawable.ic_menu_preferences);
+//        menu.add(0, CONSETTING_ID, 0, R.string.menu_setting).setIcon(android.R.drawable.ic_menu_preferences);
+//        menu.add(0, EXIT_ID, 0, R.string.menu_exit).setIcon(android.R.drawable.ic_menu_info_details);           
         return true;
     }
     
     @Override   
     public boolean onPrepareOptionsMenu(Menu menu) {   
         // Set 'delete' menu item state depending on count   
-        MenuItem loginItem = menu.findItem(LOGIN_ID);   
-        // 登录验证，如果未进行登录则弹出登录窗口
-        SharedPreferences setting = getSharedPreferences("Login",Context.MODE_WORLD_READABLE);
-        String login_user_id = setting.getString("user_id", "");
-        if (login_user_id == "") {
-            loginItem.setTitle(R.string.menu_login);
-        } else {
-            loginItem.setTitle(R.string.menu_logout);
-        }
+//        MenuItem loginItem = menu.findItem(LOGIN_ID);   
+//        // 登录验证，如果未进行登录则弹出登录窗口
+//        SharedPreferences setting = getSharedPreferences("Login",Context.MODE_WORLD_READABLE);
+//        String login_user_id = setting.getString("user_id", "");
+//        if (login_user_id == "") {
+//            loginItem.setTitle(R.string.menu_login);
+//        } else {
+//            loginItem.setTitle(R.string.menu_logout);
+//        }
         return super.onPrepareOptionsMenu(menu);   
     }      
     
@@ -223,24 +248,54 @@ public class MainActivity extends Activity {
         Log.d(DEBUG_TAG, "getPlanList_1");
         List<String> data = new ArrayList<String>();
         
-        String selection = null;
-        String[] selectionArgs = null;
-        dbHelper dbhlp = new dbHelper(this);
-        if ((ParamValue != null) && (ParamValue != "")) {
-        	selection = "sOrderNo like '%?%' or sStyleNo like '%?%'";
-        	selectionArgs = new String[] {ParamValue, ParamValue};
-        }
-        Cursor cursor = dbhlp.select("qmCheckPlan", "iID,dRequestCheck,sOrderNo,sStyleNo,sProductID,sCheckItemDesc,iFactoryID,sQCUserID", selection, selectionArgs, 20);
-
+//        String selection = null;
+//        String[] selectionArgs = null;
+//        dbHelper dbhlp = new dbHelper(this);
+//        if ((ParamValue != null) && (ParamValue != "")) {
+//        	selection = "sOrderNo like '%?%' or sStyleNo like '%?%'";
+//        	selectionArgs = new String[] {ParamValue, ParamValue};
+//        }
+//        Log.d(DEBUG_TAG, "getPlanList_2");
+//        Cursor cursor = dbhlp.select("qmCheckPlan", "iID,dRequestCheck,sOrderNo,sStyleNo,sProductID,sCheckItemDesc,iFactoryID,sQCUserID", selection, selectionArgs, 20);
+      dbHelper dbhlp = new dbHelper(this);
+      String SqlText;
+      if ((ParamValue == null) || (ParamValue == "")) {
+      	SqlText = "select iID, dRequestCheck, sOrderNo, sStyleNo "
+              + ", sProductID, sCheckItemDesc, bApproved "
+              + " from qmCheckPlan "
+              + " order by dRequestCheck asc "
+              + " limit 20 ";
+      	Log.d(DEBUG_TAG, "getPlanList_2_1");
+      }
+      else {
+      	SqlText = "select iID, dRequestCheck, sOrderNo, sStyleNo "
+              + ", sProductID, sCheckItemDesc, bApproved "
+              + " from qmCheckPlan "
+              + " where (sOrderNo like '%" + ParamValue + "%') or (sStyleNo like '%" + ParamValue + "%') "
+              + " order by dRequestCheck asc "
+              + " limit 20 ";
+      	Log.d(DEBUG_TAG, "getPlanList_2_2:" + ParamValue);
+      }
+      Log.d(DEBUG_TAG, "getPlanList_3");
+      Cursor cursor = dbhlp.querySQL(SqlText);
+        
+        Log.d(DEBUG_TAG, "getPlanList_3");
         if (cursor.getCount() > 0) {
         	ItemKeyList = new int[cursor.getCount()];
+        	String StrApproved;
             while (cursor.moveToNext()) {
             	ItemKeyList[cursor.getPosition()] = cursor.getInt(0);
+            	StrApproved = "－";
+            	Log.d(DEBUG_TAG, cursor.getString(6));
+            	if (cursor.getInt(6) == 1) {
+            		StrApproved = "√";	
+            	}
                 data.add(cursor.getString(1)
                         + "※" + cursor.getString(2)
                         + "※" + cursor.getString(3)
                         + "※" + cursor.getString(4)
                         + "※" + cursor.getString(5)
+                        + "※" + StrApproved
                         );
             }
             comm.showMsg(this, String.format(getResources().getString(R.string.have_records), cursor.getCount()));
@@ -268,14 +323,16 @@ public class MainActivity extends Activity {
             TextView tv_sStyleNo = (TextView) view.findViewById(R.id.PlanStyleNo);
             TextView tv_sProductID = (TextView) view.findViewById(R.id.PlanProductID);
             TextView tv_sCheckItemDesc = (TextView) view.findViewById(R.id.PlanCheckDesc);
+            TextView tv_Approved = (TextView) view.findViewById(R.id.PlanApproved);
             
             String[] strarray = getItem(position).split("※");
-            if (strarray.length == 5) {
+            if (strarray.length == 6) {
             	tv_dRequestCheck.setText(strarray[0]);
             	tv_sOrderNo.setText(strarray[1]);
             	tv_sStyleNo.setText(strarray[2]);
             	tv_sProductID.setText(strarray[3]);
             	tv_sCheckItemDesc.setText(strarray[4]);
+            	tv_Approved.setText(strarray[5]);
             }
             //返回重写的view
             return view;
@@ -302,12 +359,14 @@ public class MainActivity extends Activity {
     		switch(v.getId()){
         		case R.id.MainSearch: {
         			String FParamValue;
-        			if (edtSearch.getText().toString() == "" || edtSearch.getText().length() <= 0) {
+        			Log.d(DEBUG_TAG, "SearchClick");
+        			if ((edtSearch.getText().toString() == "") || (edtSearch.getText().length() <= 0)) {
         				FParamValue=null;
         			}
         			else {
         				FParamValue = edtSearch.getText().toString();    				
         			}
+        			Log.d(DEBUG_TAG, "SearchClick_1");
         	        planAdapter = new PlanAdapter(MainActivity.this, R.layout.qcplanitem, getPlanData(FParamValue));
         	        PlanList.setAdapter(planAdapter);    			
         			break;    			
@@ -333,7 +392,56 @@ public class MainActivity extends Activity {
                     }
                     
                     break;
-                }        		
+                }     
+                case R.id.main_conn: {
+                    Resources res = getResources();
+                    if (MainActivity.this.btnConn.getText().toString() == res.getString(R.string.menu_logout)) {
+                        AskDialog();
+                        if (DialogReturnType == false) {
+                            break;              
+                        }               
+                    }
+                    
+                	Intent intent = new Intent(MainActivity.this, ConsetActivity.class);
+                	startActivity(intent);        	
+                	break; 	
+                	
+                }
+                case R.id.main_login: {
+                	Log.d(DEBUG_TAG, "click login");
+                    if (!comm.isNetworkAvailable(MainActivity.this)) {
+                        comm.showMsg(MainActivity.this, R.string.network_inactive);
+                        break;
+                    }
+                    Resources res = getResources();
+                    if (MainActivity.this.btnLogin.getText().toString() == res.getString(R.string.menu_login)) {
+                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                        startActivityForResult(intent, LOGIN_ACTIVITY_REQUESTCODE);
+                    } else if (MainActivity.this.btnLogin.getText().toString() == res.getString(R.string.menu_logout)) {
+                        showDialog(0);
+                    }
+                    
+                    SharedPreferences setting = getSharedPreferences("Login",Context.MODE_WORLD_READABLE);
+                    String login_user_id = setting.getString("user_id", "");
+                    if (login_user_id == "") {
+                    	MainActivity.this.btnLogin.setText(R.string.menu_login);
+                    } else {
+                    	MainActivity.this.btnLogin.setText(R.string.menu_logout);
+                    }                    
+                    
+                	break;
+                }
+                case R.id.main_choose: {
+                	Log.d(DEBUG_TAG, "main_choose");
+                	Intent intent = new Intent(MainActivity.this, ChooseCameraActivity.class);
+                	startActivity(intent);
+                	break;
+                }
+                case R.id.main_exit: {
+                	MainActivity.this.finish();
+                	break;
+                }     
+                
     		}
     	}
     }

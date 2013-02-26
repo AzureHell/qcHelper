@@ -1,0 +1,88 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/black"
+    >    
+    <RelativeLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        >
+        <LinearLayout
+            android:id="@+id/camera_bottom"
+            android:layout_width="fill_parent"
+            android:layout_height="60dip"
+            android:orientation="horizontal"
+			style="@android:style/ButtonBar"
+            android:layout_alignParentBottom="true"
+            android:padding="1dip"
+            >
+
+            <Button 
+                android:id="@+id/camera_ok" 
+                android:text="@string/btn_Ok"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:padding="1dip"
+                android:layout_marginBottom="-5dip"
+                android:textSize="16sp" 
+                /> 
+                
+            <Button 
+                android:id="@+id/camera_take" 
+                android:text="@string/btn_GetPic"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:padding="1dip"
+                android:layout_marginLeft="-7dip"
+                android:layout_marginBottom="-5dip"
+                android:textSize="16sp" 
+                /> 
+                
+            <Button 
+                android:id="@+id/camera_retake" 
+                android:text="@string/btn_retake"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:padding="1dip"
+                android:layout_marginLeft="-7dip"
+                android:layout_marginBottom="-5dip"
+                android:textSize="16sp" 
+                />             
+                
+            <Button 
+                android:id="@+id/camera_cancel" 
+                android:text="@string/btn_Cancel"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:padding="1dip"
+                android:layout_marginLeft="-7dip"
+                android:layout_marginBottom="-5dip"
+                android:textSize="16sp" 
+                />            
+        </LinearLayout>
+        
+        <LinearLayout
+            android:id="@+id/camera_view"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/camera_bottom"
+            android:orientation="vertical" >
+
+            <SurfaceView
+                android:id="@+id/Surface_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                 />
+        </LinearLayout>
+        
+    </RelativeLayout>
+
+
+</LinearLayout>

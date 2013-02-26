@@ -10,36 +10,45 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="30"
-        android:padding="5dip" >
+        android:padding="2dip" >
         <TextView android:id="@+id/PlanCheckDate"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:paddingLeft="10dip"
+            android:paddingLeft="6dip"
             android:gravity="left"
         ></TextView>
         <TextView android:id="@+id/PlanOrderNo"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:textSize="14sp" 
-            android:paddingLeft="10dip"
+            android:paddingLeft="6dip"
             android:gravity="center_horizontal"
         ></TextView>
         <TextView android:id="@+id/PlanStyleNo"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:textSize="14sp" 
-            android:paddingLeft="10dip"
+            android:paddingLeft="6dip"
             android:gravity="center_horizontal"
         ></TextView>
         <TextView android:id="@+id/PlanProductID"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:textSize="14sp" 
-            android:paddingLeft="10dip"
+            android:paddingLeft="6dip"
             android:gravity="left"
         ></TextView>
+        <TextView android:id="@+id/PlanApproved"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:textSize="18sp" 
+            android:textStyle="bold" 
+            android:textColor="@color/red"
+            android:paddingLeft="8dip"
+            android:gravity="right"
+        ></TextView>        
     </LinearLayout>    
     
     <LinearLayout
@@ -47,12 +56,14 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_weight="30"
-        android:padding="5dip" >
+        android:padding="2dip" 
+        android:layout_marginTop="-8dip"
+        >
         <TextView android:id="@+id/PlanCheckDesc"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:textSize="14sp" 
-            android:paddingLeft="10dip"
+            android:paddingLeft="6dip"
             android:gravity="left"
         ></TextView>
     </LinearLayout>  

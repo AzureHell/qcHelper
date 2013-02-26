@@ -35,45 +35,40 @@
     <string name="conset_noserverset">The incomplete connection settings set and then login.</string>
     <string name="image_not_exists">Picture does not exist.</string>
     <string name="image_count_check">Each inspection items can only upload up to 15 pictures.</string>
-    
     <string name="title_activity_conset">Connection</string>
     <string name="title_activity_login">Login</string>
-    
     <string name="btn_sync">Sync data</string>
-    
     <string name="login_title">Login</string>
     <string name="login_user_name_hint">Type your user name</string>
     <string name="login_password_hint">Type your password</string>
     <string name="login_succeed">Login succeed</string>
-    <string name="login_failed">Login failed</string>    
+    <string name="login_failed">Login failed</string>
     <string name="login_user_or_pass_error">User or Password error</string>
     <string name="login_password_is_null">sorry, password is invalid, modify your password in erp system please.</string>
-    
     <string name="login_user_name_lost">User name lost</string>
     <string name="login_password_lost">Password lost</string>
-    
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
-    
     <string name="remember_password">Remeber password</string>
-    
     <string name="main_need_login">Please login before!</string>
     <string name="main_sure_logout">Are you sure logout!</string>
-    
     <string name="record_save_succeed">Save succeed!</string>
     <string name="record_save_failed">Save failed!</string>
-    
     <string name="main_not_data_need_sync">Not data need sync!</string>
     <string name="main_sync_completed">Sync completed!</string>
     <string name="information_incomplete">Information incomplete!</string>
     <string name="process_wait">Process,waiting....</string>
-    <string name="processing">Processing....</string>    
-    
+    <string name="processing">Processing....</string>
     <string name="sync_failed">Sync failed!</string>
-    
     <string name="wifi_inactive">Wifi Inactive!</string>
     <string name="network_inactive">Network Inactive!</string>
-    
     <string name="not_record">not record!</string>
     <string name="have_records">have %1$d records</string>
+    <string name="title_activity_camera">Camera</string>
+    <string name="btn_Retake">Retake pictures</string>
+    <string name="choose_camera">Choose to use the camera</string>
+    <string name="using_in_camera">Using the built-in camera</string>
+    <string name="using_app_camera">Using the camera application</string>
+    <string name="title_activity_choose_camera">Camera options</string>
+
 </resources>

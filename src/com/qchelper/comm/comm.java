@@ -17,6 +17,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.util.Log;
 import android.widget.Toast;
 
 public class comm {
@@ -219,7 +220,25 @@ public class comm {
     }
     
     //图片解压
-    public static Bitmap bytesTobitmap(byte[] bytes){
-        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length, null);
+    public static Bitmap bytesTobitmap(byte[] bytes, int BitmapHeight){    	
+        //return BitmapFactory.decodeByteArray(bytes, 0, bytes.length, null);
+    	BitmapFactory.Options options = new BitmapFactory.Options();    	
+    	options.inJustDecodeBounds = true;  
+        // 获取这个图片的宽和高  
+    	Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options); //此时返回bitmap为空 
+    	//计算缩放比  
+    	int be = (int)(options.outHeight / (float)BitmapHeight);  
+    	int ys = options.outHeight % BitmapHeight;//求余数  
+    	float fe = ys / (float)BitmapHeight;  
+    	if(fe>=0.5)be = be + 1;  
+    	if (be <= 0)  
+    	  be = 1;    	
+    	options.inSampleSize = be; 
+    	
+    	//重新读入图片，注意这次要把options.inJustDecodeBounds 设为 false  
+    	options.inJustDecodeBounds = false;  
+    	bitmap=BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);    	
+    	
+    	return bitmap;
     }    
 }
