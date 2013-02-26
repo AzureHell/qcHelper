@@ -131,7 +131,9 @@ public class PicActivity extends Activity {
     	dbHelper dbhlp = new dbHelper(this);
     	Cursor cursor = dbhlp.select("qmCheckRecordDtl", "uID,sPhoto", "uMstID = ?", new String[]{MstID});
     	if (cursor.getCount() > 0) {
+    		Log.d(TAG, "GetImageData1");
     		ItemKeyList = new String[cursor.getCount()];
+    		Log.d(TAG, "GetImageData2");
     		while (cursor.moveToNext()) {
     			ItemKeyList[cursor.getPosition()] = cursor.getString(0);
     			Data[cursor.getPosition()] = comm.bytesTobitmap(cursor.getBlob(1));
