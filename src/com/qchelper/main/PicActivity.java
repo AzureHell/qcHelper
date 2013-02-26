@@ -32,9 +32,10 @@ import com.qchelper.comm.comm;
 import com.qchelper.comm.dbHelper;
 import com.qchelper.main.CameraActivity;
 
-import android.app.ProgressDialog;
-
 import android.content.res.Configuration;
+
+import android.widget.Gallery;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class PicActivity extends Activity {
 	final static String TAG="PicActivity";
@@ -232,17 +233,10 @@ public class PicActivity extends Activity {
     	
     	dbHelper dbhlp = new dbHelper(this);
     	Cursor cursor = dbhlp.select("qmCheckRecordDtl", "uID,sPhoto", "uMstID = ?", new String[]{MstID});
-<<<<<<< HEAD
-    	if (cursor.getCount() > 0) {
-    		Log.d(TAG, "GetImageData1");
-    		ItemKeyList = new String[cursor.getCount()];
-    		Log.d(TAG, "GetImageData2");
-=======
     	Log.d(TAG, "GetImageData_1");
     	if (cursor.getCount() > 0) {    		
     		ItemKeyList = new String[cursor.getCount()];
     		Log.d(TAG, "GetImageData_2");
->>>>>>> cremafix
     		while (cursor.moveToNext()) {
     			ItemKeyList[cursor.getPosition()] = cursor.getString(0);
     			//Data[cursor.getPosition()] = comm.bytesTobitmap(cursor.getBlob(1));

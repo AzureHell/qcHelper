@@ -60,20 +60,20 @@
 		    android:orientation="horizontal"
 		    style="@android:style/ButtonBar"
 		    android:layout_alignParentBottom="true"  >
-		       
-		    <Button android:id="@+id/setting_ok" 
-		        android:text="@string/btn_Ok"
-		        android:layout_width="match_parent"
-		        android:layout_height="wrap_content"
-                android:layout_weight="1"
-		        />
 		    
 		    <Button android:id="@+id/setting_cancel" 
 		        android:text="@string/btn_Cancel"
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
 		        android:layout_weight="1"
-		        />      
+		        />
+		    
+		    <Button android:id="@+id/setting_ok" 
+		        android:text="@string/btn_Ok"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+                android:layout_weight="1"
+		        />		    
 		</LinearLayout>        
         
     </RelativeLayout>
