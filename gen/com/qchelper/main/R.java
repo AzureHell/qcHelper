@@ -84,10 +84,10 @@ public final class R {
         public static final int rb_UsingInCamera=0x7f080011;
         public static final int remark_top=0x7f080034;
         public static final int rg_ChooseCamera=0x7f080010;
-        public static final int setting_cancel=0x7f08001a;
+        public static final int setting_cancel=0x7f080019;
         public static final int setting_liner_1=0x7f080013;
         public static final int setting_liner_2=0x7f080016;
-        public static final int setting_ok=0x7f080019;
+        public static final int setting_ok=0x7f08001a;
         public static final int txtCheckOrderNo=0x7f080008;
         public static final int txtCheckStyleNo=0x7f080009;
         public static final int txt_server_ip=0x7f080014;
